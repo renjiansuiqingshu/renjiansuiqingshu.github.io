@@ -1,10 +1,11 @@
-// 新版腾讯云开发 SDK 初始化（本地加载，无需外部 CDN）
+// 新版腾讯云开发 SDK 初始化（本地加载）
 import cloudbase from './cloudbase-sdk.mjs';
 
 const ENV_ID = 'renjiansuiqingshu-d0d8b11638ca9a';
+const ACCESS_KEY = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjlkMWRjMzFlLWI0ZDAtNDQ4Yi1hNzZmLWIwY2M2M2Q4MTQ5OCJ9.eyJpc3MiOiJodHRwczovL3JlbmppYW5zdWlxaW5nc2h1LWQwZDhiMTE2MzhjYTlhLmFwLXNoYW5naGFpLnRjYi1hcGkudGVuY2VudGNsb3VkYXBpLmNvbSIsInN1YiI6ImFub24iLCJhdWQiOiJyZW5qaWFuc3VpcWluZ3NodS1kMGQ4YjExNjM4Y2E5YSIsImV4cCI6NDA4MDY0NzYwNywiaWF0IjoxNzc2OTY0NDA3LCJub25jZSI6IjMxYTVIbUVoU1FDdGkzeHpxb2dRNEEiLCJhdF9oYXNoIjoiMzFhNUhtRWhTUUN0aTN4enFvZ1E0QSIsIm5hbWUiOiJBbm9ueW1vdXMiLCJzY29wZSI6ImFub255bW91cyIsInByb2plY3RfaWQiOiJyZW5qaWFuc3VpcWluZ3NodS1kMGQ4YjExNjM4Y2E5YSIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJ1c2VyX3R5cGUiOiIiLCJjbGllbnRfdHlwZSI6ImNsaWVudF91c2VyIiwiaXNfc3lzdGVtX2FkbWluIjpmYWxzZX0.fdgKvadnR3PQty2LBDYK_nu5RyBk43-2cEgV_yblPMydKGjvwMp1JL4IXmVp3Q_WzPlh7k2eiQd1V5jSHzYvFBbZXY2DMTVWft0mAxwV8bzwEv2-bHRkAPMnK2lHK96JHSRofFhh4Ra_eue5w1xvCAdOmNb9H664Gr4rEt1y9P_TOAYKQg74ojuYX45DUXSzIq9IJ0uv_s2YyXUPldJFa-0__vnQUToxfSppCqsBkRBke4oDRqcEmYaVIi2TL--zn1wNK3J41YbfMGkbyY63kLCcHyBBVjZ0_ZUrBeBSp9Tz0bTqb2OQshF2xBh02oG6LvZPBwxo0OxokTTc4PkbJg';
 
 try {
-  const app = cloudbase.init({ env: ENV_ID });
+  const app = cloudbase.init({ env: ENV_ID, accessKey: ACCESS_KEY });
   const auth = app.auth();
   const db = app.database();
   const _ = db.command;
