@@ -2,12 +2,27 @@
 // ⚠️ 替换为你自己的云开发环境 ID
 const ENV_ID = 'renjiansuiqingshu-d0d8b11638ca9a';
 
-// 初始化云开发
-const app = tcb.init({ env: ENV_ID });
-const auth = app.auth();
-const db = app.database();
-const _ = db.command; // 数据库操作符
-const storage = app.uploadFile;
+// 初始化云开发（加调试）
+let app, auth, db, _, storage;
+try {
+  if (typeof tcb === 'undefined') {
+    throw new Error('腾讯云开发 SDK 未加载，请检查网络');
+  }
+  app = tcb.init({ env: ENV_ID });
+  auth = app.auth();
+  db = app.database();
+  _ = db.command;
+  storage = app.uploadFile;
+  console.log('✅ 云开发初始化成功');
+} catch (initErr) {
+  console.error('❌ 云开发初始化失败:', initErr);
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.container');
+    if (container) {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:#f44336"><h2>⚠️ 初始化失败</h2><p>' + initErr.message + '</p><p>SDK 版本: ' + (typeof tcb !== 'undefined' ? '已加载' : '未加载') + '</p></div>';
+    }
+  });
+}
 
 // ===== 全局状态 =====
 const state = {
@@ -97,7 +112,7 @@ async function initAuth() {
     updateUserUI();
   } catch (err) {
     console.error('匿名登录失败:', err);
-    toast('初始化失败，请刷新页面', 'error');
+    toast('匿名登录失败: ' + (err.message || err.code || JSON.stringify(err)), 'error');
   }
 }
 
@@ -117,8 +132,13 @@ function updateUserUI() {
 $('#loginBtn').addEventListener('click', async () => {
   try {
     // 方式1：微信公众号登录（推荐）
-    if (typeof tcb !== 'undefined' && tcb.auth && tcb.auth.WeixinAuthProvider) {
-      const provider = tcb.auth.weixinAuthProvider();
+    const authInstance = app.auth();
+    if (typeof authInstance.weixinAuthProvider === 'function') {
+      // ⚠️ 替换为你的微信开放平台 appid
+      const provider = authInstance.weixinAuthProvider({
+        appid: 'wxYOUR_APPID',
+        scope: 'snsapi_userinfo'
+      });
       await provider.signIn();
       const loginState = await auth.getLoginState();
       state.currentUser = loginState;
@@ -269,7 +289,8 @@ $('#submitBtn').addEventListener('click', async () => {
     toast('秘密已投进树洞 🌳', 'success');
     loadPosts(true);
   } catch (err) {
-    toast('投递失败：' + err.message, 'error');
+    console.error('投递失败详情:', err);
+    toast('投递失败：' + (err.message || err.code || JSON.stringify(err)), 'error');
   } finally {
     btn.disabled = false;
     btn.textContent = '投进树洞 🌳';
