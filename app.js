@@ -874,7 +874,7 @@ function waitForTcb() {
     if (window.__tcbError) return reject(new Error(window.__tcbError));
     window.addEventListener('tcb-ready', resolve, { once: true });
     window.addEventListener('tcb-error', () => reject(new Error(window.__tcbError || 'SDK加载失败')), { once: true });
-    setTimeout(() => reject(new Error('SDK 加载超时')), 15000);
+    setTimeout(() => reject(new Error('SDK 加载超时')), 30000);
   });
 }
 
