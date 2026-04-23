@@ -1,28 +1,6 @@
 // ===== 腾讯云开发配置 =====
-// ⚠️ 替换为你自己的云开发环境 ID
-const ENV_ID = 'renjiansuiqingshu-d0d8b11638ca9a';
-
-// 初始化云开发（加调试）
-let app, auth, db, _, storage;
-try {
-  if (typeof tcb === 'undefined') {
-    throw new Error('腾讯云开发 SDK 未加载，请检查网络');
-  }
-  app = tcb.init({ env: ENV_ID });
-  auth = app.auth();
-  db = app.database();
-  _ = db.command;
-  storage = app.uploadFile;
-  console.log('✅ 云开发初始化成功');
-} catch (initErr) {
-  console.error('❌ 云开发初始化失败:', initErr);
-  document.addEventListener('DOMContentLoaded', () => {
-    const container = document.querySelector('.container');
-    if (container) {
-      container.innerHTML = '<div style="text-align:center;padding:40px;color:#f44336"><h2>⚠️ 初始化失败</h2><p>' + initErr.message + '</p><p>SDK 版本: ' + (typeof tcb !== 'undefined' ? '已加载' : '未加载') + '</p></div>';
-    }
-  });
-}
+// SDK 通过 init-sdk.js (ESM) 加载新版 @cloudbase/js-sdk
+let app, auth, db, _;
 
 // ===== 全局状态 =====
 const state = {
@@ -889,9 +867,32 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ===== 初始化 =====
+// 等待新版 SDK 加载完成
+function waitForTcb() {
+  return new Promise((resolve, reject) => {
+    if (window.__tcbReady) return resolve();
+    if (window.__tcbError) return reject(new Error(window.__tcbError));
+    window.addEventListener('tcb-ready', resolve, { once: true });
+    window.addEventListener('tcb-error', () => reject(new Error(window.__tcbError || 'SDK加载失败')), { once: true });
+    setTimeout(() => reject(new Error('SDK 加载超时')), 15000);
+  });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
-  await initAuth();
-  loadPosts(true);
-  updateStats();
+  try {
+    await waitForTcb();
+    const tcb = window.__tcb;
+    app = tcb.app;
+    auth = tcb.auth;
+    db = tcb.db;
+    _ = tcb._;
+    console.log('✅ SDK 就绪');
+    await initAuth();
+    loadPosts(true);
+    updateStats();
+  } catch (err) {
+    console.error('❌ 初始化失败:', err);
+    toast('初始化失败: ' + err.message, 'error');
+  }
 });
