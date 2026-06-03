@@ -1,5 +1,5 @@
 // ===== 腾讯云开发配置 =====
-// 使用 v2 SDK (CDN: static.cloudbase.net/cloudbase-js-sdk/2.28.6/cloudbase.full.js)
+// 使用 v2 SDK (cloudbase.full.js 2.28.6)
 let app, auth, db, _;
 
 const ENV_ID = 'renjiansuiqingshu-d0d8b11638ca9a';
@@ -86,7 +86,13 @@ $('#themeToggle').addEventListener('click', () => {
 // ===== 认证 =====
 async function initAuth() {
   try {
-    await auth.signInAnonymously();
+    // v2 SDK: signInAnonymously returns {data, error}
+    const result = await auth.signInAnonymously();
+    if (result && result.error) {
+      console.error('匿名登录失败:', result.error);
+      toast('匿名登录失败: ' + (result.error.message || result.error.code || JSON.stringify(result.error)), 'error');
+      return;
+    }
     const loginState = await auth.getLoginState();
     state.currentUser = loginState;
     state.loginType = 'anonymous';
@@ -224,26 +230,45 @@ $$('.sort-btn').forEach(btn => {
 });
 
 // ===== 加载帖子 =====
-async function loadPosts(reset = false) {
-  if (reset) {
-    state.posts = []; state.hasMore = true;
-    $('#postsList').innerHTML = '<div class="empty-state" id="emptyState" style="display:none"><div class="tree-icon">🌳</div><p>树洞还是空的，来说点什么吧</p></div>';
+async function loadPosts(refresh) {
+  const list = $('#postsList');
+  const empty = $('#emptyState');
+  if (refresh) {
+    state.posts = [];
+    state.lastDoc = null;
+    state.hasMore = true;
+    list.innerHTML = '';
+    list.appendChild(empty);
+    empty.style.display = 'none';
   }
-  if (!state.hasMore) return;
   try {
     let query = db.collection('posts').where({ status: 'active' });
-    if (state.currentCategory !== '全部') query = query.where({ category: state.currentCategory });
-    query = query.orderBy(state.currentSort === 'latest' ? 'createdAt' : 'likes', 'desc');
-    if (state.posts.length > 0 && !reset) query = query.skip(state.posts.length);
+    if (state.currentCategory !== '全部') {
+      query = db.collection('posts').where({ status: 'active', category: state.currentCategory });
+    }
+    if (state.currentSort === 'hot') {
+      query = query.orderBy('likes', 'desc').orderBy('createdAt', 'desc');
+    } else {
+      query = query.orderBy('createdAt', 'desc');
+    }
     query = query.limit(state.pageSize);
+    if (state.lastDoc) query = query.skip(state.posts.length);
     const res = await query.get();
-    const es = $('#emptyState');
-    if (res.data.length === 0 && state.posts.length === 0) { if(es) es.style.display='block'; $('#loadMore').style.display='none'; return; }
-    if(es) es.style.display='none';
-    res.data.forEach(post => { state.posts.push(post); renderPost(post); });
-    state.hasMore = res.data.length === state.pageSize;
+    if (refresh && !res.data.length) {
+      empty.style.display = 'block';
+      return;
+    }
+    res.data.forEach(post => {
+      state.posts.push(post);
+      renderPost(post);
+    });
+    state.hasMore = res.data.length >= state.pageSize;
     $('#loadMore').style.display = state.hasMore ? 'block' : 'none';
-  } catch (err) { console.error('加载失败:', err); toast('加载失败，请刷新重试', 'error'); }
+    if (!refresh && !res.data.length) toast('没有更多了', 'info');
+  } catch (err) {
+    console.error('加载失败:', err);
+    toast('加载失败，请刷新重试', 'error');
+  }
 }
 
 function renderPost(post) {
@@ -388,7 +413,7 @@ async function loadAdminContent(tab) {
         body.appendChild(item);
       });
     }
-  } catch(err) { body.innerHTML = `<div style="text-align:center;padding:20px;color:#f44336">加载失败</div>`; }
+  } catch(err) { body.innerHTML = '<div style="text-align:center;padding:20px;color:#f44336">加载失败</div>'; }
 }
 
 $('#loadMoreBtn').addEventListener('click', () => loadPosts(false));
@@ -410,6 +435,10 @@ document.addEventListener('keydown', e => { if(e.key==='Escape'){$('#postModal')
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
   try {
+    // 检查SDK是否加载
+    if (typeof cloudbase === 'undefined') {
+      throw new Error('SDK未加载，请刷新页面重试');
+    }
     app = cloudbase.init({ env: ENV_ID, region: REGION, accessKey: ACCESS_KEY });
     auth = app.auth();
     db = app.database();
