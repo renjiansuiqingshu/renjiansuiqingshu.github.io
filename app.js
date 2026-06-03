@@ -86,7 +86,6 @@ $('#themeToggle').addEventListener('click', () => {
 // ===== 认证 =====
 async function initAuth() {
   try {
-    // v2 SDK: signInAnonymously returns {data, error}
     const result = await auth.signInAnonymously();
     if (result && result.error) {
       console.error('匿名登录失败:', result.error);
@@ -435,15 +434,20 @@ document.addEventListener('keydown', e => { if(e.key==='Escape'){$('#postModal')
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
   try {
-    // 检查SDK是否加载
     if (typeof cloudbase === 'undefined') {
       throw new Error('SDK未加载，请刷新页面重试');
     }
-    app = cloudbase.init({ env: ENV_ID, region: REGION, accessKey: ACCESS_KEY });
+    // 使用 GATEWAY 模式 - 绕过安全域名限制
+    app = cloudbase.init({
+      env: ENV_ID,
+      region: REGION,
+      accessKey: ACCESS_KEY,
+      endPointMode: 'GATEWAY'
+    });
     auth = app.auth();
     db = app.database();
     _ = db.command;
-    console.log('✅ SDK初始化成功, app类型:', typeof app, 'auth类型:', typeof auth);
+    console.log('✅ SDK初始化成功(GATEWAY模式)');
     await initAuth();
     loadPosts(true);
     updateStats();
