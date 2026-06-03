@@ -1,130 +1,15 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>人间碎情书 · 树洞</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌳</text></svg>">
+<meta charset="UTF-8">
+<meta http-equiv="refresh" content="0;url=https://renjiansuiqingshu-d0d8b11638ca9a-1302000480.tcloudbaseapp.com/">
+<title>人间碎情书 · 树洞</title>
+<style>body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:#1a1a2e;color:#eee}a{color:#e91e63}</style>
 </head>
 <body>
-  <!-- 顶部导航 -->
-  <nav class="navbar">
-    <div class="nav-brand">🌳 人间碎情书</div>
-    <div class="nav-actions">
-      <button class="btn-icon" id="themeToggle" title="切换主题">🌙</button>
-      <button class="btn-icon" id="adminBtn" title="管理后台" style="display:none">🛡️</button>
-      <div class="user-menu" id="userMenu">
-        <button class="btn-login" id="loginBtn">登录</button>
-        <div class="user-avatar" id="userAvatar" style="display:none">
-          <img id="avatarImg" src="" alt="">
-          <span id="userName"></span>
-          <button class="btn-logout" id="logoutBtn">退出</button>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <!-- 主内容 -->
-  <main class="container">
-    <header class="hero">
-      <h1 class="title">人间碎情书</h1>
-      <p class="subtitle">把秘密说给树洞听</p>
-      <div class="stats">
-        <span>共 <strong id="totalCount">0</strong> 条秘密</span>
-        <span>今日 <strong id="todayCount">0</strong> 条</span>
-      </div>
-    </header>
-
-    <section class="compose-box">
-      <div class="compose-inner">
-        <textarea id="secretInput" placeholder="在这里写下你的秘密、心事、或者任何想说的话..." maxlength="2000"></textarea>
-        <div class="char-count"><span id="charCount">0</span>/2000</div>
-        <p class="privacy-hint">放心，没有人知道是你写的 😏</p>
-        <div class="image-upload-area" id="imageUploadArea" style="display:none">
-          <div class="image-preview" id="imagePreview">
-            <img id="previewImg" src="" alt="">
-            <button class="btn-remove-img" id="removeImg">✕</button>
-          </div>
-        </div>
-        <div class="emoji-bar">
-          <button class="emoji-btn selected" data-emoji="☁️">☁️</button>
-          <button class="emoji-btn" data-emoji="💕">💕</button>
-          <button class="emoji-btn" data-emoji="😏">😏</button>
-          <button class="emoji-btn" data-emoji="🔥">🔥</button>
-          <button class="emoji-btn" data-emoji="🌙">🌙</button>
-          <button class="emoji-btn" data-emoji="⭐">⭐</button>
-          <button class="emoji-btn" data-emoji="😢">😢</button>
-          <button class="emoji-btn" data-emoji="😡">😡</button>
-        </div>
-        <div class="compose-actions">
-          <div class="compose-left">
-            <button class="btn-icon" id="addImageBtn" title="添加图片">🖼️</button>
-            <input type="file" id="imageInput" accept="image/*" style="display:none">
-            <select id="categorySelect">
-              <option value="随想">💭 随想</option>
-              <option value="心动">💗 心动</option>
-              <option value="难过">😢 难过</option>
-              <option value="愤怒">😡 愤怒</option>
-              <option value="深夜">🌙 深夜</option>
-              <option value="开心">😄 开心</option>
-            </select>
-          </div>
-          <button class="btn-submit" id="submitBtn">投进树洞 🌳</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="category-bar">
-      <button class="cat-btn active" data-cat="全部">全部</button>
-      <button class="cat-btn" data-cat="随想">💭 随想</button>
-      <button class="cat-btn" data-cat="心动">💗 心动</button>
-      <button class="cat-btn" data-cat="难过">😢 难过</button>
-      <button class="cat-btn" data-cat="愤怒">😡 愤怒</button>
-      <button class="cat-btn" data-cat="深夜">🌙 深夜</button>
-      <button class="cat-btn" data-cat="开心">😄 开心</button>
-    </section>
-
-    <section class="sort-bar">
-      <button class="sort-btn active" data-sort="latest">🕐 最新</button>
-      <button class="sort-btn" data-sort="hot">🔥 热门</button>
-    </section>
-
-    <section class="posts-list" id="postsList">
-      <div class="empty-state" id="emptyState">
-        <div class="tree-icon">🌳</div>
-        <p>树洞还是空的，来说点什么吧</p>
-      </div>
-    </section>
-
-    <div class="load-more" id="loadMore" style="display:none">
-      <button class="btn-load-more" id="loadMoreBtn">加载更多</button>
-    </div>
-  </main>
-
-  <div class="modal-overlay" id="postModal" style="display:none">
-    <div class="modal-content">
-      <button class="modal-close" id="modalClose">✕</button>
-      <div class="modal-body" id="modalBody"></div>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="adminModal" style="display:none">
-    <div class="modal-content modal-large">
-      <button class="modal-close" id="adminModalClose">✕</button>
-      <h2 class="modal-title">🛡️ 管理后台</h2>
-      <div class="admin-tabs">
-        <button class="admin-tab active" data-tab="reports">举报处理</button>
-        <button class="admin-tab" data-tab="posts">内容管理</button>
-      </div>
-      <div class="admin-body" id="adminBody"></div>
-    </div>
-  </div>
-
-  <div class="toast-container" id="toastContainer"></div>
-
-  <!-- 腾讯云开发 SDK - 本地加载，确保可靠性 -->
-  <script src="cloudbase.full.js"></script>
-  <script src="app.js?v=2026060303"></script>
+<div style="text-align:center">
+<p>🌳 人间碎情书·树洞 正在加载...</p>
+<p>如果没有自动跳转，请<a href="https://renjiansuiqingshu-d0d8b11638ca9a-1302000480.tcloudbaseapp.com/">点击这里</a></p>
+</div>
 </body>
 </html>
