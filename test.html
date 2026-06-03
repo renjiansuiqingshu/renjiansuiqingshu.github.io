@@ -15,31 +15,23 @@
   L('1. 检查SDK加载');
   L('   typeof cloudbase = ' + typeof cloudbase);
   if (typeof cloudbase === 'undefined') {
-    L('   ❌ cloudbase全局变量不存在！SDK加载失败');
-    L('   请检查 cloudbase.full.js 文件是否存在');
+    L('   ❌ cloudbase全局变量不存在！');
     return;
   }
   L('   ✅ SDK加载成功');
-  L('   SDK方法: ' + Object.keys(cloudbase).join(', '));
 
-  L('\n2. 初始化SDK');
+  L('\n2. 初始化SDK (GATEWAY模式)');
   let app, auth, db;
   try {
     app = cloudbase.init({
       env: 'renjiansuiqingshu-d0d8b11638ca9a',
       region: 'ap-shanghai',
-      accessKey: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjlkMWRjMzFlLWI0ZDAtNDQ4Yi1hNzZmLWIwY2M2M2Q4MTQ5OCJ9.eyJpc3MiOiJodHRwczovL3JlbmppYW5zdWlxaW5nc2h1LWQwZDhiMTE2MzhjYTlhLmFwLXNoYW5naGFpLnRjYi1hcGkudGVuY2VudGNsb3VkYXBpLmNvbSIsInN1YiI6ImFub24iLCJhdWQiOiJyZW5qaWFuc3VpcWluZ3NodS1kMGQ4YjExNjM4Y2E5YSIsImV4cCI6NDA4MDY0NzYwNywiaWF0IjoxNzc2OTY0NDA3LCJub25jZSI6IjMxYTVIbUVoU1FDdGkzeHpxb2dRNEEiLCJhdF9oYXNoIjoiMzFhNUhtRWhTUUN0aTN4enFvZ1E0QSIsIm5hbWUiOiJBbm9ueW1vdXMiLCJzY29wZSI6ImFub255bW91cyIsInByb2plY3RfaWQiOiJyZW5qaWFuc3VpcWluZ3NodS1kMGQ4YjExNjM4Y2E5YSIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJ1c2VyX3R5cGUiOiIiLCJjbGllbnRfdHlwZSI6ImNsaWVudF91c2VyIiwiaXNfc3lzdGVtX2FkbWluIjpmYWxzZX0.fdgKvadnR3PQty2LBDYK_nu5RyBk43-2cEgV_yblPMydKGjvwMp1JL4IXmVp3Q_WzPlh7k2eiQd1V5jSHzYvFBbZXY2DMTVWft0mAxwV8bzwEv2-bHRkAPMnK2lHK96JHSRofFhh4Ra_eue5w1xvCAdOmNb9H664Gr4rEt1y9P_TOAYKQg74ojuYX45DUXSzIq9IJ0uv_s2YyXUPldJFa-0__vnQUToxfSppCqsBkRBke4oDRqcEmYaVIi2TL--zn1wNK3J41YbfMGkbyY63kLCcHyBBVjZ0_ZUrBeBSp9Tz0bTqb2OQshF2xBh02oG6LvZPBwxo0OxokTTc4PkbJg'
+      accessKey: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjlkMWRjMzFlLWI0ZDAtNDQ4Yi1hNzZmLWIwY2M2M2Q4MTQ5OCJ9.eyJpc3MiOiJodHRwczovL3JlbmppYW5zdWlxaW5nc2h1LWQwZDhiMTE2MzhjYTlhLmFwLXNoYW5naGFpLnRjYi1hcGkudGVuY2VudGNsb3VkYXBpLmNvbSIsInN1YiI6ImFub24iLCJhdWQiOiJyZW5qaWFuc3VpcWluZ3NodS1kMGQ4YjExNjM4Y2E5YSIsImV4cCI6NDA4MDY0NzYwNywiaWF0IjoxNzc2OTY0NDA3LCJub25jZSI6IjMxYTVIbUVoU1FDdGkzeHpxb2dRNEEiLCJhdF9oYXNoIjoiMzFhNUhtRWhTUUN0aTN4enFvZ1E0QSIsIm5hbWUiOiJBbm9ueW1vdXMiLCJzY29wZSI6ImFub255bW91cyIsInByb2plY3RfaWQiOiJyZW5qaWFuc3VpcWluZ3NodS1kMGQ4YjExNjM4Y2E5YSIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJ1c2VyX3R5cGUiOiIiLCJjbGllbnRfdHlwZSI6ImNsaWVudF91c2VyIiwiaXNfc3lzdGVtX2FkbWluIjpmYWxzZX0.fdgKvadnR3PQty2LBDYK_nu5RyBk43-2cEgV_yblPMydKGjvwMp1JL4IXmVp3Q_WzPlh7k2eiQd1V5jSHzYvFBbZXY2DMTVWft0mAxwV8bzwEv2-bHRkAPMnK2lHK96JHSRofFhh4Ra_eue5w1xvCAdOmNb9H664Gr4rEt1y9P_TOAYKQg74ojuYX45DUXSzIq9IJ0uv_s2YyXUPldJFa-0__vnQUToxfSppCqsBkRBke4oDRqcEmYaVIi2TL--zn1wNK3J41YbfMGkbyY63kLCcHyBBVjZ0_ZUrBeBSp9Tz0bTqb2OQshF2xBh02oG6LvZPBwxo0OxokTTc4PkbJg',
+      endPointMode: 'GATEWAY'
     });
     L('   ✅ cloudbase.init() 成功');
-    L('   app类型: ' + typeof app);
-    try {
-      L('   app方法: ' + Object.getOwnPropertyNames(Object.getPrototypeOf(app)).join(', ').substring(0, 200));
-    } catch(e) {
-      L('   (无法列举app方法)');
-    }
   } catch(err) {
     L('   ❌ init失败: ' + err.message);
-    L('   详细: ' + err.stack);
     return;
   }
 
@@ -47,7 +39,6 @@
   try {
     auth = app.auth();
     L('   ✅ app.auth() 成功');
-    L('   auth类型: ' + typeof auth);
   } catch(err) {
     L('   ❌ auth失败: ' + err.message);
     return;
@@ -57,18 +48,14 @@
   (async function() {
     try {
       var result = await auth.signInAnonymously();
-      L('   signInAnonymously返回: data=' + JSON.stringify(result?.data) + ', error=' + JSON.stringify(result?.error));
       if (result && result.error) {
         L('   ❌ 匿名登录返回错误: ' + result.error.message);
-        L('   错误码: ' + result.error.code);
         return;
       }
       var loginState = await auth.getLoginState();
       L('   ✅ 匿名登录成功!');
-      L('   loginState: ' + JSON.stringify(loginState ? {uid:loginState.uid, loginType:loginState.loginType} : null));
     } catch(err) {
       L('   ❌ 登录异常: ' + err.message);
-      L('   详细: ' + err.stack);
       return;
     }
 
@@ -76,8 +63,6 @@
     try {
       db = app.database();
       L('   ✅ database() 成功');
-      L('   db.serverDate类型: ' + typeof db.serverDate);
-      L('   db.command类型: ' + typeof db.command);
     } catch(err) {
       L('   ❌ database失败: ' + err.message);
       return;
@@ -91,38 +76,26 @@
       L('   ❌ 查询失败: ' + err.message);
     }
 
-    L('\n7. 写入测试（发一条测试帖）');
+    L('\n7. 写入测试');
     try {
       var testPost = {
         content: '[系统测试] 树洞功能测试 - 请忽略',
-        emoji: '☁️',
-        category: '随想',
-        imageUrl: null,
-        authorUid: null,
-        authorName: '系统测试员',
-        authorAvatar: null,
-        deviceId: 'e2e_test_' + Date.now(),
-        likes: 0,
-        commentCount: 0,
-        reportCount: 0,
-        createdAt: db.serverDate(),
-        status: 'test'
+        emoji: '☁️', category: '随想', imageUrl: null,
+        authorUid: null, authorName: '系统测试员', authorAvatar: null,
+        deviceId: 'e2e_test_' + Date.now(), likes: 0,
+        commentCount: 0, reportCount: 0,
+        createdAt: db.serverDate(), status: 'test'
       };
       var addRes = await db.collection('posts').add(testPost);
       L('   ✅ 写入成功! ID: ' + addRes.id);
-      // Clean up
-      try {
-        await db.collection('posts').doc(addRes.id).remove();
-        L('   ✅ 测试数据已清理');
-      } catch(e) {
-        L('   ⚠️ 清理失败（不影响功能）: ' + e.message);
-      }
+      try { await db.collection('posts').doc(addRes.id).remove(); L('   ✅ 测试数据已清理'); }
+      catch(e) { L('   ⚠️ 清理失败: ' + e.message); }
     } catch(err) {
       L('   ❌ 写入失败: ' + err.message);
     }
 
     L('\n===== 诊断完成 =====');
-    L('\n如果全部✅，说明树洞功能正常，请返回主站使用。');
+    L('\n如果全部✅，说明树洞功能正常！');
   })();
 })();
 </script>
