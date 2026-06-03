@@ -1,8 +1,9 @@
 // ===== 腾讯云开发配置 =====
-// 使用 CDN 全局变量 cloudbase，不再依赖 ESM
+// 使用 v2 SDK (CDN: static.cloudbase.net/cloudbase-js-sdk/2.28.6/cloudbase.full.js)
 let app, auth, db, _;
 
 const ENV_ID = 'renjiansuiqingshu-d0d8b11638ca9a';
+const REGION = 'ap-shanghai';
 const ACCESS_KEY = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjlkMWRjMzFlLWI0ZDAtNDQ4Yi1hNzZmLWIwY2M2M2Q4MTQ5OCJ9.eyJpc3MiOiJodHRwczovL3JlbmppYW5zdWlxaW5nc2h1LWQwZDhiMTE2MzhjYTlhLmFwLXNoYW5naGFpLnRjYi1hcGkudGVuY2VudGNsb3VkYXBpLmNvbSIsInN1YiI6ImFub24iLCJhdWQiOiJyZW5qaWFuc3VpcWluZ3NodS1kMGQ4YjExNjM4Y2E5YSIsImV4cCI6NDA4MDY0NzYwNywiaWF0IjoxNzc2OTY0NDA3LCJub25jZSI6IjMxYTVIbUVoU1FDdGkzeHpxb2dRNEEiLCJhdF9oYXNoIjoiMzFhNUhtRWhTUUN0aTN4enFvZ1E0QSIsIm5hbWUiOiJBbm9ueW1vdXMiLCJzY29wZSI6ImFub255bW91cyIsInByb2plY3RfaWQiOiJyZW5qaWFuc3VpcWluZ3NodS1kMGQ4YjExNjM4Y2E5YSIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJ1c2VyX3R5cGUiOiIiLCJjbGllbnRfdHlwZSI6ImNsaWVudF91c2VyIiwiaXNfc3lzdGVtX2FkbWluIjpmYWxzZX0.fdgKvadnR3PQty2LBDYK_nu5RyBk43-2cEgV_yblPMydKGjvwMp1JL4IXmVp3Q_WzPlh7k2eiQd1V5jSHzYvFBbZXY2DMTVWft0mAxwV8bzwEv2-bHRkAPMnK2lHK96JHSRofFhh4Ra_eue5w1xvCAdOmNb9H664Gr4rEt1y9P_TOAYKQg74ojuYX45DUXSzIq9IJ0uv_s2YyXUPldJFa-0__vnQUToxfSppCqsBkRBke4oDRqcEmYaVIi2TL--zn1wNK3J41YbfMGkbyY63kLCcHyBBVjZ0_ZUrBeBSp9Tz0bTqb2OQshF2xBh02oG6LvZPBwxo0OxokTTc4PkbJg';
 
 // ===== 全局状态 =====
@@ -90,6 +91,7 @@ async function initAuth() {
     state.currentUser = loginState;
     state.loginType = 'anonymous';
     updateUserUI();
+    console.log('✅ 匿名登录成功');
   } catch (err) {
     console.error('匿名登录失败:', err);
     toast('匿名登录失败: ' + (err.message || err.code || JSON.stringify(err)), 'error');
@@ -100,49 +102,29 @@ function updateUserUI() {
   if (state.currentUser && state.loginType !== 'anonymous') {
     $('#loginBtn').style.display = 'none';
     $('#userAvatar').style.display = 'flex';
-    $('#avatarImg').src = state.currentUser.userInfo?.avatarUrl || '';
-    $('#userName').textContent = state.currentUser.userInfo?.nickName || '用户';
   } else {
     $('#loginBtn').style.display = 'block';
     $('#userAvatar').style.display = 'none';
   }
 }
 
-// 微信登录
 $('#loginBtn').addEventListener('click', async () => {
-  try {
-    const authInstance = app.auth();
-    if (typeof authInstance.weixinAuthProvider === 'function') {
-      const provider = authInstance.weixinAuthProvider({
-        appid: 'wxYOUR_APPID',
-        scope: 'snsapi_userinfo'
-      });
-      await provider.signIn();
-      const loginState = await auth.getLoginState();
-      state.currentUser = loginState;
-      state.loginType = 'wechat';
-      updateUserUI();
-      checkAdmin(loginState.uid);
-      toast('登录成功！', 'success');
-      return;
-    }
-    toast('请使用微信扫码登录', 'info');
-  } catch (err) {
-    if (err.message !== 'user cancel') {
-      toast('登录失败：' + err.message, 'error');
-    }
-  }
+  toast('匿名模式下无需登录', 'info');
 });
 
 $('#logoutBtn').addEventListener('click', async () => {
-  await auth.signOut();
-  await auth.signInAnonymously();
-  state.currentUser = await auth.getLoginState();
-  state.loginType = 'anonymous';
-  state.isAdmin = false;
-  $('#adminBtn').style.display = 'none';
-  updateUserUI();
-  toast('已退出登录');
+  try {
+    await auth.signOut();
+    await auth.signInAnonymously();
+    state.currentUser = await auth.getLoginState();
+    state.loginType = 'anonymous';
+    state.isAdmin = false;
+    $('#adminBtn').style.display = 'none';
+    updateUserUI();
+    toast('已退出登录');
+  } catch(err) {
+    toast('操作失败', 'error');
+  }
 });
 
 async function checkAdmin(uid) {
@@ -170,16 +152,10 @@ $('#addImageBtn').addEventListener('click', () => $('#imageInput').click());
 $('#imageInput').addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (!file) return;
-  if (file.size > 5 * 1024 * 1024) {
-    toast('图片不能超过 5MB', 'error');
-    return;
-  }
+  if (file.size > 5 * 1024 * 1024) { toast('图片不能超过 5MB', 'error'); return; }
   state.selectedImage = file;
   const reader = new FileReader();
-  reader.onload = (ev) => {
-    $('#previewImg').src = ev.target.result;
-    $('#imageUploadArea').style.display = 'block';
-  };
+  reader.onload = (ev) => { $('#previewImg').src = ev.target.result; $('#imageUploadArea').style.display = 'block'; };
   reader.readAsDataURL(file);
 });
 
@@ -189,10 +165,7 @@ $('#removeImg').addEventListener('click', () => {
   $('#imageInput').value = '';
 });
 
-// ===== 字数统计 =====
-$('#secretInput').addEventListener('input', (e) => {
-  $('#charCount').textContent = e.target.value.length;
-});
+$('#secretInput').addEventListener('input', (e) => { $('#charCount').textContent = e.target.value.length; });
 
 // ===== 上传图片到云存储 =====
 async function uploadImage(file) {
@@ -202,67 +175,37 @@ async function uploadImage(file) {
     const result = await app.uploadFile({ cloudPath, filePath: file });
     const urlResult = await app.getTempFileURL({ fileList: [result.fileID] });
     return urlResult.fileList[0].tempFileURL || result.fileID;
-  } catch (err) {
-    console.error('图片上传失败:', err);
-    throw err;
-  }
+  } catch (err) { console.error('图片上传失败:', err); throw err; }
 }
 
 // ===== 发布秘密 =====
 $('#submitBtn').addEventListener('click', async () => {
   const content = $('#secretInput').value.trim();
-  if (!content && !state.selectedImage) {
-    toast('写点什么再投进树洞吧', 'error');
-    return;
-  }
-
+  if (!content && !state.selectedImage) { toast('写点什么再投进树洞吧', 'error'); return; }
   const btn = $('#submitBtn');
-  btn.disabled = true;
-  btn.textContent = '投递中...';
-
+  btn.disabled = true; btn.textContent = '投递中...';
   try {
     let imageUrl = null;
-    if (state.selectedImage) {
-      imageUrl = await uploadImage(state.selectedImage);
-    }
-
-    const deviceId = getDeviceId();
+    if (state.selectedImage) imageUrl = await uploadImage(state.selectedImage);
     const post = {
-      content: content || '(图片)',
-      emoji: state.selectedEmoji,
-      category: $('#categorySelect').value,
-      imageUrl: imageUrl || null,
-      authorUid: state.currentUser?.uid || null,
-      authorName: state.currentUser?.userInfo?.nickName || generateAnonName(),
-      authorAvatar: state.currentUser?.userInfo?.avatarUrl || null,
-      deviceId,
-      likes: 0,
-      commentCount: 0,
-      reportCount: 0,
-      createdAt: db.serverDate(),
-      status: 'active'
+      content: content || '(图片)', emoji: state.selectedEmoji,
+      category: $('#categorySelect').value, imageUrl: imageUrl || null,
+      authorUid: null, authorName: generateAnonName(), authorAvatar: null,
+      deviceId: getDeviceId(), likes: 0, commentCount: 0, reportCount: 0,
+      createdAt: db.serverDate(), status: 'active'
     };
-
     await db.collection('posts').add(post);
-
-    $('#secretInput').value = '';
-    $('#charCount').textContent = '0';
-    state.selectedImage = null;
-    $('#imageUploadArea').style.display = 'none';
-    $('#imageInput').value = '';
-
+    $('#secretInput').value = ''; $('#charCount').textContent = '0';
+    state.selectedImage = null; $('#imageUploadArea').style.display = 'none'; $('#imageInput').value = '';
     toast('秘密已投进树洞 🌳', 'success');
     loadPosts(true);
   } catch (err) {
-    console.error('投递失败详情:', err);
-    toast('投递失败：' + (err.message || err.code || JSON.stringify(err)), 'error');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '投进树洞 🌳';
-  }
+    console.error('投递失败:', err);
+    toast('投递失败：' + (err.message || JSON.stringify(err)), 'error');
+  } finally { btn.disabled = false; btn.textContent = '投进树洞 🌳'; }
 });
 
-// ===== 分类筛选 =====
+// ===== 分类/排序 =====
 $$('.cat-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     $$('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -271,8 +214,6 @@ $$('.cat-btn').forEach(btn => {
     loadPosts(true);
   });
 });
-
-// ===== 排序切换 =====
 $$('.sort-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     $$('.sort-btn').forEach(b => b.classList.remove('active'));
@@ -285,173 +226,85 @@ $$('.sort-btn').forEach(btn => {
 // ===== 加载帖子 =====
 async function loadPosts(reset = false) {
   if (reset) {
-    state.posts = [];
-    state.hasMore = true;
+    state.posts = []; state.hasMore = true;
     $('#postsList').innerHTML = '<div class="empty-state" id="emptyState" style="display:none"><div class="tree-icon">🌳</div><p>树洞还是空的，来说点什么吧</p></div>';
   }
-
   if (!state.hasMore) return;
-
   try {
     let query = db.collection('posts').where({ status: 'active' });
-
-    if (state.currentCategory !== '全部') {
-      query = query.where({ category: state.currentCategory });
-    }
-
-    const orderByField = state.currentSort === 'latest' ? 'createdAt' : 'likes';
-    query = query.orderBy(orderByField, 'desc');
-
-    if (state.posts.length > 0 && !reset) {
-      query = query.skip(state.posts.length);
-    }
-
+    if (state.currentCategory !== '全部') query = query.where({ category: state.currentCategory });
+    query = query.orderBy(state.currentSort === 'latest' ? 'createdAt' : 'likes', 'desc');
+    if (state.posts.length > 0 && !reset) query = query.skip(state.posts.length);
     query = query.limit(state.pageSize);
     const res = await query.get();
-
-    const emptyState = $('#emptyState');
-    if (res.data.length === 0 && state.posts.length === 0) {
-      if (emptyState) emptyState.style.display = 'block';
-      $('#loadMore').style.display = 'none';
-      return;
-    }
-
-    if (emptyState) emptyState.style.display = 'none';
-
-    res.data.forEach(post => {
-      state.posts.push(post);
-      renderPost(post);
-    });
-
+    const es = $('#emptyState');
+    if (res.data.length === 0 && state.posts.length === 0) { if(es) es.style.display='block'; $('#loadMore').style.display='none'; return; }
+    if(es) es.style.display='none';
+    res.data.forEach(post => { state.posts.push(post); renderPost(post); });
     state.hasMore = res.data.length === state.pageSize;
     $('#loadMore').style.display = state.hasMore ? 'block' : 'none';
-
-  } catch (err) {
-    console.error('加载失败:', err);
-    toast('加载失败，请刷新重试', 'error');
-  }
+  } catch (err) { console.error('加载失败:', err); toast('加载失败，请刷新重试', 'error'); }
 }
 
 function renderPost(post) {
   const card = document.createElement('div');
-  card.className = 'post-card';
-  card.dataset.id = post._id;
-
+  card.className = 'post-card'; card.dataset.id = post._id;
   const isLiked = state.likedPosts.has(post._id);
   const createdAt = post.createdAt ? new Date(post.createdAt) : new Date();
-
   card.innerHTML = `
-    <div class="post-header">
-      <div class="post-meta">
-        <span class="post-emoji">${post.emoji || '☁️'}</span>
-        <span>${post.authorName || '匿名'}</span>
-        <span class="post-category">${post.category || '随想'}</span>
-        <span class="post-time">${timeAgo(createdAt)}</span>
-      </div>
-    </div>
+    <div class="post-header"><div class="post-meta">
+      <span class="post-emoji">${post.emoji||'☁️'}</span><span>${post.authorName||'匿名'}</span>
+      <span class="post-category">${post.category||'随想'}</span><span class="post-time">${timeAgo(createdAt)}</span>
+    </div></div>
     <div class="post-content">${escapeHtml(post.content)}</div>
-    ${post.imageUrl ? `<div class="post-image"><img src="${post.imageUrl}" alt=""></div>` : ''}
+    ${post.imageUrl?`<div class="post-image"><img src="${post.imageUrl}" alt=""></div>`:''}
     <div class="post-actions">
-      <button class="post-action ${isLiked ? 'liked' : ''}" data-action="like" data-id="${post._id}">
-        <span class="icon">${isLiked ? '❤️' : '🤍'}</span>
-        <span>${post.likes || 0}</span>
-      </button>
-      <button class="post-action" data-action="comment" data-id="${post._id}">
-        <span class="icon">💬</span>
-        <span>${post.commentCount || 0}</span>
-      </button>
-      <button class="post-action" data-action="report" data-id="${post._id}">
-        <span class="icon">🚩</span>
-      </button>
-    </div>
-  `;
-
-  // 点赞
-  card.querySelector('[data-action="like"]').addEventListener('click', async (e) => {
+      <button class="post-action ${isLiked?'liked':''}" data-action="like" data-id="${post._id}"><span class="icon">${isLiked?'❤️':'🤍'}</span><span>${post.likes||0}</span></button>
+      <button class="post-action" data-action="comment" data-id="${post._id}"><span class="icon">💬</span><span>${post.commentCount||0}</span></button>
+      <button class="post-action" data-action="report" data-id="${post._id}"><span class="icon">🚩</span></button>
+    </div>`;
+  card.querySelector('[data-action="like"]').addEventListener('click', e => { e.stopPropagation(); toggleLike(post._id); });
+  card.querySelector('[data-action="comment"]').addEventListener('click', e => { e.stopPropagation(); showPostDetail(post._id); });
+  card.querySelector('[data-action="report"]').addEventListener('click', async e => {
     e.stopPropagation();
-    await toggleLike(post._id);
-  });
-
-  // 评论
-  card.querySelector('[data-action="comment"]').addEventListener('click', (e) => {
-    e.stopPropagation();
-    showPostDetail(post._id);
-  });
-
-  // 举报
-  card.querySelector('[data-action="report"]').addEventListener('click', async (e) => {
-    e.stopPropagation();
-    if (!confirm('确定举报此内容？')) return;
+    if (!confirm('确定举报？')) return;
     try {
-      await db.collection('reports').add({
-        postId: post._id,
-        deviceId: getDeviceId(),
-        status: 'pending',
-        createdAt: db.serverDate()
-      });
-      await db.collection('posts').doc(post._id).update({
-        reportCount: _.inc(1)
-      });
-      toast('已举报', 'success');
-    } catch (err) {
-      toast('举报失败', 'error');
-    }
+      await db.collection('reports').add({ postId:post._id, deviceId:getDeviceId(), status:'pending', createdAt:db.serverDate() });
+      await db.collection('posts').doc(post._id).update({ reportCount:_.inc(1) });
+      toast('已举报','success');
+    } catch(err) { toast('举报失败','error'); }
   });
-
-  // 点击卡片打开详情
   card.addEventListener('click', () => showPostDetail(post._id));
-
   $('#postsList').appendChild(card);
 }
 
-// ===== 点赞 =====
 async function toggleLike(postId) {
   const isLiked = state.likedPosts.has(postId);
   try {
-    if (isLiked) {
-      await db.collection('posts').doc(postId).update({ likes: _.inc(-1) });
-      state.likedPosts.delete(postId);
-    } else {
-      await db.collection('posts').doc(postId).update({ likes: _.inc(1) });
-      state.likedPosts.add(postId);
-    }
+    if (isLiked) { await db.collection('posts').doc(postId).update({likes:_.inc(-1)}); state.likedPosts.delete(postId); }
+    else { await db.collection('posts').doc(postId).update({likes:_.inc(1)}); state.likedPosts.add(postId); }
     localStorage.setItem('likedPosts', JSON.stringify([...state.likedPosts]));
     loadPosts(true);
-  } catch (err) {
-    toast('操作失败', 'error');
-  }
+  } catch(err) { toast('操作失败','error'); }
 }
 
-// ===== 详情弹窗 =====
 function showPostDetail(postId) {
-  const post = state.posts.find(p => p._id === postId);
+  const post = state.posts.find(p=>p._id===postId);
   if (!post) return;
-
   const createdAt = post.createdAt ? new Date(post.createdAt) : new Date();
   const isLiked = state.likedPosts.has(postId);
-
   const modalBody = $('#modalBody');
   modalBody.innerHTML = `
     <div class="modal-post">
-      <div class="post-header">
-        <div class="post-meta">
-          <span class="post-emoji">${post.emoji || '☁️'}</span>
-          <span>${post.authorName || '匿名'}</span>
-          <span class="post-category">${post.category || '随想'}</span>
-          <span class="post-time">${timeAgo(createdAt)}</span>
-        </div>
-      </div>
+      <div class="post-header"><div class="post-meta">
+        <span class="post-emoji">${post.emoji||'☁️'}</span><span>${post.authorName||'匿名'}</span>
+        <span class="post-category">${post.category||'随想'}</span><span class="post-time">${timeAgo(createdAt)}</span>
+      </div></div>
       <div class="post-content">${escapeHtml(post.content)}</div>
-      ${post.imageUrl ? `<div class="post-image"><img src="${post.imageUrl}" alt=""></div>` : ''}
+      ${post.imageUrl?`<div class="post-image"><img src="${post.imageUrl}" alt=""></div>`:''}
       <div class="post-actions">
-        <button class="post-action ${isLiked ? 'liked' : ''}" data-action="like" data-id="${postId}">
-          <span class="icon">${isLiked ? '❤️' : '🤍'}</span>
-          <span>${post.likes || 0}</span>
-        </button>
-        <button class="post-action" data-action="comment">
-          <span class="icon">💬</span>
-          <span>${post.commentCount || 0}</span>
-        </button>
+        <button class="post-action ${isLiked?'liked':''}" data-action="like" data-id="${postId}"><span class="icon">${isLiked?'❤️':'🤍'}</span><span>${post.likes||0}</span></button>
+        <button class="post-action" data-action="comment"><span class="icon">💬</span><span>${post.commentCount||0}</span></button>
       </div>
     </div>
     <div class="comments-section">
@@ -460,294 +313,108 @@ function showPostDetail(postId) {
         <input class="comment-input" id="commentInput" placeholder="说点什么..." maxlength="500">
         <button class="btn-comment" id="submitComment">发送</button>
       </div>
-      <div class="comments-list" id="commentsList">
-        <div style="text-align:center;color:var(--text-muted);padding:20px;">加载中...</div>
-      </div>
-    </div>
-  `;
-
-  // 点赞
+      <div class="comments-list" id="commentsList"><div style="text-align:center;color:var(--text-muted);padding:20px;">加载中...</div></div>
+    </div>`;
   const likeBtn = modalBody.querySelector('[data-action="like"]');
-  if (likeBtn) {
-    likeBtn.addEventListener('click', async () => {
-      await toggleLike(postId);
-      const res = await db.collection('posts').doc(postId).get();
-      const updated = res.data[0];
-      likeBtn.classList.toggle('liked');
-      likeBtn.querySelector('.icon').textContent = state.likedPosts.has(postId) ? '❤️' : '🤍';
-      likeBtn.querySelector('span:last-child').textContent = updated?.likes || 0;
-    });
-  }
-
-  // 提交评论
+  if (likeBtn) likeBtn.addEventListener('click', async () => {
+    await toggleLike(postId);
+    try { const r = await db.collection('posts').doc(postId).get(); const u = r.data[0]; likeBtn.classList.toggle('liked'); likeBtn.querySelector('.icon').textContent = state.likedPosts.has(postId)?'❤️':'🤍'; likeBtn.querySelector('span:last-child').textContent = u?.likes||0; } catch(e){}
+  });
   const submitComment = $('#submitComment');
   submitComment.addEventListener('click', async () => {
-    const text = $('#commentInput').value.trim();
-    if (!text) return;
+    const text = $('#commentInput').value.trim(); if (!text) return;
     submitComment.disabled = true;
     try {
-      await db.collection('comments').add({
-        postId,
-        content: text,
-        authorUid: state.currentUser?.uid || null,
-        authorName: state.currentUser?.userInfo?.nickName || generateAnonName(),
-        authorAvatar: state.currentUser?.userInfo?.avatarUrl || null,
-        deviceId: getDeviceId(),
-        createdAt: db.serverDate()
-      });
-      await db.collection('posts').doc(postId).update({ commentCount: _.inc(1) });
-      $('#commentInput').value = '';
-      toast('评论成功', 'success');
-      loadComments(postId);
-    } catch (err) {
-      toast('评论失败', 'error');
-    } finally {
-      submitComment.disabled = false;
-    }
+      await db.collection('comments').add({ postId, content:text, authorName:generateAnonName(), deviceId:getDeviceId(), createdAt:db.serverDate() });
+      await db.collection('posts').doc(postId).update({commentCount:_.inc(1)});
+      $('#commentInput').value=''; toast('评论成功','success'); loadComments(postId);
+    } catch(err) { toast('评论失败','error'); } finally { submitComment.disabled=false; }
   });
-
-  $('#commentInput').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      submitComment.click();
-    }
-  });
-
-  $('#postModal').style.display = 'flex';
-  loadComments(postId);
+  $('#commentInput').addEventListener('keydown', e => { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitComment.click();} });
+  $('#postModal').style.display = 'flex'; loadComments(postId);
 }
 
 async function loadComments(postId) {
   const list = $('#commentsList');
   try {
-    const res = await db.collection('comments')
-      .where({ postId })
-      .orderBy('createdAt', 'desc')
-      .limit(50)
-      .get();
-
-    if (res.data.length === 0) {
-      list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">暂无评论，来说点什么吧</div>';
-      return;
-    }
-
+    const res = await db.collection('comments').where({postId}).orderBy('createdAt','desc').limit(50).get();
+    if (!res.data.length) { list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">暂无评论</div>'; return; }
     list.innerHTML = '';
     res.data.forEach(c => {
       const time = c.createdAt ? timeAgo(new Date(c.createdAt)) : '';
       const isOwner = c.deviceId === getDeviceId();
-
-      const item = document.createElement('div');
-      item.className = 'comment-item';
-      item.innerHTML = `
-        <div class="comment-avatar">${c.authorAvatar ? `<img src="${c.authorAvatar}" style="width:100%;height:100%;border-radius:50%">` : '👤'}</div>
-        <div class="comment-body">
-          <div class="comment-author">${escapeHtml(c.authorName || '匿名')}</div>
-          <div class="comment-text">${escapeHtml(c.content)}</div>
-          <div class="comment-time">${time}</div>
-          <div class="comment-actions">
-            ${isOwner || state.isAdmin ? `<button class="comment-action-btn" data-cid="${c._id}" data-pid="${postId}">删除</button>` : ''}
-          </div>
-        </div>
-      `;
-
+      const item = document.createElement('div'); item.className = 'comment-item';
+      item.innerHTML = `<div class="comment-avatar">👤</div><div class="comment-body"><div class="comment-author">${escapeHtml(c.authorName||'匿名')}</div><div class="comment-text">${escapeHtml(c.content)}</div><div class="comment-time">${time}</div>${isOwner||state.isAdmin?`<div class="comment-actions"><button class="comment-action-btn" data-cid="${c._id}" data-pid="${postId}">删除</button></div>`:''}</div>`;
       const delBtn = item.querySelector('.comment-action-btn');
-      if (delBtn) {
-        delBtn.addEventListener('click', async () => {
-          if (!confirm('删除这条评论？')) return;
-          try {
-            await db.collection('comments').doc(c._id).remove();
-            await db.collection('posts').doc(postId).update({ commentCount: _.inc(-1) });
-            item.remove();
-            toast('评论已删除', 'success');
-          } catch (err) {
-            toast('删除失败', 'error');
-          }
-        });
-      }
-
+      if (delBtn) delBtn.addEventListener('click', async () => { if(!confirm('删除？'))return; try{await db.collection('comments').doc(c._id).remove();await db.collection('posts').doc(postId).update({commentCount:_.inc(-1)});item.remove();toast('已删除','success');}catch(err){toast('删除失败','error');} });
       list.appendChild(item);
     });
-  } catch (err) {
-    list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">加载评论失败</div>';
-  }
+  } catch(err) { list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">加载失败</div>'; }
 }
 
-// 关闭弹窗
-$('#modalClose').addEventListener('click', () => {
-  $('#postModal').style.display = 'none';
-});
-$('#postModal').addEventListener('click', (e) => {
-  if (e.target === $('#postModal')) {
-    $('#postModal').style.display = 'none';
-  }
-});
+$('#modalClose').addEventListener('click', () => { $('#postModal').style.display='none'; });
+$('#postModal').addEventListener('click', e => { if(e.target===$('#postModal')) $('#postModal').style.display='none'; });
 
 // ===== 管理后台 =====
-$('#adminBtn').addEventListener('click', () => {
-  $('#adminModal').style.display = 'flex';
-  loadAdminContent('reports');
-});
-
-$('#adminModalClose').addEventListener('click', () => {
-  $('#adminModal').style.display = 'none';
-});
-$('#adminModal').addEventListener('click', (e) => {
-  if (e.target === $('#adminModal')) {
-    $('#adminModal').style.display = 'none';
-  }
-});
-
-$$('.admin-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    $$('.admin-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    loadAdminContent(tab.dataset.tab);
-  });
-});
+$('#adminBtn').addEventListener('click', () => { $('#adminModal').style.display='flex'; loadAdminContent('reports'); });
+$('#adminModalClose').addEventListener('click', () => { $('#adminModal').style.display='none'; });
+$('#adminModal').addEventListener('click', e => { if(e.target===$('#adminModal')) $('#adminModal').style.display='none'; });
+$$('.admin-tab').forEach(tab => { tab.addEventListener('click', () => { $$('.admin-tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); loadAdminContent(tab.dataset.tab); }); });
 
 async function loadAdminContent(tab) {
-  const body = $('#adminBody');
-  body.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">加载中...</div>';
-
+  const body = $('#adminBody'); body.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">加载中...</div>';
   try {
     if (tab === 'reports') {
-      const res = await db.collection('reports')
-        .where({ status: 'pending' })
-        .orderBy('createdAt', 'desc')
-        .limit(50)
-        .get();
-
-      if (res.data.length === 0) {
-        body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted)">🎉 暂无待处理的举报</div>';
-        return;
-      }
-
+      const res = await db.collection('reports').where({status:'pending'}).orderBy('createdAt','desc').limit(50).get();
+      if (!res.data.length) { body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted)">🎉 暂无举报</div>'; return; }
       body.innerHTML = '';
       for (const report of res.data) {
         let postContent = '(已删除)';
-        let postData = null;
-        try {
-          const postRes = await db.collection('posts').doc(report.postId).get();
-          if (postRes.data.length > 0) {
-            postData = postRes.data[0];
-            postContent = postData.content?.substring(0, 100) || '(图片)';
-          }
-        } catch (e) {}
-
-        const item = document.createElement('div');
-        item.className = 'admin-item';
-        item.innerHTML = `
-          <div class="admin-item-header">
-            <span style="color:var(--accent);font-weight:600">🚩 举报</span>
-            <span style="color:var(--text-muted);font-size:12px">${report.createdAt ? timeAgo(new Date(report.createdAt)) : ''}</span>
-          </div>
-          <div class="admin-item-content">
-            <strong>被举报内容：</strong>${escapeHtml(postContent)}
-            ${postData?.imageUrl ? '<br><em>(含图片)</em>' : ''}
-          </div>
-          <div class="admin-item-actions">
-            <button class="admin-btn admin-btn-dismiss" data-id="${report._id}">忽略</button>
-            <button class="admin-btn admin-btn-delete" data-pid="${report.postId}" data-rid="${report._id}">删除内容</button>
-          </div>
-        `;
-
-        item.querySelector('.admin-btn-dismiss').addEventListener('click', async () => {
-          await db.collection('reports').doc(report._id).update({ status: 'dismissed' });
-          item.remove();
-          toast('已忽略', 'success');
-        });
-
-        item.querySelector('.admin-btn-delete').addEventListener('click', async () => {
-          if (!confirm('确定删除该内容？')) return;
-          await db.collection('posts').doc(report.postId).update({ status: 'deleted' });
-          await db.collection('reports').doc(report._id).update({ status: 'resolved' });
-          item.remove();
-          toast('内容已删除', 'success');
-          loadPosts(true);
-        });
-
+        try { const r = await db.collection('posts').doc(report.postId).get(); if(r.data.length>0) postContent = r.data[0].content?.substring(0,100)||'(图片)'; } catch(e){}
+        const item = document.createElement('div'); item.className = 'admin-item';
+        item.innerHTML = `<div class="admin-item-header"><span style="color:var(--accent)">🚩 举报</span><span style="color:var(--text-muted);font-size:12px">${report.createdAt?timeAgo(new Date(report.createdAt)):''}</span></div><div class="admin-item-content"><strong>内容：</strong>${escapeHtml(postContent)}</div><div class="admin-item-actions"><button class="admin-btn admin-btn-dismiss" data-id="${report._id}">忽略</button><button class="admin-btn admin-btn-delete" data-pid="${report.postId}" data-rid="${report._id}">删除</button></div>`;
+        item.querySelector('.admin-btn-dismiss').addEventListener('click', async () => { await db.collection('reports').doc(report._id).update({status:'dismissed'}); item.remove(); toast('已忽略','success'); });
+        item.querySelector('.admin-btn-delete').addEventListener('click', async () => { if(!confirm('确定删除？'))return; await db.collection('posts').doc(report.postId).update({status:'deleted'}); await db.collection('reports').doc(report._id).update({status:'resolved'}); item.remove(); toast('已删除','success'); loadPosts(true); });
         body.appendChild(item);
       }
-
     } else if (tab === 'posts') {
-      const res = await db.collection('posts')
-        .orderBy('createdAt', 'desc')
-        .limit(50)
-        .get();
-
+      const res = await db.collection('posts').orderBy('createdAt','desc').limit(50).get();
       body.innerHTML = '';
       res.data.forEach(post => {
-        if (post.status === 'deleted') return;
-
-        const item = document.createElement('div');
-        item.className = 'admin-item';
-        item.innerHTML = `
-          <div class="admin-item-header">
-            <span>${post.emoji || '☁️'} ${post.authorName || '匿名'}</span>
-            <span style="color:var(--text-muted);font-size:12px">
-              ❤️${post.likes || 0} 💬${post.commentCount || 0} ${post.reportCount ? '🚩' + post.reportCount : ''}
-            </span>
-          </div>
-          <div class="admin-item-content">${escapeHtml((post.content || '').substring(0, 150))}</div>
-          <div class="admin-item-actions">
-            <button class="admin-btn admin-btn-delete" data-pid="${post._id}">删除</button>
-          </div>
-        `;
-
-        item.querySelector('.admin-btn-delete').addEventListener('click', async () => {
-          if (!confirm('确定删除？')) return;
-          await db.collection('posts').doc(post._id).update({ status: 'deleted' });
-          item.remove();
-          toast('已删除', 'success');
-          loadPosts(true);
-        });
-
+        if(post.status==='deleted') return;
+        const item = document.createElement('div'); item.className = 'admin-item';
+        item.innerHTML = `<div class="admin-item-header"><span>${post.emoji||'☁️'} ${post.authorName||'匿名'}</span><span style="color:var(--text-muted);font-size:12px">❤️${post.likes||0} 💬${post.commentCount||0}</span></div><div class="admin-item-content">${escapeHtml((post.content||'').substring(0,150))}</div><div class="admin-item-actions"><button class="admin-btn admin-btn-delete" data-pid="${post._id}">删除</button></div>`;
+        item.querySelector('.admin-btn-delete').addEventListener('click', async () => { if(!confirm('确定删除？'))return; await db.collection('posts').doc(post._id).update({status:'deleted'}); item.remove(); toast('已删除','success'); loadPosts(true); });
         body.appendChild(item);
       });
     }
-  } catch (err) {
-    body.innerHTML = `<div style="text-align:center;padding:20px;color:#f44336">加载失败：${err.message}</div>`;
-  }
+  } catch(err) { body.innerHTML = `<div style="text-align:center;padding:20px;color:#f44336">加载失败</div>`; }
 }
 
-// ===== 加载更多 =====
 $('#loadMoreBtn').addEventListener('click', () => loadPosts(false));
 
-// ===== 统计更新 =====
 async function updateStats() {
   try {
-    const totalRes = await db.collection('posts').where({ status: 'active' }).count();
-    $('#totalCount').textContent = totalRes.total || 0;
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const todayRes = await db.collection('posts')
-      .where({ status: 'active', createdAt: _.gte(today) })
-      .count();
-    $('#todayCount').textContent = todayRes.total || 0;
-  } catch (err) {}
+    const totalRes = await db.collection('posts').where({status:'active'}).count();
+    $('#totalCount').textContent = totalRes.total||0;
+    const today = new Date(); today.setHours(0,0,0,0);
+    const todayRes = await db.collection('posts').where({status:'active',createdAt:_.gte(today)}).count();
+    $('#todayCount').textContent = todayRes.total||0;
+  } catch(err){}
 }
-
 setInterval(updateStats, 30000);
 
-// ===== 键盘快捷键 =====
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    $('#postModal').style.display = 'none';
-    $('#adminModal').style.display = 'none';
-  }
-});
+document.addEventListener('keydown', e => { if(e.key==='Escape'){$('#postModal').style.display='none';$('#adminModal').style.display='none';} });
 
 // ===== 初始化 =====
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
   try {
-    // 直接使用 CDN 加载的全局 cloudbase 对象
-    app = cloudbase.init({ env: ENV_ID, accessKey: ACCESS_KEY });
+    app = cloudbase.init({ env: ENV_ID, region: REGION, accessKey: ACCESS_KEY });
     auth = app.auth();
     db = app.database();
     _ = db.command;
-    console.log('✅ SDK 初始化成功');
+    console.log('✅ SDK初始化成功, app类型:', typeof app, 'auth类型:', typeof auth);
     await initAuth();
     loadPosts(true);
     updateStats();
