@@ -27,7 +27,6 @@
 
   <!-- 主内容 -->
   <main class="container">
-    <!-- 标题区 -->
     <header class="hero">
       <h1 class="title">人间碎情书</h1>
       <p class="subtitle">把秘密说给树洞听</p>
@@ -37,22 +36,17 @@
       </div>
     </header>
 
-    <!-- 发布区 -->
     <section class="compose-box">
       <div class="compose-inner">
         <textarea id="secretInput" placeholder="在这里写下你的秘密、心事、或者任何想说的话..." maxlength="2000"></textarea>
         <div class="char-count"><span id="charCount">0</span>/2000</div>
         <p class="privacy-hint">放心，没有人知道是你写的 😏</p>
-        
-        <!-- 图片上传 -->
         <div class="image-upload-area" id="imageUploadArea" style="display:none">
           <div class="image-preview" id="imagePreview">
             <img id="previewImg" src="" alt="">
             <button class="btn-remove-img" id="removeImg">✕</button>
           </div>
         </div>
-        
-        <!-- 表情选择 -->
         <div class="emoji-bar">
           <button class="emoji-btn selected" data-emoji="☁️">☁️</button>
           <button class="emoji-btn" data-emoji="💕">💕</button>
@@ -63,8 +57,6 @@
           <button class="emoji-btn" data-emoji="😢">😢</button>
           <button class="emoji-btn" data-emoji="😡">😡</button>
         </div>
-        
-        <!-- 操作栏 -->
         <div class="compose-actions">
           <div class="compose-left">
             <button class="btn-icon" id="addImageBtn" title="添加图片">🖼️</button>
@@ -83,7 +75,6 @@
       </div>
     </section>
 
-    <!-- 分类标签 -->
     <section class="category-bar">
       <button class="cat-btn active" data-cat="全部">全部</button>
       <button class="cat-btn" data-cat="随想">💭 随想</button>
@@ -94,13 +85,11 @@
       <button class="cat-btn" data-cat="开心">😄 开心</button>
     </section>
 
-    <!-- 排序 -->
     <section class="sort-bar">
       <button class="sort-btn active" data-sort="latest">🕐 最新</button>
       <button class="sort-btn" data-sort="hot">🔥 热门</button>
     </section>
 
-    <!-- 内容列表 -->
     <section class="posts-list" id="postsList">
       <div class="empty-state" id="emptyState">
         <div class="tree-icon">🌳</div>
@@ -108,13 +97,11 @@
       </div>
     </section>
 
-    <!-- 加载更多 -->
     <div class="load-more" id="loadMore" style="display:none">
       <button class="btn-load-more" id="loadMoreBtn">加载更多</button>
     </div>
   </main>
 
-  <!-- 详情弹窗 -->
   <div class="modal-overlay" id="postModal" style="display:none">
     <div class="modal-content">
       <button class="modal-close" id="modalClose">✕</button>
@@ -122,7 +109,6 @@
     </div>
   </div>
 
-  <!-- 管理后台弹窗 -->
   <div class="modal-overlay" id="adminModal" style="display:none">
     <div class="modal-content modal-large">
       <button class="modal-close" id="adminModalClose">✕</button>
@@ -135,11 +121,10 @@
     </div>
   </div>
 
-  <!-- Toast 提示 -->
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- 腾讯云开发 SDK（直接CDN加载，不使用ESM） -->
-  <script src="https://unpkg.com/@cloudbase/js-sdk@1.9.0/dist/cloudbase.full.js"></script>
-  <script src="app.js?v=2026060301"></script>
+  <!-- 腾讯云开发 SDK（官方CDN v2） -->
+  <script src="https://static.cloudbase.net/cloudbase-js-sdk/2.28.6/cloudbase.full.js"></script>
+  <script src="app.js?v=2026060302"></script>
 </body>
 </html>
