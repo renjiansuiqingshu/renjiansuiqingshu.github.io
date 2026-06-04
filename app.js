@@ -473,9 +473,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (err) {
     console.error('❌ 初始化失败:', err);
     toast('初始化失败: ' + err.message, 'error');
-  } finally {
-    // 猫不依赖后端，无论初始化成功与否都要启动
-    initCatPet();
   }
 });
 
@@ -651,4 +648,11 @@ function initCatPet() {
     say('喵~');
     scheduleNext();
   }, 1500);
+}
+
+// 猫不依赖任何异步初始化，直接调用
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => setTimeout(initCatPet, 100));
+} else {
+  setTimeout(initCatPet, 100);
 }
