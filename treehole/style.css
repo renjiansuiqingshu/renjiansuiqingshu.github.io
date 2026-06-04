@@ -870,327 +870,100 @@ body {
   user-select: none;
   -webkit-user-select: none;
   transition: none;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.12));
 }
 
-.cat-body-wrap {
-  position: relative;
-  width: 60px;
+.cat-sprite {
+  width: 56px;
   height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
 }
 
-.cat-shadow {
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 44px;
-  height: 8px;
-  background: rgba(0,0,0,0.08);
-  border-radius: 50%;
-  transition: all 0.3s;
-}
-[data-theme="dark"] .cat-shadow { background: rgba(0,0,0,0.25); }
-
-.cat-body {
-  position: relative;
+/* 用SVG内联绘制布偶猫 - 通过JS动态设置 */
+.cat-sprite svg {
   width: 100%;
   height: 100%;
 }
 
-/* 身体 */
-.cat-torso {
-  position: absolute;
-  bottom: 6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 32px;
-  height: 24px;
-  background: #F5E6D3;
-  border-radius: 14px 14px 10px 10px;
-  border: 1.5px solid rgba(0,0,0,0.06);
-}
-
-/* 头 */
-.cat-head {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 34px;
-  height: 28px;
-  background: #FAF0E6;
-  border-radius: 14px 14px 12px 12px;
-  border: 1.5px solid rgba(0,0,0,0.06);
-  z-index: 2;
-  transition: transform 0.2s;
-}
-
-/* 布偶猫面罩 - 脸部深色区域 */
-.cat-face-mask {
-  position: absolute;
-  top: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 18px;
-  height: 14px;
-  background: #C4A882;
-  border-radius: 9px 9px 8px 8px;
-  opacity: 0.5;
-}
-
-/* 耳朵 */
-.cat-ear {
-  position: absolute;
-  top: -8px;
-  width: 12px;
-  height: 12px;
-  background: #C4A882;
-  border-radius: 2px 8px 0 0;
-  border: 1.5px solid rgba(0,0,0,0.06);
-  z-index: 1;
-}
-.cat-ear::after {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 2px;
-  width: 7px;
-  height: 7px;
-  background: #F0C8C8;
-  border-radius: 1px 5px 0 0;
-  opacity: 0.6;
-}
-.cat-ear-l { left: 1px; transform: rotate(-8deg); }
-.cat-ear-r { right: 1px; transform: rotate(8deg); }
-
-/* 眼睛 - 蓝色 */
-.cat-eye {
-  position: absolute;
-  top: 10px;
-  width: 7px;
-  height: 7px;
-  background: #6B9FD4;
-  border-radius: 50%;
-  border: 1px solid rgba(0,0,0,0.08);
-  overflow: hidden;
-  transition: all 0.3s;
-}
-.cat-eye-l { left: 6px; }
-.cat-eye-r { right: 6px; }
-
-.cat-pupil {
-  width: 3px;
-  height: 3px;
-  background: #1A1A2E;
-  border-radius: 50%;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  transition: all 0.15s;
-}
-
-/* 鼻子 */
-.cat-nose {
-  position: absolute;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 3px;
-  background: #E8A0A0;
-  border-radius: 50% 50% 40% 40%;
-}
-
-/* 嘴 */
-.cat-mouth {
-  position: absolute;
-  top: 19px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 8px;
-  height: 4px;
-  border-bottom: 1.5px solid rgba(0,0,0,0.12);
-  border-radius: 0 0 50% 50%;
-}
-
-/* 胡须 */
-.cat-whisker {
-  position: absolute;
-  top: 17px;
-  width: 14px;
-  height: 1px;
-  background: rgba(0,0,0,0.1);
-}
-.cat-whisker::before,
-.cat-whisker::after {
-  content: '';
-  position: absolute;
-  width: 14px;
-  height: 1px;
-  background: rgba(0,0,0,0.1);
-}
-.cat-whisker-l {
-  right: 28px;
-  transform: rotate(-5deg);
-}
-.cat-whisker-l::before { top: -4px; transform: rotate(8deg); }
-.cat-whisker-l::after { top: 4px; transform: rotate(-8deg); }
-.cat-whisker-r {
-  left: 28px;
-  transform: rotate(5deg);
-}
-.cat-whisker-r::before { top: -4px; transform: rotate(-8deg); }
-.cat-whisker-r::after { top: 4px; transform: rotate(8deg); }
-
-/* 爪子 */
-.cat-paw {
-  position: absolute;
-  bottom: 2px;
-  width: 8px;
-  height: 6px;
-  background: #FAF0E6;
-  border-radius: 4px 4px 3px 3px;
-  border: 1px solid rgba(0,0,0,0.04);
-  z-index: 1;
-}
-.cat-paw-fl { left: 10px; }
-.cat-paw-fr { right: 10px; }
-.cat-paw-bl { left: 14px; bottom: 0; }
-.cat-paw-br { right: 14px; bottom: 0; }
-
-/* 尾巴 */
-.cat-tail {
-  position: absolute;
-  bottom: 8px;
-  right: -10px;
-  width: 20px;
-  height: 8px;
-  background: #C4A882;
-  border-radius: 0 8px 8px 0;
-  border: 1px solid rgba(0,0,0,0.04);
-  transform-origin: left center;
-  animation: tailSwing 2.5s ease-in-out infinite;
-}
-
-@keyframes tailSwing {
-  0%, 100% { transform: rotate(-10deg); }
-  50% { transform: rotate(15deg); }
-}
-
 /* === 状态：走路 === */
-.cat-pet[data-state="walk-left"] .cat-body-wrap { transform: scaleX(1); }
-.cat-pet[data-state="walk-right"] .cat-body-wrap { transform: scaleX(-1); }
-
-.cat-pet[data-state="walk-left"] .cat-paw-fl,
-.cat-pet[data-state="walk-left"] .cat-paw-br,
-.cat-pet[data-state="walk-right"] .cat-paw-fl,
-.cat-pet[data-state="walk-right"] .cat-paw-br {
-  animation: pawStep 0.35s ease-in-out infinite alternate;
-}
-.cat-pet[data-state="walk-left"] .cat-paw-fr,
-.cat-pet[data-state="walk-left"] .cat-paw-bl,
-.cat-pet[data-state="walk-right"] .cat-paw-fr,
-.cat-pet[data-state="walk-right"] .cat-paw-bl {
-  animation: pawStep 0.35s ease-in-out infinite alternate-reverse;
+.cat-pet[data-state="walk-left"] .cat-sprite { transform: scaleX(1); }
+.cat-pet[data-state="walk-right"] .cat-sprite { transform: scaleX(-1); }
+.cat-pet[data-state="walk-left"] .cat-sprite,
+.cat-pet[data-state="walk-right"] .cat-sprite {
+  animation: catWalk 0.3s ease-in-out infinite alternate;
 }
 
-.cat-pet[data-state="walk-left"] .cat-head,
-.cat-pet[data-state="walk-right"] .cat-head {
-  animation: headBob 0.35s ease-in-out infinite alternate;
-}
-
-@keyframes pawStep {
+@keyframes catWalk {
   from { transform: translateY(0); }
   to { transform: translateY(-3px); }
 }
-
-@keyframes headBob {
-  from { transform: translateX(-50%) translateY(0); }
-  to { transform: translateX(-50%) translateY(-1px); }
+.cat-pet[data-state="walk-right"] {
+  animation: catWalk 0.3s ease-in-out infinite alternate;
 }
 
 /* === 状态：坐下 === */
-.cat-pet[data-state="sit"] .cat-torso {
-  height: 22px;
-  border-radius: 12px 12px 8px 8px;
+.cat-pet[data-state="sit"] .cat-sprite {
+  animation: catBreathe 3s ease-in-out infinite;
 }
-.cat-pet[data-state="sit"] .cat-paw-fl,
-.cat-pet[data-state="sit"] .cat-paw-fr {
-  bottom: 4px;
-}
-.cat-pet[data-state="sit"] .cat-paw-bl,
-.cat-pet[data-state="sit"] .cat-paw-br {
-  opacity: 0;
+
+@keyframes catBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
 }
 
 /* === 状态：睡觉 === */
-.cat-pet[data-state="sleep"] .cat-eye { height: 2px; top: 13px; border-radius: 2px; }
-.cat-pet[data-state="sleep"] .cat-pupil { display: none; }
-.cat-pet[data-state="sleep"] .cat-body-wrap { transform: scale(0.95); }
-.cat-pet[data-state="sleep"] .cat-torso {
-  height: 18px;
-  border-radius: 12px 12px 6px 6px;
-}
-.cat-pet[data-state="sleep"] .cat-paw-bl,
-.cat-pet[data-state="sleep"] .cat-paw-br { opacity: 0; }
-.cat-pet[data-state="sleep"] .cat-tail { animation: tailSleep 4s ease-in-out infinite; }
-
-@keyframes tailSleep {
-  0%, 100% { transform: rotate(-5deg); }
-  50% { transform: rotate(5deg); }
+.cat-pet[data-state="sleep"] .cat-sprite {
+  animation: catBreathe 4s ease-in-out infinite;
+  filter: brightness(0.9);
 }
 
 /* Zzz 气泡 */
-.cat-pet[data-state="sleep"]::after {
+.cat-pet[data-state="sleep"]::before {
   content: 'z z z';
   position: absolute;
-  top: -18px;
-  right: -8px;
-  font-size: 10px;
+  top: -14px;
+  right: -6px;
+  font-size: 11px;
   color: var(--primary);
   opacity: 0.5;
   animation: zzFloat 2s ease-in-out infinite;
   font-family: var(--font-s);
   letter-spacing: 2px;
+  pointer-events: none;
 }
 
 @keyframes zzFloat {
   0%, 100% { transform: translateY(0); opacity: 0.3; }
-  50% { transform: translateY(-6px); opacity: 0.6; }
+  50% { transform: translateY(-8px); opacity: 0.7; }
 }
 
-/* === 状态：清洗/舔毛 === */
-.cat-pet[data-state="groom"] .cat-paw-fl {
-  animation: groomPaw 0.4s ease-in-out infinite alternate;
-  transform-origin: bottom center;
-}
-.cat-pet[data-state="groom"] .cat-head {
-  animation: groomHead 0.4s ease-in-out infinite alternate;
+/* === 状态：舔毛 === */
+.cat-pet[data-state="groom"] .cat-sprite {
+  animation: catGroom 0.5s ease-in-out infinite alternate;
 }
 
-@keyframes groomPaw {
-  from { transform: rotate(0); }
-  to { transform: rotate(-20deg) translateY(-4px); }
-}
-@keyframes groomHead {
-  from { transform: translateX(-50%) rotate(0); }
-  to { transform: translateX(-50%) rotate(-5deg); }
+@keyframes catGroom {
+  from { transform: rotate(-3deg); }
+  to { transform: rotate(3deg); }
 }
 
 /* 说话气泡 */
 .cat-speech {
   position: absolute;
-  top: -30px;
+  top: -32px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--card);
   color: var(--text-2);
-  padding: 4px 10px;
-  border-radius: 10px;
-  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 12px;
   font-family: var(--font-s);
   white-space: nowrap;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   border: 1px solid var(--border);
   animation: speechPop 0.3s ease;
   pointer-events: none;
@@ -1211,27 +984,32 @@ body {
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-/* 眨眼动画 */
-.cat-pet .cat-eye {
-  animation: blink 4s ease-in-out infinite;
-}
-
-@keyframes blink {
-  0%, 92%, 100% { transform: scaleY(1); }
-  95% { transform: scaleY(0.1); }
-}
-
 /* 点击跳跃 */
-.cat-pet.jumping .cat-body-wrap {
-  animation: catJump 0.4s ease;
+.cat-pet.jumping .cat-sprite {
+  animation: catJump 0.4s ease !important;
 }
 @keyframes catJump {
-  0% { transform: translateY(0); }
-  40% { transform: translateY(-14px); }
-  100% { transform: translateY(0); }
+  0% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-16px) scale(1.1); }
+  100% { transform: translateY(0) scale(1); }
 }
+
+/* 猫影 */
+.cat-pet::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 6px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 50%;
+  pointer-events: none;
+}
+[data-theme="dark"] .cat-pet::after { background: rgba(0,0,0,0.2); }
 
 /* 响应式 - 移动端猫稍小 */
 @media (max-width: 480px) {
-  .cat-body-wrap { transform: scale(0.85); transform-origin: bottom center; }
+  .cat-sprite { width: 44px; height: 44px; }
 }
