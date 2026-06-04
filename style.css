@@ -861,3 +861,155 @@ body {
   
   .modal-sheet { padding: 12px 18px 24px; }
 }
+
+/* ===== 布偶猫虚拟宠物 ===== */
+.cat-pet {
+  position: fixed;
+  z-index: 90;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: none;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.12));
+}
+
+.cat-sprite {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+/* 用SVG内联绘制布偶猫 - 通过JS动态设置 */
+.cat-sprite svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* === 状态：走路 === */
+.cat-pet[data-state="walk-left"] .cat-sprite { transform: scaleX(1); }
+.cat-pet[data-state="walk-right"] .cat-sprite { transform: scaleX(-1); }
+.cat-pet[data-state="walk-left"] .cat-sprite,
+.cat-pet[data-state="walk-right"] .cat-sprite {
+  animation: catWalk 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes catWalk {
+  from { transform: translateY(0); }
+  to { transform: translateY(-3px); }
+}
+.cat-pet[data-state="walk-right"] {
+  animation: catWalk 0.3s ease-in-out infinite alternate;
+}
+
+/* === 状态：坐下 === */
+.cat-pet[data-state="sit"] .cat-sprite {
+  animation: catBreathe 3s ease-in-out infinite;
+}
+
+@keyframes catBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+/* === 状态：睡觉 === */
+.cat-pet[data-state="sleep"] .cat-sprite {
+  animation: catBreathe 4s ease-in-out infinite;
+  filter: brightness(0.9);
+}
+
+/* Zzz 气泡 */
+.cat-pet[data-state="sleep"]::before {
+  content: 'z z z';
+  position: absolute;
+  top: -14px;
+  right: -6px;
+  font-size: 11px;
+  color: var(--primary);
+  opacity: 0.5;
+  animation: zzFloat 2s ease-in-out infinite;
+  font-family: var(--font-s);
+  letter-spacing: 2px;
+  pointer-events: none;
+}
+
+@keyframes zzFloat {
+  0%, 100% { transform: translateY(0); opacity: 0.3; }
+  50% { transform: translateY(-8px); opacity: 0.7; }
+}
+
+/* === 状态：舔毛 === */
+.cat-pet[data-state="groom"] .cat-sprite {
+  animation: catGroom 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes catGroom {
+  from { transform: rotate(-3deg); }
+  to { transform: rotate(3deg); }
+}
+
+/* 说话气泡 */
+.cat-speech {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card);
+  color: var(--text-2);
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-family: var(--font-s);
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+  animation: speechPop 0.3s ease;
+  pointer-events: none;
+}
+.cat-speech::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--card);
+}
+
+@keyframes speechPop {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* 点击跳跃 */
+.cat-pet.jumping .cat-sprite {
+  animation: catJump 0.4s ease !important;
+}
+@keyframes catJump {
+  0% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-16px) scale(1.1); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* 猫影 */
+.cat-pet::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 6px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 50%;
+  pointer-events: none;
+}
+[data-theme="dark"] .cat-pet::after { background: rgba(0,0,0,0.2); }
+
+/* 响应式 - 移动端猫稍小 */
+@media (max-width: 480px) {
+  .cat-sprite { width: 44px; height: 44px; }
+}
