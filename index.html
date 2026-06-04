@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>人间碎情书 · 树洞</title>
-  <link rel="stylesheet" href="style.css?v=202606042">
+  <link rel="stylesheet" href="style.css?v=202606043">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -33,28 +33,53 @@
 
   <main class="page">
 
-    <!-- 问候区 -->
-    <section class="greeting-section">
-      <div class="greeting-left">
-        <h1 class="greeting-title">树洞</h1>
-        <p class="greeting-sub">把心事说给风听，风会替你保管</p>
-      </div>
-      <div class="greeting-stats">
-        <div class="stat-card">
-          <span class="stat-num" id="totalCount">0</span>
-          <span class="stat-label">封信</span>
-        </div>
-        <div class="stat-card stat-card-alt">
-          <span class="stat-num" id="todayCount">0</span>
-          <span class="stat-label">今日</span>
-        </div>
-      </div>
-    </section>
+    <!-- 仪表盘网格布局 -->
+    <div class="dashboard-grid">
 
-    <!-- 投递区 -->
-    <section class="compose-section">
-      <div class="compose-card">
-        <textarea id="secretInput" placeholder="写一封不会被拆开的信..." maxlength="2000" rows="4"></textarea>
+      <!-- Row 1 左：品牌/问候 -->
+      <div class="dash-card dash-brand">
+        <div class="brand-visual">
+          <div class="brand-icon">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <path d="M24 6C17.373 6 12 11.373 12 18c0 4.5 2 8 5.5 10.5L24 42l6.5-13.5C34 26 36 22.5 36 18c0-6.627-5.373-12-12-12z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.3"/>
+              <path d="M24 14c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            </svg>
+          </div>
+          <h1 class="brand-title">树洞</h1>
+          <p class="brand-sub">把心事说给风听<br>风会替你保管</p>
+        </div>
+      </div>
+
+      <!-- Row 1 右：数据面板 -->
+      <div class="dash-card dash-stats">
+        <div class="stats-grid">
+          <div class="stat-block">
+            <span class="stat-num" id="totalCount">0</span>
+            <span class="stat-label">封信</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-num" id="todayCount">0</span>
+            <span class="stat-label">今日</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-num" id="weekCount">—</span>
+            <span class="stat-label">本周</span>
+          </div>
+        </div>
+        <div class="stats-footer">
+          <span class="stats-hint">每一封信都值得被温柔以待</span>
+        </div>
+      </div>
+
+      <!-- Row 2 左：投递区 -->
+      <div class="dash-card dash-compose">
+        <div class="compose-header">
+          <span class="compose-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 2L11 13"/><path d="m22 2-7 20-4-9-9-4z"/></svg>
+            写一封不会被拆开的信
+          </span>
+        </div>
+        <textarea id="secretInput" placeholder="此刻你在想什么..." maxlength="2000" rows="5"></textarea>
         <div class="image-upload-area" id="imageUploadArea" style="display:none">
           <div class="image-preview" id="imagePreview">
             <img id="previewImg" src="" alt="">
@@ -85,24 +110,31 @@
           </button>
         </div>
       </div>
-    </section>
 
-    <!-- 筛选栏 -->
-    <section class="filter-section">
-      <div class="filter-scroll">
-        <button class="filter-chip active" data-cat="全部">全部</button>
-        <button class="filter-chip" data-cat="随想">💭 随想</button>
-        <button class="filter-chip" data-cat="心动">💗 心动</button>
-        <button class="filter-chip" data-cat="难过">😢 难过</button>
-        <button class="filter-chip" data-cat="愤怒">😡 愤怒</button>
-        <button class="filter-chip" data-cat="深夜">🌙 深夜</button>
-        <button class="filter-chip" data-cat="开心">😄 开心</button>
+      <!-- Row 2 右：筛选/排序 -->
+      <div class="dash-card dash-filter">
+        <div class="filter-group">
+          <span class="filter-label">分类</span>
+          <div class="filter-chips">
+            <button class="filter-chip active" data-cat="全部">全部</button>
+            <button class="filter-chip" data-cat="随想">💭 随想</button>
+            <button class="filter-chip" data-cat="心动">💗 心动</button>
+            <button class="filter-chip" data-cat="难过">😢 难过</button>
+            <button class="filter-chip" data-cat="愤怒">😡 愤怒</button>
+            <button class="filter-chip" data-cat="深夜">🌙 深夜</button>
+            <button class="filter-chip" data-cat="开心">😄 开心</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">排序</span>
+          <div class="sort-chips">
+            <button class="sort-chip active" data-sort="latest">最新</button>
+            <button class="sort-chip" data-sort="hot">热门</button>
+          </div>
+        </div>
       </div>
-      <div class="sort-group">
-        <button class="sort-chip active" data-sort="latest">最新</button>
-        <button class="sort-chip" data-sort="hot">热门</button>
-      </div>
-    </section>
+
+    </div><!-- /dashboard-grid -->
 
     <!-- 信件列表 -->
     <section class="posts-section">
@@ -154,6 +186,6 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <script src="cloudbase.full.js"></script>
-  <script src="app.js?v=202606042"></script>
+  <script src="app.js?v=202606043"></script>
 </body>
 </html>
