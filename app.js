@@ -470,6 +470,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await initAuth();
     loadPosts(true);
     updateStats();
+    initCatPet();
   } catch (err) {
     console.error('❌ 初始化失败:', err);
     toast('初始化失败: ' + err.message, 'error');
@@ -477,85 +478,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // ===== 布偶猫虚拟宠物 =====
-(function() {
-  // 延迟初始化，确保DOM完全渲染
-  setTimeout(function initCat() {
-    const cat = document.getElementById('catPet');
-    const sprite = document.getElementById('catSprite');
-    const speech = document.getElementById('catSpeech');
-    if (!cat || !sprite) { console.warn('🐱 猫元素未找到，500ms后重试'); setTimeout(initCat, 500); return; }
+function initCatPet() {
+  const cat = document.getElementById('catPet');
+  const sprite = document.getElementById('catSprite');
+  const speech = document.getElementById('catSpeech');
+  if (!cat || !sprite) { console.warn('🐱 猫元素未找到'); return; }
+  console.log('🐱 初始化布偶猫...');
 
   // 布偶猫SVG - 坐姿/站立
   const catSVGs = {
-    sit: `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-      <!-- 尾巴 -->
-      <path d="M48 42 Q56 38 54 30" stroke="#C4A882" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      <!-- 身体 -->
-      <ellipse cx="32" cy="44" rx="16" ry="13" fill="#F5E6D3"/>
-      <ellipse cx="32" cy="44" rx="16" ry="13" fill="url(#bodyShade)" opacity="0.15"/>
-      <!-- 前爪 -->
-      <ellipse cx="24" cy="53" rx="5" ry="3.5" fill="#FAF0E6"/>
-      <ellipse cx="40" cy="53" rx="5" ry="3.5" fill="#FAF0E6"/>
-      <!-- 头 -->
-      <ellipse cx="32" cy="26" rx="16" ry="14" fill="#FAF0E6"/>
-      <!-- 面罩 -->
-      <path d="M24 22 Q32 16 40 22 Q38 28 32 30 Q26 28 24 22" fill="#C4A882" opacity="0.45"/>
-      <!-- 耳朵 -->
-      <path d="M18 16 L14 4 L24 13 Z" fill="#C4A882"/>
-      <path d="M46 16 L50 4 L40 13 Z" fill="#C4A882"/>
-      <path d="M19 14 L16 7 L23 12 Z" fill="#F0C8C8" opacity="0.5"/>
-      <path d="M45 14 L48 7 L41 12 Z" fill="#F0C8C8" opacity="0.5"/>
-      <!-- 眼睛 -->
-      <ellipse cx="26" cy="24" rx="3.5" ry="4" fill="#6B9FD4"/>
-      <ellipse cx="38" cy="24" rx="3.5" ry="4" fill="#6B9FD4"/>
-      <ellipse cx="26" cy="24" rx="1.8" ry="2.2" fill="#1A1A2E"/>
-      <ellipse cx="38" cy="24" rx="1.8" ry="2.2" fill="#1A1A2E"/>
-      <circle cx="25" cy="22.5" r="0.8" fill="white" opacity="0.7"/>
-      <circle cx="37" cy="22.5" r="0.8" fill="white" opacity="0.7"/>
-      <!-- 鼻子 -->
-      <path d="M31 28.5 L32 29.5 L33 28.5" stroke="#E8A0A0" stroke-width="1" fill="none"/>
-      <!-- 嘴 -->
-      <path d="M29 30.5 Q32 32.5 35 30.5" stroke="#D4A0A0" stroke-width="0.8" fill="none"/>
-      <!-- 胡须 -->
-      <line x1="12" y1="26" x2="22" y2="28" stroke="#C0B0A0" stroke-width="0.5"/>
-      <line x1="12" y1="29" x2="22" y2="29" stroke="#C0B0A0" stroke-width="0.5"/>
-      <line x1="12" y1="32" x2="22" y2="30" stroke="#C0B0A0" stroke-width="0.5"/>
-      <line x1="52" y1="26" x2="42" y2="28" stroke="#C0B0A0" stroke-width="0.5"/>
-      <line x1="52" y1="29" x2="42" y2="29" stroke="#C0B0A0" stroke-width="0.5"/>
-      <line x1="52" y1="32" x2="42" y2="30" stroke="#C0B0A0" stroke-width="0.5"/>
-      <defs>
-        <radialGradient id="bodyShade" cx="0.5" cy="0.3" r="0.7">
-          <stop offset="0%" stop-color="transparent"/>
-          <stop offset="100%" stop-color="#000"/>
-        </radialGradient>
-      </defs>
-    </svg>`,
-    sleep: `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-      <!-- 尾巴 -->
-      <path d="M48 44 Q54 42 52 36" stroke="#C4A882" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      <!-- 身体 - 趴着 -->
-      <ellipse cx="32" cy="46" rx="18" ry="10" fill="#F5E6D3"/>
-      <!-- 前爪 -->
-      <ellipse cx="22" cy="52" rx="4.5" ry="3" fill="#FAF0E6"/>
-      <ellipse cx="42" cy="52" rx="4.5" ry="3" fill="#FAF0E6"/>
-      <!-- 头 -->
-      <ellipse cx="32" cy="32" rx="15" ry="13" fill="#FAF0E6"/>
-      <!-- 面罩 -->
-      <path d="M24 28 Q32 22 40 28 Q38 34 32 36 Q26 34 24 28" fill="#C4A882" opacity="0.45"/>
-      <!-- 耳朵 -->
-      <path d="M19 22 L15 10 L25 19 Z" fill="#C4A882"/>
-      <path d="M45 22 L49 10 L39 19 Z" fill="#C4A882"/>
-      <path d="M20 20 L17 13 L24 18 Z" fill="#F0C8C8" opacity="0.5"/>
-      <path d="M44 20 L47 13 L40 18 Z" fill="#F0C8C8" opacity="0.5"/>
-      <!-- 闭眼 -->
-      <path d="M22 30 Q26 27 30 30" stroke="#1A1A2E" stroke-width="1.2" fill="none"/>
-      <path d="M34 30 Q38 27 42 30" stroke="#1A1A2E" stroke-width="1.2" fill="none"/>
-      <!-- 鼻子 -->
-      <path d="M31 33 L32 34 L33 33" stroke="#E8A0A0" stroke-width="1" fill="none"/>
-    </svg>`
+    sit: '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M48 42 Q56 38 54 30" stroke="#C4A882" stroke-width="3.5" fill="none" stroke-linecap="round"/><ellipse cx="32" cy="44" rx="16" ry="13" fill="#F5E6D3"/><ellipse cx="24" cy="53" rx="5" ry="3.5" fill="#FAF0E6"/><ellipse cx="40" cy="53" rx="5" ry="3.5" fill="#FAF0E6"/><ellipse cx="32" cy="26" rx="16" ry="14" fill="#FAF0E6"/><path d="M24 22 Q32 16 40 22 Q38 28 32 30 Q26 28 24 22" fill="#C4A882" opacity="0.45"/><path d="M18 16 L14 4 L24 13 Z" fill="#C4A882"/><path d="M46 16 L50 4 L40 13 Z" fill="#C4A882"/><path d="M19 14 L16 7 L23 12 Z" fill="#F0C8C8" opacity="0.5"/><path d="M45 14 L48 7 L41 12 Z" fill="#F0C8C8" opacity="0.5"/><ellipse cx="26" cy="24" rx="3.5" ry="4" fill="#6B9FD4"/><ellipse cx="38" cy="24" rx="3.5" ry="4" fill="#6B9FD4"/><ellipse cx="26" cy="24" rx="1.8" ry="2.2" fill="#1A1A2E"/><ellipse cx="38" cy="24" rx="1.8" ry="2.2" fill="#1A1A2E"/><circle cx="25" cy="22.5" r="0.8" fill="white" opacity="0.7"/><circle cx="37" cy="22.5" r="0.8" fill="white" opacity="0.7"/><path d="M31 28.5 L32 29.5 L33 28.5" stroke="#E8A0A0" stroke-width="1" fill="none"/><path d="M29 30.5 Q32 32.5 35 30.5" stroke="#D4A0A0" stroke-width="0.8" fill="none"/><line x1="12" y1="26" x2="22" y2="28" stroke="#C0B0A0" stroke-width="0.5"/><line x1="12" y1="29" x2="22" y2="29" stroke="#C0B0A0" stroke-width="0.5"/><line x1="12" y1="32" x2="22" y2="30" stroke="#C0B0A0" stroke-width="0.5"/><line x1="52" y1="26" x2="42" y2="28" stroke="#C0B0A0" stroke-width="0.5"/><line x1="52" y1="29" x2="42" y2="29" stroke="#C0B0A0" stroke-width="0.5"/><line x1="52" y1="32" x2="42" y2="30" stroke="#C0B0A0" stroke-width="0.5"/></svg>',
+    sleep: '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M48 44 Q54 42 52 36" stroke="#C4A882" stroke-width="3.5" fill="none" stroke-linecap="round"/><ellipse cx="32" cy="46" rx="18" ry="10" fill="#F5E6D3"/><ellipse cx="22" cy="52" rx="4.5" ry="3" fill="#FAF0E6"/><ellipse cx="42" cy="52" rx="4.5" ry="3" fill="#FAF0E6"/><ellipse cx="32" cy="32" rx="15" ry="13" fill="#FAF0E6"/><path d="M24 28 Q32 22 40 28 Q38 34 32 36 Q26 34 24 28" fill="#C4A882" opacity="0.45"/><path d="M19 22 L15 10 L25 19 Z" fill="#C4A882"/><path d="M45 22 L49 10 L39 19 Z" fill="#C4A882"/><path d="M20 20 L17 13 L24 18 Z" fill="#F0C8C8" opacity="0.5"/><path d="M44 20 L47 13 L40 18 Z" fill="#F0C8C8" opacity="0.5"/><path d="M22 30 Q26 27 30 30" stroke="#1A1A2E" stroke-width="1.2" fill="none"/><path d="M34 30 Q38 27 42 30" stroke="#1A1A2E" stroke-width="1.2" fill="none"/><path d="M31 33 L32 34 L33 33" stroke="#E8A0A0" stroke-width="1" fill="none"/></svg>'
   };
 
-  // 设置猫的SVG
   function setCatSVG(state) {
     if (state === 'sleep') {
       sprite.innerHTML = catSVGs.sleep;
@@ -566,8 +501,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 猫的状态
   const catState = {
-    x: Math.min(window.innerWidth - 100, Math.floor(window.innerWidth * 0.6)),
-    y: -1, // 用bottom定位，初始-1表示尚未设置
+    x: Math.floor(window.innerWidth * 0.6),
+    y: window.innerHeight - 100,
     targetX: 0,
     targetY: 0,
     state: 'sit',
@@ -577,16 +512,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     lastInteraction: Date.now()
   };
 
-  // 初始位置 — 用安全的top值
+  // 初始位置
   cat.style.left = catState.x + 'px';
-  catState.y = Math.min(window.innerHeight - 100, Math.max(60, window.innerHeight * 0.75));
   cat.style.top = catState.y + 'px';
-  cat.style.bottom = 'auto';
-  cat.style.right = 'auto';
   setCatSVG('sit');
-  console.log('🐱 布偶猫已就位 x=' + catState.x + ' y=' + catState.y + ' viewport=' + window.innerWidth + 'x' + window.innerHeight);
+  console.log('🐱 布偶猫已就位 x=' + catState.x + ' y=' + catState.y);
 
-  // 猫的台词
   const catLines = [
     '喵~', '嗯？', '别摸我...', '今天也辛苦了',
     '想吃小鱼干', '呼噜噜~', '...', '别吵，在睡觉',
@@ -616,30 +547,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     const dist = Math.sqrt(dx * dx + dy * dy);
 
     if (dist < 5) {
-      const idleStates = ['sit', 'sit', 'sit', 'groom', 'groom'];
-      setCatState(pick(idleStates));
+      setCatState(pick(['sit', 'sit', 'sit', 'groom', 'groom']));
       scheduleNext();
       return;
     }
 
     const step = Math.min(catState.speed, dist);
     const angle = Math.atan2(dy, dx);
-
     catState.x += Math.cos(angle) * step;
     catState.y += Math.sin(angle) * step;
-
-    catState.x = Math.max(10, Math.min(window.innerWidth - 70, catState.x));
-    catState.y = Math.max(60, Math.min(window.innerHeight - 70, catState.y));
+    catState.x = Math.max(10, Math.min(window.innerWidth - 80, catState.x));
+    catState.y = Math.max(60, Math.min(window.innerHeight - 80, catState.y));
 
     cat.style.left = catState.x + 'px';
     cat.style.top = catState.y + 'px';
 
-    if (dx > 0) {
-      setCatState('walk-right');
-    } else {
-      setCatState('walk-left');
-    }
-
+    setCatState(dx > 0 ? 'walk-right' : 'walk-left');
     requestAnimationFrame(moveCat);
   }
 
@@ -683,23 +606,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function pickNewTarget() {
     catState.targetX = randInt(40, window.innerWidth - 100);
-    catState.targetY = randInt(70, window.innerHeight - 80);
+    catState.targetY = randInt(70, window.innerHeight - 100);
     moveCat();
   }
 
   cat.addEventListener('click', (e) => {
     e.stopPropagation();
     catState.lastInteraction = Date.now();
-
     if (catState.state === 'sleep') {
       say('嗯...别吵...');
-      setTimeout(() => {
-        setCatState('sit');
-        say(pick(catLines));
-      }, 800);
+      setTimeout(() => { setCatState('sit'); say(pick(catLines)); }, 800);
       return;
     }
-
     cat.classList.add('jumping');
     setTimeout(() => cat.classList.remove('jumping'), 400);
     say();
@@ -709,15 +627,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     e.stopPropagation();
     say('别碰我!');
     catState.targetX = randInt(40, window.innerWidth - 100);
-    catState.targetY = randInt(70, window.innerHeight - 80);
+    catState.targetY = randInt(70, window.innerHeight - 100);
     catState.speed = 3;
     moveCat();
     setTimeout(() => { catState.speed = 1.2; }, 2000);
   });
 
   window.addEventListener('resize', () => {
-    catState.x = Math.min(catState.x, window.innerWidth - 70);
-    catState.y = Math.min(catState.y, window.innerHeight - 70);
+    catState.x = Math.min(catState.x, window.innerWidth - 80);
+    catState.y = Math.min(catState.y, window.innerHeight - 80);
     cat.style.left = catState.x + 'px';
     cat.style.top = catState.y + 'px';
   });
@@ -727,6 +645,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     say('喵~');
     scheduleNext();
   }, 1500);
-
-  }, 600); // setTimeout 600ms 延迟初始化
-})();
+}
