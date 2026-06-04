@@ -74,7 +74,15 @@ function escapeHtml(text) {
 // ===== 主题切换 =====
 function initTheme() {
   document.documentElement.setAttribute('data-theme', state.theme);
-  $('#themeToggle').textContent = state.theme === 'dark' ? '☀️' : '🌙';
+  const sunIcon = document.querySelector('#themeToggle .icon-sun');
+  const moonIcon = document.querySelector('#themeToggle .icon-moon');
+  if (state.theme === 'dark') {
+    if (sunIcon) sunIcon.style.display = 'none';
+    if (moonIcon) moonIcon.style.display = 'inline-block';
+  } else {
+    if (sunIcon) sunIcon.style.display = 'inline-block';
+    if (moonIcon) moonIcon.style.display = 'none';
+  }
 }
 
 $('#themeToggle').addEventListener('click', () => {
@@ -188,7 +196,7 @@ $('#submitBtn').addEventListener('click', async () => {
   const content = $('#secretInput').value.trim();
   if (!content && !state.selectedImage) { toast('写点什么再投进树洞吧', 'error'); return; }
   const btn = $('#submitBtn');
-  btn.disabled = true; btn.textContent = '投递中...';
+  btn.disabled = true; btn.querySelector('span').textContent = '投递中...';
   try {
     let imageUrl = null;
     if (state.selectedImage) imageUrl = await uploadImage(state.selectedImage);
@@ -207,21 +215,21 @@ $('#submitBtn').addEventListener('click', async () => {
   } catch (err) {
     console.error('投递失败:', err);
     toast('投递失败：' + (err.message || JSON.stringify(err)), 'error');
-  } finally { btn.disabled = false; btn.textContent = '投进树洞 🌳'; }
+  } finally { btn.disabled = false; btn.querySelector('span').textContent = '投递'; }
 });
 
 // ===== 分类/排序 =====
-$$('.cat-btn').forEach(btn => {
+$$('.filter-chip').forEach(btn => {
   btn.addEventListener('click', () => {
-    $$('.cat-btn').forEach(b => b.classList.remove('active'));
+    $$('.filter-chip').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     state.currentCategory = btn.dataset.cat;
     loadPosts(true);
   });
 });
-$$('.sort-btn').forEach(btn => {
+$$('.sort-chip').forEach(btn => {
   btn.addEventListener('click', () => {
-    $$('.sort-btn').forEach(b => b.classList.remove('active'));
+    $$('.sort-chip').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     state.currentSort = btn.dataset.sort;
     loadPosts(true);
@@ -376,12 +384,11 @@ async function loadComments(postId) {
   } catch(err) { list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">加载失败</div>'; }
 }
 
-$('#modalClose').addEventListener('click', () => { $('#postModal').style.display='none'; });
+// modalClose and adminModalClose not in new HTML - using overlay click instead
 $('#postModal').addEventListener('click', e => { if(e.target===$('#postModal')) $('#postModal').style.display='none'; });
 
 // ===== 管理后台 =====
 $('#adminBtn').addEventListener('click', () => { $('#adminModal').style.display='flex'; loadAdminContent('reports'); });
-$('#adminModalClose').addEventListener('click', () => { $('#adminModal').style.display='none'; });
 $('#adminModal').addEventListener('click', e => { if(e.target===$('#adminModal')) $('#adminModal').style.display='none'; });
 $$('.admin-tab').forEach(tab => { tab.addEventListener('click', () => { $$('.admin-tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); loadAdminContent(tab.dataset.tab); }); });
 
