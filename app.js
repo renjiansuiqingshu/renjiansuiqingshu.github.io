@@ -470,10 +470,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     await initAuth();
     loadPosts(true);
     updateStats();
-    initCatPet();
   } catch (err) {
     console.error('❌ 初始化失败:', err);
     toast('初始化失败: ' + err.message, 'error');
+  } finally {
+    // 猫不依赖后端，无论初始化成功与否都要启动
+    initCatPet();
   }
 });
 
@@ -536,9 +538,13 @@ function initCatPet() {
 
   function say(text) {
     speech.textContent = text || pick(catLines);
-    speech.style.display = 'block';
+    speech.style.setProperty('display', 'block', 'important');
+    speech.style.opacity = '1';
     clearTimeout(catState.speechTimer);
-    catState.speechTimer = setTimeout(() => { speech.style.display = 'none'; }, 2500);
+    catState.speechTimer = setTimeout(() => {
+      speech.style.display = 'none';
+      speech.style.opacity = '';
+    }, 2500);
   }
 
   function moveCat() {
