@@ -431,6 +431,9 @@ async function updateStats() {
     const today = new Date(); today.setHours(0,0,0,0);
     const todayRes = await db.collection('posts').where({status:'active',createdAt:_.gte(today)}).count();
     $('#todayCount').textContent = todayRes.total||0;
+    const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate()-7); weekAgo.setHours(0,0,0,0);
+    const weekRes = await db.collection('posts').where({status:'active',createdAt:_.gte(weekAgo)}).count();
+    $('#weekCount').textContent = weekRes.total||0;
   } catch(err){}
 }
 setInterval(updateStats, 30000);
