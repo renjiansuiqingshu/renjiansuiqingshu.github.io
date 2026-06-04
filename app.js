@@ -477,11 +477,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // ===== 布偶猫虚拟宠物 =====
-window.addEventListener('DOMContentLoaded', function() {
-  const cat = document.getElementById('catPet');
-  const sprite = document.getElementById('catSprite');
-  const speech = document.getElementById('catSpeech');
-  if (!cat || !sprite) { console.warn('🐱 猫元素未找到'); return; }
+(function() {
+  // 延迟初始化，确保DOM完全渲染
+  setTimeout(function initCat() {
+    const cat = document.getElementById('catPet');
+    const sprite = document.getElementById('catSprite');
+    const speech = document.getElementById('catSpeech');
+    if (!cat || !sprite) { console.warn('🐱 猫元素未找到，500ms后重试'); setTimeout(initCat, 500); return; }
 
   // 布偶猫SVG - 坐姿/站立
   const catSVGs = {
@@ -564,8 +566,8 @@ window.addEventListener('DOMContentLoaded', function() {
 
   // 猫的状态
   const catState = {
-    x: Math.min(window.innerWidth - 120, window.innerWidth * 0.7),
-    y: Math.max(60, window.innerHeight - 80),
+    x: Math.min(window.innerWidth - 100, Math.floor(window.innerWidth * 0.6)),
+    y: -1, // 用bottom定位，初始-1表示尚未设置
     targetX: 0,
     targetY: 0,
     state: 'sit',
@@ -575,13 +577,14 @@ window.addEventListener('DOMContentLoaded', function() {
     lastInteraction: Date.now()
   };
 
-  // 初始位置和SVG — 确保在视口内
+  // 初始位置 — 用安全的top值
   cat.style.left = catState.x + 'px';
+  catState.y = Math.min(window.innerHeight - 100, Math.max(60, window.innerHeight * 0.75));
   cat.style.top = catState.y + 'px';
   cat.style.bottom = 'auto';
   cat.style.right = 'auto';
   setCatSVG('sit');
-  console.log('🐱 布偶猫已就位', catState.x, catState.y, 'viewport:', window.innerWidth, window.innerHeight);
+  console.log('🐱 布偶猫已就位 x=' + catState.x + ' y=' + catState.y + ' viewport=' + window.innerWidth + 'x' + window.innerHeight);
 
   // 猫的台词
   const catLines = [
@@ -724,4 +727,6 @@ window.addEventListener('DOMContentLoaded', function() {
     say('喵~');
     scheduleNext();
   }, 1500);
-});
+
+  }, 600); // setTimeout 600ms 延迟初始化
+})();
