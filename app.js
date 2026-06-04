@@ -440,6 +440,15 @@ setInterval(updateStats, 30000);
 
 document.addEventListener('keydown', e => { if(e.key==='Escape'){$('#postModal').style.display='none';$('#adminModal').style.display='none';} });
 
+// ===== PWA Service Worker =====
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(() => {
+    console.log('✅ Service Worker 注册成功');
+  }).catch(err => {
+    console.log('SW 注册失败:', err);
+  });
+}
+
 // ===== 初始化 =====
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
