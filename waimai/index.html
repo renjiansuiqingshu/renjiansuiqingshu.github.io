@@ -162,6 +162,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="page-header"><h1>设置</h1></div>
     <div class="card"><div class="card-title">店铺管理</div><div id="storeList"></div><div class="add-store-row"><input type="text" id="newStoreName" placeholder="输入店铺名称"><button onclick="addStore()">添加</button></div></div>
     <div class="card"><div class="card-title">修改密码</div><div class="form-group"><label class="form-label">新密码</label><input type="password" class="form-input" id="s_newPwd" placeholder="输入新密码"></div><button class="btn-submit" onclick="changePassword()">修改密码</button></div>
+    <div class="card"><div class="card-title">快捷导入</div><p style="font-size:12px;color:var(--text-light);margin-bottom:8px">一键导入淘宝闪购截图数据（6月5日+6月6日）</p><button class="btn-submit" onclick="importScreenshotData()" style="background:var(--primary)">导入截图数据</button></div>
     <div class="card"><div class="card-title">数据管理</div><button class="btn-submit" onclick="exportData()" style="background:var(--primary-light)">导出数据</button><div style="height:8px"></div><label class="btn-submit" style="background:var(--primary-light);display:block;text-align:center;cursor:pointer">导入数据<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label><div style="height:8px"></div><button class="btn-submit" onclick="if(confirm('确定清空所有数据？'))clearAllData()" style="background:var(--danger)">清空数据</button></div>
   </div>
 
@@ -397,6 +398,29 @@ function exportData(){const blob=new Blob([JSON.stringify({stores,platforms:PLAT
 function importData(e){const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=function(ev){try{const imp=JSON.parse(ev.target.result);if(imp.stores){stores=imp.stores;saveStores();}const recs=imp.data||imp;if(!Array.isArray(recs)){showToast('格式错误');return;}saveData([...loadData(),...recs]);showToast('导入成功');refreshDD();loadDashboard();}catch(err){showToast('解析失败');}};r.readAsText(file);}
 function clearAllData(){localStorage.removeItem(SK_DATA);showToast('已清空');}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+
+function importScreenshotData(){
+  const records=[
+    {id:'1717507200000',storeIndex:0,platformIndex:0,date:'2026-06-05',
+     validOrders:5,invalidOrders:0,revenue:136,income:101.14,expense:34.86,customerPay:138.60,avgPay:27.72,avgOrder:20.23,
+     expPeople:0,expTimes:0,inPeople:0,inTimes:0,orderPeople:0,orderTimes:0,inRate:0,orderRate:0,
+     promoOrders:5,promoCost:10,promoPay:138.6,promoAvg:27.72,roi:13.86,promoRate:9.8,
+     newCust:4,oldCust:0,repurchase:25,bizHours:4.0,
+     cancelOrders:0,cancelRate:0,reportRate:80,cookTime:13,overTimeRate:20},
+    {id:'1717593600000',storeIndex:0,platformIndex:0,date:'2026-06-06',
+     validOrders:0,invalidOrders:0,revenue:0,income:0,expense:0,customerPay:0,avgPay:0,avgOrder:0,
+     expPeople:107,expTimes:120,inPeople:15,inTimes:17,orderPeople:1,orderTimes:1,inRate:14.0,orderRate:6.7,
+     promoOrders:0,promoCost:0,promoPay:0,promoAvg:0,roi:0,promoRate:0,
+     newCust:0,oldCust:0,repurchase:0,bizHours:0,
+     cancelOrders:0,cancelRate:0,reportRate:0,cookTime:0,overTimeRate:0}
+  ];
+  let data=loadData();
+  records.forEach(r=>{
+    const ex=data.findIndex(d=>d.storeIndex===r.storeIndex&&d.platformIndex===r.platformIndex&&d.date===r.date);
+    if(ex>=0)data[ex]=r;else data.push(r);
+  });
+  saveData(data);showToast('导入成功（2条）');refreshDD();loadDashboard();
+}
 </script>
 </body>
 </html>
