@@ -208,27 +208,7 @@ function enterApp(){
 document.getElementById('pwdInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 (function(){if(sessionStorage.getItem('wm_authed')==='1'){document.getElementById('loginPage').style.display='none';document.getElementById('mainApp').style.display='block';loadStores();initApp();}})();
 
-function initApp(){document.getElementById('entryDate').value=today();document.getElementById('dashDate').textContent=today();seedData();refreshDD();loadDashboard();}
-
-function seedData(){
-  var data=JSON.parse(localStorage.getItem(SK_DATA)||'[]');
-  if(data.length>0)return;
-  var seed=[
-    {id:'1717507200000',storeIndex:0,platformIndex:0,date:'2026-06-05',
-     validOrders:5,invalidOrders:0,revenue:136,income:101.14,expense:34.86,customerPay:138.60,avgPay:27.72,avgOrder:20.23,
-     expPeople:0,expTimes:0,inPeople:0,inTimes:0,orderPeople:0,orderTimes:0,inRate:0,orderRate:0,
-     promoOrders:5,promoCost:10,promoPay:138.6,promoAvg:27.72,roi:13.86,promoRate:9.8,
-     newCust:4,oldCust:0,repurchase:25,bizHours:4.0,
-     cancelOrders:0,cancelRate:0,reportRate:80,cookTime:13,overTimeRate:20},
-    {id:'1717593600000',storeIndex:0,platformIndex:0,date:'2026-06-06',
-     validOrders:0,invalidOrders:0,revenue:0,income:0,expense:0,customerPay:0,avgPay:0,avgOrder:0,
-     expPeople:107,expTimes:120,inPeople:15,inTimes:17,orderPeople:1,orderTimes:1,inRate:14.0,orderRate:6.7,
-     promoOrders:0,promoCost:0,promoPay:0,promoAvg:0,roi:0,promoRate:0,
-     newCust:0,oldCust:0,repurchase:0,bizHours:0,
-     cancelOrders:0,cancelRate:0,reportRate:0,cookTime:0,overTimeRate:0}
-  ];
-  localStorage.setItem(SK_DATA,JSON.stringify(seed));
-}
+function initApp(){document.getElementById('entryDate').value=today();document.getElementById('dashDate').textContent=today();refreshDD();loadDashboard();}
 
 // Nav
 function switchPage(id){
@@ -281,10 +261,10 @@ function renderKpi(d){
   if(!d){el.innerHTML='<div class="kpi-item" style="grid-column:span 2"><div class="kpi-value" style="font-size:14px;color:var(--text-light)">暂无数据</div><div class="kpi-label">快去录入吧</div></div>';document.getElementById('dashDate').textContent=today();return;}
   const isToday=d.date===today();
   document.getElementById('dashDate').textContent=(isToday?'今日':d.date.slice(5))+' 数据';
-  const avgO=d.validOrders>0?(d.income/d.validOrders).toFixed(1):'-';
-  const inR=d.expPeople>0?(d.inPeople/d.expPeople*100).toFixed(1)+'%':'-';
-  const oR=d.inPeople>0?(d.orderPeople/d.inPeople*100).toFixed(1)+'%':'-';
-  const rep=d.repurchase?d.repurchase+'%':'-';
+  const avgO=d.validOrders>0?(d.income/d.validOrders).toFixed(1):'0';
+  const inR=d.expPeople>0?(d.inPeople/d.expPeople*100).toFixed(1)+'%':'0%';
+  const oR=d.inPeople>0?(d.orderPeople/d.inPeople*100).toFixed(1)+'%':'0%';
+  const rep=d.repurchase!==undefined&&d.repurchase!==null?d.repurchase+'%':'-';
   el.innerHTML=`
     <div class="kpi-item"><div class="kpi-value">${d.validOrders}</div><div class="kpi-label">有效订单</div></div>
     <div class="kpi-item"><div class="kpi-value success">¥${d.income}</div><div class="kpi-label">收入</div></div>
@@ -299,46 +279,46 @@ function renderDataCards(data){
   if(!data.length){el.innerHTML='<div class="empty"><div class="icon">📭</div><div>暂无数据，去录入页添加</div></div>';return;}
   let html='';
   const grid='display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px';
-  const fmt=(v,unit)=>(v===undefined||v===0)?'-':(unit==='¥'?'¥'+v:v+unit);
+  const fmt=(v,unit)=>(v===undefined||v===null)?'-':(unit==='¥'?'¥'+v:v+unit);
   const sec=(title,body)=>`<div class="card"><div class="card-title" style="font-size:13px;color:var(--primary)">${title}</div><div style="${grid}">${body}</div></div>`;
   data.forEach(d=>{
     html+=`<div class="card" style="padding:10px 16px"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:15px">${d.date.slice(5)}</b><span style="font-size:12px;color:var(--text-light)">${PLATFORMS[d.platformIndex]}</span></div></div>`;
     html+=sec('📦 订单',`
-      <div>有效订单 <b>${d.validOrders||'-'}</b></div>
+      <div>有效订单 <b>${d.validOrders!==undefined?d.validOrders:'-'}</b></div>
       <div>营业额 <b>${fmt(d.revenue,'¥')}</b></div>
       <div>收入 <b style="color:var(--success)">${fmt(d.income,'¥')}</b></div>
       <div>支出 <b style="color:var(--danger)">${fmt(d.expense,'¥')}</b></div>
       <div>顾客实付 <b>${fmt(d.customerPay,'¥')}</b></div>
       <div>单均实付 <b>${fmt(d.avgPay,'¥')}</b></div>
       <div>客单价 <b>${fmt(d.avgOrder,'¥')}</b></div>
-      <div>无效订单 <b>${d.invalidOrders||'-'}</b></div>`);
+      <div>无效订单 <b>${d.invalidOrders!==undefined?d.invalidOrders:'-'}</b></div>`);
     html+=sec('👁 流量',`
-      <div>曝光人数 <b>${d.expPeople||'-'}</b></div>
-      <div>曝光次数 <b>${d.expTimes||'-'}</b></div>
-      <div>进店人数 <b>${d.inPeople||'-'}</b></div>
-      <div>进店次数 <b>${d.inTimes||'-'}</b></div>
-      <div>下单人数 <b>${d.orderPeople||'-'}</b></div>
-      <div>下单次数 <b>${d.orderTimes||'-'}</b></div>
-      <div>进店转化率 <b>${d.inRate?d.inRate+'%':'-'}</b></div>
-      <div>下单转化率 <b>${d.orderRate?d.orderRate+'%':'-'}</b></div>`);
+      <div>曝光人数 <b>${d.expPeople!==undefined?d.expPeople:'-'}</b></div>
+      <div>曝光次数 <b>${d.expTimes!==undefined?d.expTimes:'-'}</b></div>
+      <div>进店人数 <b>${d.inPeople!==undefined?d.inPeople:'-'}</b></div>
+      <div>进店次数 <b>${d.inTimes!==undefined?d.inTimes:'-'}</b></div>
+      <div>下单人数 <b>${d.orderPeople!==undefined?d.orderPeople:'-'}</b></div>
+      <div>下单次数 <b>${d.orderTimes!==undefined?d.orderTimes:'-'}</b></div>
+      <div>进店转化率 <b>${d.inRate!==undefined&&d.inRate!==null?d.inRate+'%':'-'}</b></div>
+      <div>下单转化率 <b>${d.orderRate!==undefined&&d.orderRate!==null?d.orderRate+'%':'-'}</b></div>`);
     html+=sec('🎯 营销',`
-      <div>活动订单 <b>${d.promoOrders||'-'}</b></div>
+      <div>活动订单 <b>${d.promoOrders!==undefined?d.promoOrders:'-'}</b></div>
       <div>活动成本 <b>${fmt(d.promoCost,'¥')}</b></div>
       <div>活动顾客实付 <b>${fmt(d.promoPay,'¥')}</b></div>
       <div>活动客单价 <b>${fmt(d.promoAvg,'¥')}</b></div>
-      <div>投入产出比 <b>${d.roi||'-'}</b></div>
-      <div>营销力度 <b>${d.promoRate?d.promoRate+'%':'-'}</b></div>`);
+      <div>投入产出比 <b>${d.roi!==undefined?d.roi:'-'}</b></div>
+      <div>营销力度 <b>${d.promoRate!==undefined&&d.promoRate!==null?d.promoRate+'%':'-'}</b></div>`);
     html+=sec('👥 顾客',`
-      <div>下单新客 <b>${d.newCust||'-'}</b></div>
-      <div>下单老客 <b>${d.oldCust||'-'}</b></div>
-      <div>复购率 <b>${d.repurchase?d.repurchase+'%':'-'}</b></div>
-      <div>日均营业时长 <b>${d.bizHours?d.bizHours+'h':'-'}</b></div>`);
+      <div>下单新客 <b>${d.newCust!==undefined?d.newCust:'-'}</b></div>
+      <div>下单老客 <b>${d.oldCust!==undefined?d.oldCust:'-'}</b></div>
+      <div>复购率 <b>${d.repurchase!==undefined&&d.repurchase!==null?d.repurchase+'%':'-'}</b></div>
+      <div>日均营业时长 <b>${d.bizHours!==undefined&&d.bizHours!==null?d.bizHours+'h':'-'}</b></div>`);
     html+=sec('🔧 服务',`
-      <div>取消单数 <b>${d.cancelOrders||'-'}</b></div>
-      <div>商责取消率 <b>${d.cancelRate?d.cancelRate+'%':'-'}</b></div>
-      <div>出餐上报率 <b>${d.reportRate?d.reportRate+'%':'-'}</b></div>
-      <div>出餐时长 <b>${d.cookTime?d.cookTime+'min':'-'}</b></div>
-      <div>出餐超时率 <b>${d.overTimeRate?d.overTimeRate+'%':'-'}</b></div>`);
+      <div>取消单数 <b>${d.cancelOrders!==undefined?d.cancelOrders:'-'}</b></div>
+      <div>商责取消率 <b>${d.cancelRate!==undefined&&d.cancelRate!==null?d.cancelRate+'%':'-'}</b></div>
+      <div>出餐上报率 <b>${d.reportRate!==undefined&&d.reportRate!==null?d.reportRate+'%':'-'}</b></div>
+      <div>出餐时长 <b>${d.cookTime!==undefined?d.cookTime+'min':'-'}</b></div>
+      <div>出餐超时率 <b>${d.overTimeRate!==undefined&&d.overTimeRate!==null?d.overTimeRate+'%':'-'}</b></div>`);
   });
   el.innerHTML=html;
 }
@@ -417,32 +397,6 @@ function exportData(){const blob=new Blob([JSON.stringify({stores,platforms:PLAT
 function importData(e){const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=function(ev){try{const imp=JSON.parse(ev.target.result);if(imp.stores){stores=imp.stores;saveStores();}const recs=imp.data||imp;if(!Array.isArray(recs)){showToast('格式错误');return;}saveData([...loadData(),...recs]);showToast('导入成功');refreshDD();loadDashboard();}catch(err){showToast('解析失败');}};r.readAsText(file);}
 function clearAllData(){localStorage.removeItem(SK_DATA);showToast('已清空');}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
-
-// 自动导入：URL带?import=1时自动写入截图数据
-(function(){
-  if(location.search.indexOf('import=1')===-1)return;
-  var records=[
-    {id:'1717507200000',storeIndex:0,platformIndex:0,date:'2026-06-05',
-     validOrders:5,invalidOrders:0,revenue:136,income:101.14,expense:34.86,customerPay:138.60,avgPay:27.72,avgOrder:20.23,
-     expPeople:0,expTimes:0,inPeople:0,inTimes:0,orderPeople:0,orderTimes:0,inRate:0,orderRate:0,
-     promoOrders:5,promoCost:10,promoPay:138.6,promoAvg:27.72,roi:13.86,promoRate:9.8,
-     newCust:4,oldCust:0,repurchase:25,bizHours:4.0,
-     cancelOrders:0,cancelRate:0,reportRate:80,cookTime:13,overTimeRate:20},
-    {id:'1717593600000',storeIndex:0,platformIndex:0,date:'2026-06-06',
-     validOrders:0,invalidOrders:0,revenue:0,income:0,expense:0,customerPay:0,avgPay:0,avgOrder:0,
-     expPeople:107,expTimes:120,inPeople:15,inTimes:17,orderPeople:1,orderTimes:1,inRate:14.0,orderRate:6.7,
-     promoOrders:0,promoCost:0,promoPay:0,promoAvg:0,roi:0,promoRate:0,
-     newCust:0,oldCust:0,repurchase:0,bizHours:0,
-     cancelOrders:0,cancelRate:0,reportRate:0,cookTime:0,overTimeRate:0}
-  ];
-  var data=JSON.parse(localStorage.getItem('wm_data')||'[]');
-  records.forEach(function(r){
-    var ex=data.findIndex(function(d){return d.storeIndex===r.storeIndex && d.platformIndex===r.platformIndex && d.date===r.date;});
-    if(ex>=0)data[ex]=r; else data.push(r);
-  });
-  localStorage.setItem('wm_data',JSON.stringify(data));
-  setTimeout(function(){showToast('数据导入成功（2条）');if(typeof loadDashboard==='function')loadDashboard();},500);
-})();
 </script>
 </body>
 </html>
