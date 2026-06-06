@@ -177,7 +177,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 // ============ STORAGE ============
 const SK_PWD = 'wm_pwd', SK_DATA = 'wm_data', SK_NAMES = 'wm_names';
-let storeNames = ['店1','店2'];
+let storeNames = ['淘宝闪购','美团外卖'];
 let currentDashStore=0, currentEntryStore=0, currentHistStore=0;
 let chartRevenue=null, chartOrders=null;
 let editingId=null;
@@ -408,8 +408,8 @@ function loadSettingsForm(){
   document.getElementById('s_store1Name').value=storeNames[1];
 }
 function saveStoreNames(){
-  storeNames[0]=document.getElementById('s_store0Name').value.trim()||'店1';
-  storeNames[1]=document.getElementById('s_store1Name').value.trim()||'店2';
+  storeNames[0]=document.getElementById('s_store0Name').value.trim()||'淘宝闪购';
+  storeNames[1]=document.getElementById('s_store1Name').value.trim()||'美团外卖';
   saveNames();
   updateStoreLabels();
   showToast('保存成功');
