@@ -253,11 +253,15 @@ function autoCalc(){
 // Dashboard
 function loadDashboard(){
   const all=loadData().filter(d=>d.storeIndex===dashS&&d.platformIndex===dashP).sort((a,b)=>b.date.localeCompare(a.date));
+  if(!selectedDate&&all.length)selectedDate=all[0].date;
   renderDateTabs(all);
   if(selectedDate){
     const picked=all.find(d=>d.date===selectedDate);
-    renderKpi(picked,selectedDate.slice(5));
-    renderDataCards(picked?[picked]:[]);
+    const dates=all.map(d=>d.date).sort((a,b)=>a.localeCompare(b));
+    const idx=dates.indexOf(selectedDate);
+    const prev=idx>0?all.find(d=>d.date===dates[idx-1]):null;
+    renderKpi(picked,selectedDate.slice(5),prev);
+    renderDataCards(picked?[picked]:[],prev);
   }else{
     renderKpiAgg(all);
     renderDataCards(all);
@@ -268,14 +272,15 @@ function renderDateTabs(data){
   const el=document.getElementById('dashDateTabs');
   if(!data.length){el.innerHTML='';return;}
   const dates=[...new Set(data.map(d=>d.date))].sort((a,b)=>b.localeCompare(a));
-  let html=`<div class="tab${selectedDate?'' :' active'}" onclick="pickDate(null)">全部</div>`;
+  let html='';
   dates.forEach(d=>{
     html+=`<div class="tab${selectedDate===d?' active':''}" onclick="pickDate('${d}')">${d.slice(5)}</div>`;
   });
+  html+=`<div class="tab${!selectedDate?' active':''}" onclick="pickDate(null)">全部</div>`;
   el.innerHTML=html;
 }
 
-function renderKpi(d,dateLabel){
+function renderKpi(d,dateLabel,prev){
   const el=document.getElementById('dashKpi');
   if(!d){el.innerHTML='<div class="kpi-item" style="grid-column:span 2"><div class="kpi-value" style="font-size:14px;color:var(--text-light)">暂无数据</div><div class="kpi-label">快去录入吧</div></div>';document.getElementById('dashDate').textContent='数据总览';return;}
   document.getElementById('dashDate').textContent=dateLabel+' 数据';
@@ -283,13 +288,26 @@ function renderKpi(d,dateLabel){
   const inR=d.expPeople>0?(d.inPeople/d.expPeople*100).toFixed(1)+'%':'0%';
   const oR=d.inPeople>0?(d.orderPeople/d.inPeople*100).toFixed(1)+'%':'0%';
   const rep=d.repurchase!==undefined&&d.repurchase!==null?d.repurchase+'%':'-';
+  const cmp=(cur,old,unit,rev)=>{
+    if(!prev||old===undefined||old===null||old===0)return'';
+    let diff,arrow,color;
+    if(unit==='%'){diff=(cur-old).toFixed(1);}
+    else{diff=(cur-old).toFixed(2);}
+    if(rev){arrow=diff<0?'↑':diff>0?'↓':'-';color=diff<0?'var(--success)':diff>0?'var(--danger)':'';}
+    else{arrow=diff>0?'↑':diff<0?'↓':'-';color=diff>0?'var(--success)':diff<0?'var(--danger)':'';}
+    if(diff==0)return'';
+    return`<span style="font-size:10px;color:${color||'var(--text-light)'}">${arrow}${unit==='¥'?'¥':''}${Math.abs(diff)}${unit==='%'?'pp':''}</span>`;
+  };
+  const pAvgO=prev&&prev.validOrders>0?(prev.income/prev.validOrders):0;
+  const pInR=prev&&prev.expPeople>0?(prev.inPeople/prev.expPeople*100):0;
+  const pOR=prev&&prev.inPeople>0?(prev.orderPeople/prev.inPeople*100):0;
   el.innerHTML=`
-    <div class="kpi-item"><div class="kpi-value">${d.validOrders}</div><div class="kpi-label">有效订单</div></div>
-    <div class="kpi-item"><div class="kpi-value success">¥${d.income}</div><div class="kpi-label">收入</div></div>
-    <div class="kpi-item"><div class="kpi-value">¥${avgO}</div><div class="kpi-label">客单价</div></div>
-    <div class="kpi-item"><div class="kpi-value">${inR}</div><div class="kpi-label">进店转化率</div></div>
-    <div class="kpi-item"><div class="kpi-value">${oR}</div><div class="kpi-label">下单转化率</div></div>
-    <div class="kpi-item"><div class="kpi-value">${rep}</div><div class="kpi-label">复购率</div></div>`;
+    <div class="kpi-item"><div class="kpi-value">${d.validOrders} ${cmp(d.validOrders,prev?prev.validOrders:null,'')}</div><div class="kpi-label">有效订单</div></div>
+    <div class="kpi-item"><div class="kpi-value success">¥${d.income} ${cmp(d.income,prev?prev.income:null,'¥')}</div><div class="kpi-label">收入</div></div>
+    <div class="kpi-item"><div class="kpi-value">¥${avgO} ${cmp(d.validOrders>0?d.income/d.validOrders:0,pAvgO,'¥')}</div><div class="kpi-label">客单价</div></div>
+    <div class="kpi-item"><div class="kpi-value">${inR} ${cmp(d.expPeople>0?d.inPeople/d.expPeople*100:0,pInR,'%')}</div><div class="kpi-label">进店转化率</div></div>
+    <div class="kpi-item"><div class="kpi-value">${oR} ${cmp(d.inPeople>0?d.orderPeople/d.inPeople*100:0,pOR,'%')}</div><div class="kpi-label">下单转化率</div></div>
+    <div class="kpi-item"><div class="kpi-value">${rep} ${cmp(d.repurchase,prev?prev.repurchase:null,'%')}</div><div class="kpi-label">复购率</div></div>`;
 }
 
 function renderKpiAgg(data){
@@ -346,50 +364,66 @@ function aggData(data){
   return s;
 }
 
-function renderDataCards(data){
+function renderDataCards(data,prev){
   const el=document.getElementById('dashDataList');
   if(!data.length){el.innerHTML='<div class="empty"><div class="icon">📭</div><div>暂无数据，去录入页添加</div></div>';return;}
   const d=aggData(data);
+  const p=prev?aggData([prev]):null;
   const grid='display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px';
   const fmt=(v,unit)=>(v===undefined||v===null)?'-':(unit==='¥'?'¥'+(typeof v==='number'?v.toFixed(2):v):v+unit);
+  const delta=(cur,old,rev)=>{
+    if(!p||old===undefined||old===null)return'';
+    if(old===0&&cur===0)return'';
+    let diff;
+    if(typeof cur==='number'&&typeof old==='number'){diff=cur-old;}
+    else return'';
+    if(diff===0)return'';
+    const abs=Math.abs(diff);
+    const arrow=diff>0?'↑':'↓';
+    let color;
+    if(rev)color=diff<0?'var(--success)':diff>0?'var(--danger)':'';
+    else color=diff>0?'var(--success)':diff<0?'var(--danger)':'';
+    const num=Number.isInteger(abs)?abs:abs.toFixed(1);
+    return`<span style="font-size:10px;color:${color}">${arrow}${num}</span>`;
+  };
   const sec=(title,body)=>`<div class="card"><div class="card-title" style="font-size:13px;color:var(--primary)">${title}</div><div style="${grid}">${body}</div></div>`;
   let html='';
   html+=sec('📦 订单',`
-      <div>有效订单 <b>${d.validOrders!==undefined?d.validOrders:'-'}</b></div>
-      <div>营业额 <b>${fmt(d.revenue,'¥')}</b></div>
-      <div>收入 <b style="color:var(--success)">${fmt(d.income,'¥')}</b></div>
-      <div>支出 <b style="color:var(--danger)">${fmt(d.expense,'¥')}</b></div>
-      <div>顾客实付 <b>${fmt(d.customerPay,'¥')}</b></div>
-      <div>单均实付 <b>${fmt(d.avgPay,'¥')}</b></div>
-      <div>客单价 <b>${fmt(d.avgOrder,'¥')}</b></div>
-      <div>无效订单 <b>${d.invalidOrders!==undefined?d.invalidOrders:'-'}</b></div>`);
+      <div>有效订单 <b>${d.validOrders!==undefined?d.validOrders:'-'} ${delta(d.validOrders,p?p.validOrders:null)}</b></div>
+      <div>营业额 <b>${fmt(d.revenue,'¥')} ${delta(d.revenue,p?p.revenue:null)}</b></div>
+      <div>收入 <b style="color:var(--success)">${fmt(d.income,'¥')} ${delta(d.income,p?p.income:null)}</b></div>
+      <div>支出 <b style="color:var(--danger)">${fmt(d.expense,'¥')} ${delta(d.expense,p?p.expense:null,true)}</b></div>
+      <div>顾客实付 <b>${fmt(d.customerPay,'¥')} ${delta(d.customerPay,p?p.customerPay:null)}</b></div>
+      <div>单均实付 <b>${fmt(d.avgPay,'¥')} ${delta(d.avgPay,p?p.avgPay:null)}</b></div>
+      <div>客单价 <b>${fmt(d.avgOrder,'¥')} ${delta(d.avgOrder,p?p.avgOrder:null)}</b></div>
+      <div>无效订单 <b>${d.invalidOrders!==undefined?d.invalidOrders:'-'} ${delta(d.invalidOrders,p?p.invalidOrders:null,true)}</b></div>`);
   html+=sec('👁 流量',`
-      <div>曝光人数 <b>${d.expPeople!==undefined?d.expPeople:'-'}</b></div>
-      <div>曝光次数 <b>${d.expTimes!==undefined?d.expTimes:'-'}</b></div>
-      <div>进店人数 <b>${d.inPeople!==undefined?d.inPeople:'-'}</b></div>
-      <div>进店次数 <b>${d.inTimes!==undefined?d.inTimes:'-'}</b></div>
-      <div>下单人数 <b>${d.orderPeople!==undefined?d.orderPeople:'-'}</b></div>
-      <div>下单次数 <b>${d.orderTimes!==undefined?d.orderTimes:'-'}</b></div>
-      <div>进店转化率 <b>${d.inRate?d.inRate.toFixed(1)+'%':'-'}</b></div>
-      <div>下单转化率 <b>${d.orderRate?d.orderRate.toFixed(1)+'%':'-'}</b></div>`);
+      <div>曝光人数 <b>${d.expPeople!==undefined?d.expPeople:'-'} ${delta(d.expPeople,p?p.expPeople:null)}</b></div>
+      <div>曝光次数 <b>${d.expTimes!==undefined?d.expTimes:'-'} ${delta(d.expTimes,p?p.expTimes:null)}</b></div>
+      <div>进店人数 <b>${d.inPeople!==undefined?d.inPeople:'-'} ${delta(d.inPeople,p?p.inPeople:null)}</b></div>
+      <div>进店次数 <b>${d.inTimes!==undefined?d.inTimes:'-'} ${delta(d.inTimes,p?p.inTimes:null)}</b></div>
+      <div>下单人数 <b>${d.orderPeople!==undefined?d.orderPeople:'-'} ${delta(d.orderPeople,p?p.orderPeople:null)}</b></div>
+      <div>下单次数 <b>${d.orderTimes!==undefined?d.orderTimes:'-'} ${delta(d.orderTimes,p?p.orderTimes:null)}</b></div>
+      <div>进店转化率 <b>${d.inRate?d.inRate.toFixed(1)+'%':'-'} ${delta(d.inRate,p?p.inRate:null)}</b></div>
+      <div>下单转化率 <b>${d.orderRate?d.orderRate.toFixed(1)+'%':'-'} ${delta(d.orderRate,p?p.orderRate:null)}</b></div>`);
   html+=sec('🎯 营销',`
-      <div>活动订单 <b>${d.promoOrders!==undefined?d.promoOrders:'-'}</b></div>
-      <div>活动成本 <b>${fmt(d.promoCost,'¥')}</b></div>
-      <div>活动顾客实付 <b>${fmt(d.promoPay,'¥')}</b></div>
-      <div>活动客单价 <b>${fmt(d.promoAvg,'¥')}</b></div>
-      <div>投入产出比 <b>${d.roi?d.roi.toFixed(2):'-'}</b></div>
-      <div>营销力度 <b>${d.promoRate?d.promoRate.toFixed(1)+'%':'-'}</b></div>`);
+      <div>活动订单 <b>${d.promoOrders!==undefined?d.promoOrders:'-'} ${delta(d.promoOrders,p?p.promoOrders:null)}</b></div>
+      <div>活动成本 <b>${fmt(d.promoCost,'¥')} ${delta(d.promoCost,p?p.promoCost:null,true)}</b></div>
+      <div>活动顾客实付 <b>${fmt(d.promoPay,'¥')} ${delta(d.promoPay,p?p.promoPay:null)}</b></div>
+      <div>活动客单价 <b>${fmt(d.promoAvg,'¥')} ${delta(d.promoAvg,p?p.promoAvg:null)}</b></div>
+      <div>投入产出比 <b>${d.roi?d.roi.toFixed(2):'-'} ${delta(d.roi,p?p.roi:null)}</b></div>
+      <div>营销力度 <b>${d.promoRate?d.promoRate.toFixed(1)+'%':'-'} ${delta(d.promoRate,p?p.promoRate:null,true)}</b></div>`);
   html+=sec('👥 顾客',`
-      <div>下单新客 <b>${d.newCust!==undefined?d.newCust:'-'}</b></div>
-      <div>下单老客 <b>${d.oldCust!==undefined?d.oldCust:'-'}</b></div>
-      <div>复购率 <b>${d.repurchase?d.repurchase.toFixed(1)+'%':'-'}</b></div>
-      <div>日均营业时长 <b>${d.bizHours?d.bizHours.toFixed(1)+'h':'-'}</b></div>`);
+      <div>下单新客 <b>${d.newCust!==undefined?d.newCust:'-'} ${delta(d.newCust,p?p.newCust:null)}</b></div>
+      <div>下单老客 <b>${d.oldCust!==undefined?d.oldCust:'-'} ${delta(d.oldCust,p?p.oldCust:null)}</b></div>
+      <div>复购率 <b>${d.repurchase?d.repurchase.toFixed(1)+'%':'-'} ${delta(d.repurchase,p?p.repurchase:null)}</b></div>
+      <div>日均营业时长 <b>${d.bizHours?d.bizHours.toFixed(1)+'h':'-'} ${delta(d.bizHours,p?p.bizHours:null)}</b></div>`);
   html+=sec('🔧 服务',`
-      <div>取消单数 <b>${d.cancelOrders!==undefined?d.cancelOrders:'-'}</b></div>
-      <div>商责取消率 <b>${d.cancelRate?d.cancelRate.toFixed(1)+'%':'-'}</b></div>
-      <div>出餐上报率 <b>${d.reportRate?d.reportRate.toFixed(1)+'%':'-'}</b></div>
-      <div>出餐时长 <b>${d.cookTime?d.cookTime+'min':'-'}</b></div>
-      <div>出餐超时率 <b>${d.overTimeRate?d.overTimeRate.toFixed(1)+'%':'-'}</b></div>`);
+      <div>取消单数 <b>${d.cancelOrders!==undefined?d.cancelOrders:'-'} ${delta(d.cancelOrders,p?p.cancelOrders:null,true)}</b></div>
+      <div>商责取消率 <b>${d.cancelRate?d.cancelRate.toFixed(1)+'%':'-'} ${delta(d.cancelRate,p?p.cancelRate:null,true)}</b></div>
+      <div>出餐上报率 <b>${d.reportRate?d.reportRate.toFixed(1)+'%':'-'} ${delta(d.reportRate,p?p.reportRate:null)}</b></div>
+      <div>出餐时长 <b>${d.cookTime?d.cookTime+'min':'-'} ${delta(d.cookTime,p?p.cookTime:null,true)}</b></div>
+      <div>出餐超时率 <b>${d.overTimeRate?d.overTimeRate.toFixed(1)+'%':'-'} ${delta(d.overTimeRate,p?p.overTimeRate:null,true)}</b></div>`);
   el.innerHTML=html;
 }
 
