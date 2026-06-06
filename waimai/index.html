@@ -110,11 +110,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="page-header"><h1>数据看板</h1><span class="date" id="dashDate"></span></div>
     <div class="store-selector"><button class="store-btn" id="dashStoreBtn" onclick="toggleDrop('dash')"><span id="dashStoreLabel">远大购物中心店</span><span class="arrow">▼</span></button><div class="store-dropdown" id="dashStoreDD"></div></div>
     <div class="platform-toggle" id="dashPT"><div class="tab active" onclick="setDashP(0)">淘宝闪购</div><div class="tab" onclick="setDashP(1)">美团外卖</div></div>
-    <div id="dashDateTabs" style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:0 4px">
-      <span style="font-size:13px;color:var(--text-light)">📅</span>
-      <input type="date" id="dashDatePicker" class="form-input" style="padding:8px 10px;font-size:14px;max-width:160px" onchange="pickDate(this.value)">
-      <div class="tab" style="cursor:pointer;padding:8px 12px;border-radius:6px;font-size:14px;background:var(--bg)" onclick="pickDate('all')">全部</div>
-    </div>
+    <div id="dashDateTabs" style="display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap"></div>
     <div id="dashKpi" class="kpi-grid"></div>
     <div id="dashDataList"></div>
   </div>
@@ -280,13 +276,17 @@ function loadDashboard(){
 }
 
 function renderDateTabs(all){
-  const picker=document.getElementById('dashDatePicker');
-  if(!all.length){if(picker)picker.value='';return;}
-  if(picker&&selectedDate&&selectedDate!=='all')picker.value=selectedDate;
-  const allBtn=document.querySelector('#dashDateTabs .tab');
-  if(allBtn)allBtn.style.background=selectedDate==='all'?'var(--primary)':'var(--bg)';
-  if(allBtn&&selectedDate==='all')allBtn.style.color='#fff';
-  else if(allBtn){allBtn.style.color='';}
+  const el=document.getElementById('dashDateTabs');
+  if(!all.length){el.innerHTML='';return;}
+  const dates=[...new Set(all.map(d=>d.date))].sort((a,b)=>b.localeCompare(a));
+  let html='';
+  dates.forEach(d=>{
+    const active=selectedDate===d;
+    html+=`<span style="padding:5px 12px;border-radius:14px;font-size:13px;cursor:pointer;background:${active?'var(--primary)':'var(--bg)'};color:${active?'#fff':'var(--text)'};font-weight:${active?'600':'400'}" onclick="pickDate('${d}')">${d.slice(5)}</span>`;
+  });
+  const isAll=selectedDate==='all';
+  html+=`<span style="padding:5px 12px;border-radius:14px;font-size:13px;cursor:pointer;background:${isAll?'var(--primary)':'var(--bg)'};color:${isAll?'#fff':'var(--text)'};font-weight:${isAll?'600':'400'}" onclick="pickDate('all')">全部</span>`;
+  el.innerHTML=html;
 }
 
 function pickDate(v){selectedDate=v;loadDashboard();}
