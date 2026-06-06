@@ -14,10 +14,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-box{background:var(--card);border-radius:16px;padding:32px 24px;width:100%;max-width:320px;box-shadow:0 2px 12px rgba(0,0,0,.08);text-align:center}
 .login-box h2{font-size:20px;margin-bottom:8px;color:var(--primary)}
 .login-box p{font-size:13px;color:var(--text-light);margin-bottom:24px}
-.login-box input{width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:8px;font-size:16px;outline:none;transition:border .2s}
+.login-box input{width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:8px;font-size:16px;outline:none}
 .login-box input:focus{border-color:var(--primary)}
 .login-box button{width:100%;margin-top:16px;padding:12px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer}
-.login-box button:active{background:var(--primary-light)}
 
 .nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
 .nav-item{flex:1;text-align:center;padding:8px 0 6px;color:var(--text-light);font-size:11px;cursor:pointer}
@@ -34,27 +33,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .card{background:var(--card);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .card-title{font-size:15px;font-weight:600;margin-bottom:12px}
 
-.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .kpi-item{background:var(--card);border-radius:10px;padding:12px;text-align:center}
-.kpi-value{font-size:22px;font-weight:700;color:var(--primary)}
-.kpi-value.danger{color:var(--danger)}
+.kpi-value{font-size:20px;font-weight:700;color:var(--primary)}
 .kpi-value.success{color:var(--success)}
 .kpi-label{font-size:11px;color:var(--text-light);margin-top:2px}
 
-.form-group{margin-bottom:14px}
+.form-group{margin-bottom:12px}
 .form-label{font-size:13px;color:var(--text-light);margin-bottom:4px;display:block}
 .form-row{display:flex;gap:10px}
 .form-row .form-group{flex:1}
-.form-input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:15px;outline:none;transition:border .2s;background:#fff}
+.form-input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:15px;outline:none;background:#fff}
 .form-input:focus{border-color:var(--primary)}
+.form-input[readonly]{background:#f8f9fa;color:var(--text-light)}
+.section-label{font-size:14px;font-weight:600;color:var(--primary);margin:16px 0 8px;padding-left:2px}
 
-/* Store selector */
 .store-selector{margin-bottom:12px}
-.store-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:15px;cursor:pointer;color:var(--text)}
-.store-btn:active{background:var(--bg)}
+.store-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:15px;cursor:pointer}
 .store-btn .arrow{font-size:12px;color:var(--text-light);transition:transform .2s}
 .store-btn.open .arrow{transform:rotate(180deg)}
-
 .store-dropdown{display:none;margin-top:4px;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.08)}
 .store-dropdown.show{display:block}
 .store-opt{padding:10px 16px;cursor:pointer;font-size:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -62,22 +59,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .store-opt:active{background:var(--bg)}
 .store-opt.selected{color:var(--primary);font-weight:600}
 .store-opt .platforms{font-size:11px;color:var(--text-light)}
-.store-opt .check{color:var(--primary);font-size:16px}
 
-/* Platform toggle under store */
 .platform-toggle{display:flex;background:var(--bg);border-radius:8px;padding:3px;margin-bottom:16px}
-.platform-toggle .tab{flex:1;text-align:center;padding:8px;border-radius:6px;font-size:14px;cursor:pointer;transition:all .2s}
+.platform-toggle .tab{flex:1;text-align:center;padding:8px;border-radius:6px;font-size:14px;cursor:pointer}
 .platform-toggle .tab.active{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.1);font-weight:600;color:var(--primary)}
 
 .btn-submit{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;margin-top:8px}
 .btn-submit:active{background:var(--primary-light)}
-.btn-submit:disabled{background:#ccc}
 
 .chart-wrap{position:relative;height:200px;margin:8px 0}
 
 .history-table{width:100%;border-collapse:collapse;font-size:12px}
-.history-table th{text-align:left;padding:8px 6px;color:var(--text-light);font-weight:500;border-bottom:1px solid var(--border)}
-.history-table td{padding:8px 6px;border-bottom:1px solid var(--border)}
+.history-table th{text-align:left;padding:8px 4px;color:var(--text-light);font-weight:500;border-bottom:1px solid var(--border)}
+.history-table td{padding:8px 4px;border-bottom:1px solid var(--border)}
 
 .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 24px;border-radius:8px;font-size:14px;z-index:999;opacity:0;transition:opacity .3s}
 .toast.show{opacity:1}
@@ -96,9 +90,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .empty{text-align:center;padding:40px 20px;color:var(--text-light)}
 .empty .icon{font-size:48px;margin-bottom:12px}
 
-.section-label{font-size:12px;color:var(--text-light);margin:12px 0 6px;padding-left:4px}
-
-/* Add store */
 .add-store-row{display:flex;gap:8px;margin-top:8px}
 .add-store-row input{flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;outline:none}
 .add-store-row button{padding:10px 16px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:14px;white-space:nowrap}
@@ -106,7 +97,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </head>
 <body>
 
-<!-- Login -->
 <div id="loginPage" class="login-wrap">
   <div class="login-box">
     <h2>🍪 外卖数据监测</h2>
@@ -116,110 +106,66 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
-<!-- App -->
 <div id="mainApp" style="display:none">
-
-  <!-- Dashboard -->
   <div id="pageDash" class="page active">
     <div class="page-header"><h1>数据看板</h1><span class="date" id="dashDate"></span></div>
-    <div class="store-selector">
-      <button class="store-btn" id="dashStoreBtn" onclick="toggleDashDropdown()">
-        <span id="dashStoreLabel">选择店铺</span>
-        <span class="arrow">▼</span>
-      </button>
-      <div class="store-dropdown" id="dashStoreDropdown"></div>
-    </div>
-    <div class="platform-toggle" id="dashPlatformToggle">
-      <div class="tab active" onclick="switchDashPlatform(0)">淘宝闪购</div>
-      <div class="tab" onclick="switchDashPlatform(1)">美团外卖</div>
-    </div>
+    <div class="store-selector"><button class="store-btn" id="dashStoreBtn" onclick="toggleDrop('dash')"><span id="dashStoreLabel">远大购物中心店</span><span class="arrow">▼</span></button><div class="store-dropdown" id="dashStoreDD"></div></div>
+    <div class="platform-toggle" id="dashPT"><div class="tab active" onclick="setDashP(0)">淘宝闪购</div><div class="tab" onclick="setDashP(1)">美团外卖</div></div>
     <div id="dashKpi" class="kpi-grid"></div>
-    <div class="card"><div class="card-title">营业额趋势</div><div class="chart-wrap"><canvas id="chartRevenue"></canvas></div></div>
+    <div class="card"><div class="card-title">收入趋势</div><div class="chart-wrap"><canvas id="chartRevenue"></canvas></div></div>
     <div class="card"><div class="card-title">订单量趋势</div><div class="chart-wrap"><canvas id="chartOrders"></canvas></div></div>
     <div class="card"><div class="card-title">平台对比（近7日）</div><div id="compareSection"></div></div>
   </div>
 
-  <!-- Entry -->
   <div id="pageEntry" class="page">
     <div class="page-header"><h1>数据录入</h1></div>
-    <div class="store-selector">
-      <button class="store-btn" id="entryStoreBtn" onclick="toggleEntryDropdown()">
-        <span id="entryStoreLabel">选择店铺</span>
-        <span class="arrow">▼</span>
-      </button>
-      <div class="store-dropdown" id="entryStoreDropdown"></div>
-    </div>
-    <div class="platform-toggle" id="entryPlatformToggle">
-      <div class="tab active" onclick="switchEntryPlatform(0)">淘宝闪购</div>
-      <div class="tab" onclick="switchEntryPlatform(1)">美团外卖</div>
-    </div>
+    <div class="store-selector"><button class="store-btn" id="entryStoreBtn" onclick="toggleDrop('entry')"><span id="entryStoreLabel">远大购物中心店</span><span class="arrow">▼</span></button><div class="store-dropdown" id="entryStoreDD"></div></div>
+    <div class="platform-toggle" id="entryPT"><div class="tab active" onclick="setEntryP(0)">淘宝闪购</div><div class="tab" onclick="setEntryP(1)">美团外卖</div></div>
     <div class="card">
-      <div class="form-group"><label class="form-label">日期</label><input type="date" class="form-input" id="entryDate"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">曝光量</label><input type="number" class="form-input" id="f_impressions" placeholder="0"></div>
-        <div class="form-group"><label class="form-label">进店人数</label><input type="number" class="form-input" id="f_visitors" placeholder="0"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">下单人数</label><input type="number" class="form-input" id="f_buyers" placeholder="0"></div>
-        <div class="form-group"><label class="form-label">订单量</label><input type="number" class="form-input" id="f_orderCount" placeholder="0"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">营业额（元）</label><input type="number" step="0.01" class="form-input" id="f_revenue" placeholder="0.00"></div>
-        <div class="form-group"><label class="form-label">实收（元）</label><input type="number" step="0.01" class="form-input" id="f_actualIncome" placeholder="0.00"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">平台抽成（元）</label><input type="number" step="0.01" class="form-input" id="f_commission" placeholder="0.00"></div>
-        <div class="form-group"><label class="form-label">活动支出（元）</label><input type="number" step="0.01" class="form-input" id="f_promoCost" placeholder="0.00"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">好评数</label><input type="number" class="form-input" id="f_goodReviews" placeholder="0"></div>
-        <div class="form-group"><label class="form-label">差评数</label><input type="number" class="form-input" id="f_badReviews" placeholder="0"></div>
-      </div>
+      <div class="form-group"><label class="form-label">📅 日期</label><input type="date" class="form-input" id="entryDate"></div>
+
+      <div class="section-label">📦 订单数据</div>
+      <div class="form-row"><div class="form-group"><label class="form-label">有效订单</label><input type="number" class="form-input" id="f_validOrders" placeholder="0" oninput="autoCalc()"></div><div class="form-group"><label class="form-label">无效订单</label><input type="number" class="form-input" id="f_invalidOrders" placeholder="0"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">营业额（元）</label><input type="number" step="0.01" class="form-input" id="f_revenue" placeholder="0.00"></div><div class="form-group"><label class="form-label">收入（元）</label><input type="number" step="0.01" class="form-input" id="f_income" placeholder="0.00"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">支出（元）</label><input type="number" step="0.01" class="form-input" id="f_expense" placeholder="0.00"></div><div class="form-group"><label class="form-label">顾客实付（元）</label><input type="number" step="0.01" class="form-input" id="f_customerPay" placeholder="0.00"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">单均实付（元）</label><input type="number" step="0.01" class="form-input" id="f_avgPay" placeholder="0.00" readonly></div><div class="form-group"><label class="form-label">客单价（元）</label><input type="number" step="0.01" class="form-input" id="f_avgOrder" placeholder="0.00" readonly></div></div>
+
+      <div class="section-label">👁 流量数据</div>
+      <div class="form-row"><div class="form-group"><label class="form-label">曝光人数</label><input type="number" class="form-input" id="f_expPeople" placeholder="0" oninput="autoCalc()"></div><div class="form-group"><label class="form-label">曝光次数</label><input type="number" class="form-input" id="f_expTimes" placeholder="0"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">进店人数</label><input type="number" class="form-input" id="f_inPeople" placeholder="0" oninput="autoCalc()"></div><div class="form-group"><label class="form-label">进店次数</label><input type="number" class="form-input" id="f_inTimes" placeholder="0"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">下单人数</label><input type="number" class="form-input" id="f_orderPeople" placeholder="0" oninput="autoCalc()"></div><div class="form-group"><label class="form-label">下单次数</label><input type="number" class="form-input" id="f_orderTimes" placeholder="0"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">进店转化率</label><input type="text" class="form-input" id="f_inRate" placeholder="自动计算" readonly></div><div class="form-group"><label class="form-label">下单转化率</label><input type="text" class="form-input" id="f_orderRate" placeholder="自动计算" readonly></div></div>
+
+      <div class="section-label">🎯 营销数据</div>
+      <div class="form-row"><div class="form-group"><label class="form-label">活动订单量</label><input type="number" class="form-input" id="f_promoOrders" placeholder="0"></div><div class="form-group"><label class="form-label">商家活动成本（元）</label><input type="number" step="0.01" class="form-input" id="f_promoCost" placeholder="0.00"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">活动顾客实付（元）</label><input type="number" step="0.01" class="form-input" id="f_promoPay" placeholder="0.00"></div><div class="form-group"><label class="form-label">活动客单价（元）</label><input type="number" step="0.01" class="form-input" id="f_promoAvg" placeholder="0.00"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">投入产出比</label><input type="number" step="0.01" class="form-input" id="f_roi" placeholder="0.00"></div><div class="form-group"><label class="form-label">营销力度（%）</label><input type="number" step="0.1" class="form-input" id="f_promoRate" placeholder="0.0"></div></div>
+
+      <div class="section-label">👥 顾客数据</div>
+      <div class="form-row"><div class="form-group"><label class="form-label">下单新客</label><input type="number" class="form-input" id="f_newCust" placeholder="0"></div><div class="form-group"><label class="form-label">下单老客</label><input type="number" class="form-input" id="f_oldCust" placeholder="0"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">复购率（%）</label><input type="number" step="0.1" class="form-input" id="f_repurchase" placeholder="0.0"></div><div class="form-group"></div></div>
+
+      <div class="section-label">🔧 服务数据</div>
+      <div class="form-row"><div class="form-group"><label class="form-label">日均营业时长（h）</label><input type="number" step="0.1" class="form-input" id="f_bizHours" placeholder="0.0"></div><div class="form-group"><label class="form-label">取消单数</label><input type="number" class="form-input" id="f_cancelOrders" placeholder="0"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">商责取消率（%）</label><input type="number" step="0.1" class="form-input" id="f_cancelRate" placeholder="0.0"></div><div class="form-group"><label class="form-label">出餐上报率（%）</label><input type="number" step="0.1" class="form-input" id="f_reportRate" placeholder="0.0"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">平均出餐时长（min）</label><input type="number" class="form-input" id="f_cookTime" placeholder="0"></div><div class="form-group"><label class="form-label">出餐超时率（%）</label><input type="number" step="0.1" class="form-input" id="f_overTimeRate" placeholder="0.0"></div></div>
+
       <button class="btn-submit" id="btnSubmit" onclick="submitEntry()">提交数据</button>
     </div>
   </div>
 
-  <!-- History -->
   <div id="pageHistory" class="page">
     <div class="page-header"><h1>历史记录</h1></div>
-    <div class="store-selector">
-      <button class="store-btn" id="histStoreBtn" onclick="toggleHistDropdown()">
-        <span id="histStoreLabel">选择店铺</span>
-        <span class="arrow">▼</span>
-      </button>
-      <div class="store-dropdown" id="histStoreDropdown"></div>
-    </div>
-    <div class="platform-toggle" id="histPlatformToggle">
-      <div class="tab active" onclick="switchHistPlatform(0)">淘宝闪购</div>
-      <div class="tab" onclick="switchHistPlatform(1)">美团外卖</div>
-    </div>
+    <div class="store-selector"><button class="store-btn" id="histStoreBtn" onclick="toggleDrop('hist')"><span id="histStoreLabel">远大购物中心店</span><span class="arrow">▼</span></button><div class="store-dropdown" id="histStoreDD"></div></div>
+    <div class="platform-toggle" id="histPT"><div class="tab active" onclick="setHistP(0)">淘宝闪购</div><div class="tab" onclick="setHistP(1)">美团外卖</div></div>
     <div id="histContent"></div>
   </div>
 
-  <!-- Settings -->
   <div id="pageSettings" class="page">
     <div class="page-header"><h1>设置</h1></div>
-    <div class="card">
-      <div class="card-title">店铺管理</div>
-      <div id="storeList"></div>
-      <div class="add-store-row">
-        <input type="text" id="newStoreName" placeholder="输入店铺名称">
-        <button onclick="addStore()">添加</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">修改密码</div>
-      <div class="form-group"><label class="form-label">新密码</label><input type="password" class="form-input" id="s_newPwd" placeholder="输入新密码"></div>
-      <button class="btn-submit" onclick="changePassword()">修改密码</button>
-    </div>
-    <div class="card">
-      <div class="card-title">数据管理</div>
-      <button class="btn-submit" onclick="exportData()" style="background:var(--primary-light)">导出数据</button>
-      <div style="height:8px"></div>
-      <label class="btn-submit" style="background:var(--primary-light);display:block;text-align:center;cursor:pointer">导入数据<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label>
-      <div style="height:8px"></div>
-      <button class="btn-submit" onclick="if(confirm('确定清空所有数据？不可恢复！'))clearAllData()" style="background:var(--danger)">清空数据</button>
-    </div>
+    <div class="card"><div class="card-title">店铺管理</div><div id="storeList"></div><div class="add-store-row"><input type="text" id="newStoreName" placeholder="输入店铺名称"><button onclick="addStore()">添加</button></div></div>
+    <div class="card"><div class="card-title">修改密码</div><div class="form-group"><label class="form-label">新密码</label><input type="password" class="form-input" id="s_newPwd" placeholder="输入新密码"></div><button class="btn-submit" onclick="changePassword()">修改密码</button></div>
+    <div class="card"><div class="card-title">数据管理</div><button class="btn-submit" onclick="exportData()" style="background:var(--primary-light)">导出数据</button><div style="height:8px"></div><label class="btn-submit" style="background:var(--primary-light);display:block;text-align:center;cursor:pointer">导入数据<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label><div style="height:8px"></div><button class="btn-submit" onclick="if(confirm('确定清空所有数据？'))clearAllData()" style="background:var(--danger)">清空数据</button></div>
   </div>
 
   <div class="nav">
@@ -235,89 +181,81 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 const SK_PWD='wm_pwd',SK_DATA='wm_data',SK_STORES='wm_stores';
 const PLATFORMS=['淘宝闪购','美团外卖'];
+const FIELDS=['validOrders','invalidOrders','revenue','income','expense','customerPay','avgPay','avgOrder','expPeople','expTimes','inPeople','inTimes','orderPeople','orderTimes','inRate','orderRate','promoOrders','promoCost','promoPay','promoAvg','roi','promoRate','newCust','oldCust','repurchase','bizHours','cancelOrders','cancelRate','reportRate','cookTime','overTimeRate'];
 
-let stores=['远大购物中心店']; // default
-let curStore=0, curPlatform=0;
-let dashStore=0, dashPlatform=0;
-let entryStore=0, entryPlatform=0;
-let histStore=0, histPlatform=0;
-let chartRevenue=null, chartOrders=null;
-let editingId=null;
+let stores=['远大购物中心店'];
+let dashS=0,dashP=0,entryS=0,entryP=0,histS=0,histP=0;
+let chartRevenue=null,chartOrders=null,editingId=null;
 
-// ============ STORAGE ============
 function loadData(){return JSON.parse(localStorage.getItem(SK_DATA)||'[]');}
 function saveData(d){localStorage.setItem(SK_DATA,JSON.stringify(d));}
 function loadStores(){const s=JSON.parse(localStorage.getItem(SK_STORES)||'null');if(s&&s.length)stores=s;}
 function saveStores(){localStorage.setItem(SK_STORES,JSON.stringify(stores));}
+function today(){return new Date().toISOString().split('T')[0];}
 
-// ============ LOGIN ============
+// Login
 function doLogin(){
   const pwd=document.getElementById('pwdInput').value.trim();
   if(!pwd){showToast('请输入密码');return;}
   const saved=localStorage.getItem(SK_PWD);
   if(!saved){localStorage.setItem(SK_PWD,pwd);enterApp();showToast('密码已设置');}
-  else if(pwd===saved){enterApp();}
-  else{showToast('密码错误');}
+  else if(pwd===saved) enterApp();
+  else showToast('密码错误');
 }
 function enterApp(){
   sessionStorage.setItem('wm_authed','1');
   document.getElementById('loginPage').style.display='none';
   document.getElementById('mainApp').style.display='block';
-  loadStores();
-  initApp();
+  loadStores();initApp();
 }
 document.getElementById('pwdInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 (function(){if(sessionStorage.getItem('wm_authed')==='1'){document.getElementById('loginPage').style.display='none';document.getElementById('mainApp').style.display='block';loadStores();initApp();}})();
 
-// ============ APP ============
-function initApp(){
-  document.getElementById('entryDate').value=today();
-  document.getElementById('dashDate').textContent=today();
-  refreshStoreDropdowns();
-  loadDashboard();
-}
-function today(){return new Date().toISOString().split('T')[0];}
+function initApp(){document.getElementById('entryDate').value=today();document.getElementById('dashDate').textContent=today();refreshDD();loadDashboard();}
 
-// ============ NAV ============
+// Nav
 function switchPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav-item').forEach((n,i)=>n.classList.toggle('active',['pageDash','pageEntry','pageHistory','pageSettings'][i]===id));
-  if(id==='pageDash')loadDashboard();
-  if(id==='pageHistory')loadHistory();
-  if(id==='pageSettings')renderStoreList();
+  if(id==='pageDash')loadDashboard();if(id==='pageHistory')loadHistory();if(id==='pageSettings')renderStoreList();
 }
 
-// ============ STORE DROPDOWNS ============
-function refreshStoreDropdowns(){
-  ['dash','entry','hist'].forEach(prefix=>{
-    const dd=document.getElementById(prefix+'StoreDropdown');
-    const label=document.getElementById(prefix+'StoreLabel');
-    const storeIdx=prefix==='dash'?dashStore:prefix==='entry'?entryStore:histStore;
-    label.textContent=stores[storeIdx]||stores[0];
-    dd.innerHTML=stores.map((s,i)=>`<div class="store-opt${i===storeIdx?' selected':''}" onclick="select${prefix.charAt(0).toUpperCase()+prefix.slice(1)}Store(${i})">${s}<span class="platforms">${PLATFORMS.join(' / ')}</span>${i===storeIdx?'<span class="check">✓</span>':''}</div>`).join('');
+// Store dropdowns
+function refreshDD(){
+  ['dash','entry','hist'].forEach(p=>{
+    const s=p==='dash'?dashS:p==='entry'?entryS:histS;
+    document.getElementById(p+'StoreLabel').textContent=stores[s]||stores[0];
+    document.getElementById(p+'StoreDD').innerHTML=stores.map((n,i)=>`<div class="store-opt${i===s?' selected':''}" onclick="pickS('${p}',${i})">${n}<span class="platforms">${PLATFORMS.join('/')}</span></div>`).join('');
   });
 }
+function toggleDrop(p){const dd=document.getElementById(p+'StoreDD');dd.classList.toggle('show');document.getElementById(p+'StoreBtn').classList.toggle('open');}
+function pickS(p,i){if(p==='dash')dashS=i;else if(p==='entry')entryS=i;else histS=i;toggleDrop(p);refreshDD();if(p==='dash')loadDashboard();if(p==='hist')loadHistory();}
 
-function toggleDashDropdown(){const dd=document.getElementById('dashStoreDropdown');dd.classList.toggle('show');document.getElementById('dashStoreBtn').classList.toggle('open');}
-function toggleEntryDropdown(){const dd=document.getElementById('entryStoreDropdown');dd.classList.toggle('show');document.getElementById('entryStoreBtn').classList.toggle('open');}
-function toggleHistDropdown(){const dd=document.getElementById('histStoreDropdown');dd.classList.toggle('show');document.getElementById('histStoreBtn').classList.toggle('open');}
+// Platform
+function setDashP(i){dashP=i;document.querySelectorAll('#dashPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadDashboard();}
+function setEntryP(i){entryP=i;document.querySelectorAll('#entryPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));editingId=null;document.getElementById('btnSubmit').textContent='提交数据';clearForm();}
+function setHistP(i){histP=i;document.querySelectorAll('#histPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadHistory();}
 
-function selectDashStore(i){dashStore=i;document.getElementById('dashStoreLabel').textContent=stores[i];toggleDashDropdown();refreshStoreDropdowns();loadDashboard();}
-function selectEntryStore(i){entryStore=i;document.getElementById('entryStoreLabel').textContent=stores[i];toggleEntryDropdown();refreshStoreDropdowns();editingId=null;document.getElementById('btnSubmit').textContent='提交数据';clearForm();}
-function selectHistStore(i){histStore=i;document.getElementById('histStoreLabel').textContent=stores[i];toggleHistDropdown();refreshStoreDropdowns();loadHistory();}
+// Auto calc
+function autoCalc(){
+  const ep=Number(document.getElementById('f_expPeople').value)||0;
+  const ip=Number(document.getElementById('f_inPeople').value)||0;
+  const op=Number(document.getElementById('f_orderPeople').value)||0;
+  const vo=Number(document.getElementById('f_validOrders').value)||0;
+  const cp=Number(document.getElementById('f_customerPay').value)||0;
+  const ic=Number(document.getElementById('f_income').value)||0;
+  document.getElementById('f_inRate').value=ep>0?(ip/ep*100).toFixed(1)+'%':'';
+  document.getElementById('f_orderRate').value=ip>0?(op/ip*100).toFixed(1)+'%':'';
+  document.getElementById('f_avgPay').value=vo>0?(cp/vo).toFixed(2):'';
+  document.getElementById('f_avgOrder').value=vo>0?(ic/vo).toFixed(2):'';
+}
 
-// ============ PLATFORM TOGGLES ============
-function switchDashPlatform(i){dashPlatform=i;document.querySelectorAll('#dashPlatformToggle .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadDashboard();}
-function switchEntryPlatform(i){entryPlatform=i;document.querySelectorAll('#entryPlatformToggle .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));editingId=null;document.getElementById('btnSubmit').textContent='提交数据';clearForm();}
-function switchHistPlatform(i){histPlatform=i;document.querySelectorAll('#histPlatformToggle .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadHistory();}
-
-// ============ DASHBOARD ============
+// Dashboard
 function loadDashboard(){
-  const all=loadData().filter(d=>d.storeIndex===dashStore&&d.platformIndex===dashPlatform).sort((a,b)=>a.date.localeCompare(b.date));
+  const all=loadData().filter(d=>d.storeIndex===dashS&&d.platformIndex===dashP).sort((a,b)=>a.date.localeCompare(b.date));
   const last7=all.slice(-7);
-  const todayD=all.find(d=>d.date===today());
-  renderKpi(todayD);
+  renderKpi(all.find(d=>d.date===today()));
   renderCharts(last7);
   renderComparison();
 }
@@ -325,24 +263,24 @@ function loadDashboard(){
 function renderKpi(d){
   const el=document.getElementById('dashKpi');
   if(!d){el.innerHTML='<div class="kpi-item" style="grid-column:span 2"><div class="kpi-value" style="font-size:14px;color:var(--text-light)">今日暂无数据</div><div class="kpi-label">快去录入吧</div></div>';return;}
-  const conv=d.visitors>0?((d.buyers/d.visitors)*100).toFixed(1):'-';
-  const avg=d.orderCount>0?(d.actualIncome/d.orderCount).toFixed(1):'-';
-  const gr=(d.goodReviews+d.badReviews)>0?((d.goodReviews/(d.goodReviews+d.badReviews))*100).toFixed(1)+'%':'-';
+  const avgO=d.validOrders>0?(d.income/d.validOrders).toFixed(1):'-';
+  const inR=d.expPeople>0?(d.inPeople/d.expPeople*100).toFixed(1)+'%':'-';
+  const oR=d.inPeople>0?(d.orderPeople/d.inPeople*100).toFixed(1)+'%':'-';
+  const rep=d.repurchase?d.repurchase+'%':'-';
   el.innerHTML=`
-    <div class="kpi-item"><div class="kpi-value">${d.orderCount}</div><div class="kpi-label">订单量</div></div>
-    <div class="kpi-item"><div class="kpi-value success">¥${d.actualIncome}</div><div class="kpi-label">实收</div></div>
-    <div class="kpi-item"><div class="kpi-value">¥${avg}</div><div class="kpi-label">客单价</div></div>
-    <div class="kpi-item"><div class="kpi-value">${conv}%</div><div class="kpi-label">转化率</div></div>
-    <div class="kpi-item"><div class="kpi-value">${d.visitors}</div><div class="kpi-label">进店人数</div></div>
-    <div class="kpi-item"><div class="kpi-value">${gr}</div><div class="kpi-label">好评率</div></div>`;
+    <div class="kpi-item"><div class="kpi-value">${d.validOrders}</div><div class="kpi-label">有效订单</div></div>
+    <div class="kpi-item"><div class="kpi-value success">¥${d.income}</div><div class="kpi-label">收入</div></div>
+    <div class="kpi-item"><div class="kpi-value">¥${avgO}</div><div class="kpi-label">客单价</div></div>
+    <div class="kpi-item"><div class="kpi-value">${inR}</div><div class="kpi-label">进店转化率</div></div>
+    <div class="kpi-item"><div class="kpi-value">${oR}</div><div class="kpi-label">下单转化率</div></div>
+    <div class="kpi-item"><div class="kpi-value">${rep}</div><div class="kpi-label">复购率</div></div>`;
 }
 
 function renderCharts(data){
   const labels=data.map(d=>d.date.slice(5));
-  const rev=data.map(d=>d.actualIncome||0);
-  const ord=data.map(d=>d.orderCount||0);
-  if(chartRevenue)chartRevenue.destroy();
-  if(chartOrders)chartOrders.destroy();
+  const rev=data.map(d=>d.income||0);
+  const ord=data.map(d=>d.validOrders||0);
+  if(chartRevenue)chartRevenue.destroy();if(chartOrders)chartOrders.destroy();
   const opts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'#f0f0f0'},ticks:{font:{size:10}},beginAtZero:true}}};
   chartRevenue=new Chart(document.getElementById('chartRevenue'),{type:'line',data:{labels,datasets:[{data:rev,borderColor:'#5B7BA5',backgroundColor:'rgba(91,123,165,0.1)',fill:true,tension:.3,pointRadius:3}]},options:opts});
   chartOrders=new Chart(document.getElementById('chartOrders'),{type:'bar',data:{labels,datasets:[{data:ord,backgroundColor:'rgba(91,123,165,0.6)',borderRadius:4}]},options:opts});
@@ -351,171 +289,92 @@ function renderCharts(data){
 function renderComparison(){
   const el=document.getElementById('compareSection');
   const all=loadData();
-  const d0=all.filter(d=>d.storeIndex===dashStore&&d.platformIndex===0).slice(-7);
-  const d1=all.filter(d=>d.storeIndex===dashStore&&d.platformIndex===1).slice(-7);
+  const d0=all.filter(d=>d.storeIndex===dashS&&d.platformIndex===0).slice(-7);
+  const d1=all.filter(d=>d.storeIndex===dashS&&d.platformIndex===1).slice(-7);
   const sum=(arr,k)=>arr.reduce((s,d)=>s+(d[k]||0),0);
-  const metrics=[{label:'营业额',key:'revenue'},{label:'实收',key:'actualIncome'},{label:'订单量',key:'orderCount'},{label:'进店人数',key:'visitors'}];
-  let html=`<div style="display:flex;justify-content:flex-end;gap:20px;margin-bottom:8px;font-size:11px;color:var(--text-light)"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--primary);margin-right:4px"></span>${PLATFORMS[0]}</span><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-right:4px"></span>${PLATFORMS[1]}</span></div>`;
+  const metrics=[{label:'收入',key:'income'},{label:'有效订单',key:'validOrders'},{label:'进店人数',key:'inPeople'},{label:'下单人数',key:'orderPeople'}];
+  let html=`<div style="display:flex;justify-content:flex-end;gap:16px;margin-bottom:8px;font-size:11px;color:var(--text-light)"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--primary);margin-right:4px"></span>${PLATFORMS[0]}</span><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-right:4px"></span>${PLATFORMS[1]}</span></div>`;
   metrics.forEach(m=>{
     const v0=sum(d0,m.key),v1=sum(d1,m.key),max=Math.max(v0,v1,1);
-    const isMoney=m.key.includes('Income')||m.key==='revenue';
-    html+=`<div class="compare-row"><span style="width:60px;font-size:12px;color:var(--text-light)">${m.label}</span><div class="compare-bar"><div class="bar a" style="width:${v0/max*100}px"></div><span style="font-size:12px;min-width:40px">${isMoney?'¥'+v0:v0}</span></div><div class="compare-bar"><div class="bar b" style="width:${v1/max*100}px"></div><span style="font-size:12px;min-width:40px">${isMoney?'¥'+v1:v1}</span></div></div>`;
+    const isM=m.key==='income';
+    html+=`<div class="compare-row"><span style="width:60px;font-size:12px;color:var(--text-light)">${m.label}</span><div class="compare-bar"><div class="bar a" style="width:${v0/max*100}px"></div><span style="font-size:12px;min-width:40px">${isM?'¥'+v0:v0}</span></div><div class="compare-bar"><div class="bar b" style="width:${v1/max*100}px"></div><span style="font-size:12px;min-width:40px">${isM?'¥'+v1:v1}</span></div></div>`;
   });
   el.innerHTML=html;
 }
 
-// ============ ENTRY ============
+// Entry
 function submitEntry(){
   const date=document.getElementById('entryDate').value;
   if(!date){showToast('请选择日期');return;}
-  const record={
-    id:editingId||Date.now().toString(),
-    storeIndex:entryStore,
-    platformIndex:entryPlatform,
-    date,
-    impressions:Number(document.getElementById('f_impressions').value)||0,
-    visitors:Number(document.getElementById('f_visitors').value)||0,
-    buyers:Number(document.getElementById('f_buyers').value)||0,
-    orderCount:Number(document.getElementById('f_orderCount').value)||0,
-    revenue:Number(Number(document.getElementById('f_revenue').value).toFixed(2))||0,
-    actualIncome:Number(Number(document.getElementById('f_actualIncome').value).toFixed(2))||0,
-    commission:Number(Number(document.getElementById('f_commission').value).toFixed(2))||0,
-    promoCost:Number(Number(document.getElementById('f_promoCost').value).toFixed(2))||0,
-    goodReviews:Number(document.getElementById('f_goodReviews').value)||0,
-    badReviews:Number(document.getElementById('f_badReviews').value)||0,
-  };
+  const r={id:editingId||Date.now().toString(),storeIndex:entryS,platformIndex:entryP,date};
+  FIELDS.forEach(f=>{
+    const el=document.getElementById('f_'+f);
+    if(!el)return;
+    let v=el.value;
+    if(f==='inRate'||f==='orderRate')v=parseFloat(v)||0;
+    else v=Number(v)||0;
+    r[f]=v;
+  });
   let data=loadData();
   if(editingId){
-    const idx=data.findIndex(d=>d.id===editingId);
-    if(idx>=0)data[idx]=record;
-    editingId=null;
-    document.getElementById('btnSubmit').textContent='提交数据';
-    showToast('更新成功');
+    const idx=data.findIndex(d=>d.id===editingId);if(idx>=0)data[idx]=r;editingId=null;document.getElementById('btnSubmit').textContent='提交数据';showToast('更新成功');
   }else{
-    const exist=data.findIndex(d=>d.storeIndex===entryStore&&d.platformIndex===entryPlatform&&d.date===date);
-    if(exist>=0){
-      if(confirm('该日期已有数据，是否覆盖？')){data[exist]=record;showToast('覆盖成功');}
-      else return;
-    }else{
-      data.push(record);
-      showToast('录入成功');
-    }
+    const ex=data.findIndex(d=>d.storeIndex===entryS&&d.platformIndex===entryP&&d.date===date);
+    if(ex>=0){if(confirm('该日期已有数据，是否覆盖？')){data[ex]=r;showToast('覆盖成功');}else return;}
+    else{data.push(r);showToast('录入成功');}
   }
-  saveData(data);
-  clearForm();
-  document.getElementById('entryDate').value=today();
+  saveData(data);clearForm();document.getElementById('entryDate').value=today();
 }
 
-function clearForm(){['f_impressions','f_visitors','f_buyers','f_orderCount','f_revenue','f_actualIncome','f_commission','f_promoCost','f_goodReviews','f_badReviews'].forEach(id=>{document.getElementById(id).value='';});}
+function clearForm(){FIELDS.forEach(f=>{const el=document.getElementById('f_'+f);if(el)el.value='';});}
 
-// ============ HISTORY ============
+// History
 function loadHistory(){
-  const data=loadData().filter(d=>d.storeIndex===histStore&&d.platformIndex===histPlatform).sort((a,b)=>b.date.localeCompare(a.date));
+  const data=loadData().filter(d=>d.storeIndex===histS&&d.platformIndex===histP).sort((a,b)=>b.date.localeCompare(a.date));
   const el=document.getElementById('histContent');
   if(!data.length){el.innerHTML='<div class="empty"><div class="icon">📭</div><div>暂无数据</div></div>';return;}
-  let html='<table class="history-table"><thead><tr><th>日期</th><th>订单</th><th>实收</th><th>客单价</th><th>操作</th></tr></thead><tbody>';
+  let html='<table class="history-table"><thead><tr><th>日期</th><th>订单</th><th>收入</th><th>客单价</th><th>操作</th></tr></thead><tbody>';
   data.forEach(d=>{
-    const avg=d.orderCount>0?'¥'+(d.actualIncome/d.orderCount).toFixed(1):'-';
-    html+=`<tr><td>${d.date.slice(5)}</td><td>${d.orderCount}</td><td>¥${d.actualIncome}</td><td>${avg}</td><td><button class="btn-sm btn-edit" onclick="editRecord('${d.id}')">编辑</button> <button class="btn-sm btn-del" onclick="delRecord('${d.id}')">删</button></td></tr>`;
+    const avg=d.validOrders>0?'¥'+(d.income/d.validOrders).toFixed(1):'-';
+    html+=`<tr><td>${d.date.slice(5)}</td><td>${d.validOrders}</td><td>¥${d.income}</td><td>${avg}</td><td><button class="btn-sm btn-edit" onclick="editR('${d.id}')">编辑</button> <button class="btn-sm btn-del" onclick="delR('${d.id}')">删</button></td></tr>`;
   });
-  html+='</tbody></table>';
-  el.innerHTML=html;
+  html+='</tbody></table>';el.innerHTML=html;
 }
 
-function editRecord(id){
-  const d=loadData().find(r=>r.id===id);
-  if(!d){showToast('数据不存在');return;}
-  editingId=id;
-  entryStore=d.storeIndex;entryPlatform=d.platformIndex;
-  document.getElementById('entryStoreLabel').textContent=stores[entryStore];
-  document.querySelectorAll('#entryPlatformToggle .tab').forEach((t,i)=>t.classList.toggle('active',i===entryPlatform));
-  refreshStoreDropdowns();
-  switchPage('pageEntry');
+function editR(id){
+  const d=loadData().find(r=>r.id===id);if(!d)return;
+  editingId=id;entryS=d.storeIndex;entryP=d.platformIndex;
+  document.getElementById('entryStoreLabel').textContent=stores[entryS];
+  document.querySelectorAll('#entryPT .tab').forEach((t,i)=>t.classList.toggle('active',i===entryP));
+  refreshDD();switchPage('pageEntry');
   document.getElementById('entryDate').value=d.date;
-  document.getElementById('f_impressions').value=d.impressions||'';
-  document.getElementById('f_visitors').value=d.visitors||'';
-  document.getElementById('f_buyers').value=d.buyers||'';
-  document.getElementById('f_orderCount').value=d.orderCount||'';
-  document.getElementById('f_revenue').value=d.revenue||'';
-  document.getElementById('f_actualIncome').value=d.actualIncome||'';
-  document.getElementById('f_commission').value=d.commission||'';
-  document.getElementById('f_promoCost').value=d.promoCost||'';
-  document.getElementById('f_goodReviews').value=d.goodReviews||'';
-  document.getElementById('f_badReviews').value=d.badReviews||'';
+  FIELDS.forEach(f=>{const el=document.getElementById('f_'+f);if(el)el.value=d[f]!==undefined&&d[f]!==0?d[f]:'';});
+  autoCalc();
   document.getElementById('btnSubmit').textContent='更新数据';
 }
 
-function delRecord(id){
-  if(!confirm('确定删除？'))return;
-  saveData(loadData().filter(d=>d.id!==id));
-  showToast('已删除');
-  loadHistory();
-}
+function delR(id){if(!confirm('确定删除？'))return;saveData(loadData().filter(d=>d.id!==id));showToast('已删除');loadHistory();}
 
-// ============ SETTINGS ============
+// Settings
 function renderStoreList(){
-  const el=document.getElementById('storeList');
-  el.innerHTML=stores.map((s,i)=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><span style="font-size:15px">${s}</span>${stores.length>1?`<button class="btn-sm btn-del" onclick="removeStore(${i})">删除</button>`:''}</div>`).join('');
+  document.getElementById('storeList').innerHTML=stores.map((s,i)=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><span>${s}</span>${stores.length>1?`<button class="btn-sm btn-del" onclick="removeStore(${i})">删除</button>`:''}</div>`).join('');
 }
 function addStore(){
-  const name=document.getElementById('newStoreName').value.trim();
-  if(!name){showToast('请输入店铺名称');return;}
-  if(stores.includes(name)){showToast('店铺已存在');return;}
-  stores.push(name);
-  saveStores();
-  document.getElementById('newStoreName').value='';
-  renderStoreList();
-  refreshStoreDropdowns();
-  showToast('添加成功');
+  const n=document.getElementById('newStoreName').value.trim();
+  if(!n){showToast('请输入名称');return;}if(stores.includes(n)){showToast('已存在');return;}
+  stores.push(n);saveStores();document.getElementById('newStoreName').value='';renderStoreList();refreshDD();showToast('添加成功');
 }
 function removeStore(i){
-  if(!confirm('删除店铺会同时删除该店铺所有数据，确定？'))return;
-  // Remove associated data
-  let data=loadData().filter(d=>d.storeIndex!==i);
-  // Re-index storeIndex for stores after removed one
-  data=data.map(d=>{if(d.storeIndex>i)d.storeIndex--;return d;});
-  saveData(data);
-  stores.splice(i,1);
-  saveStores();
-  if(dashStore>=stores.length)dashStore=0;
-  if(entryStore>=stores.length)entryStore=0;
-  if(histStore>=stores.length)histStore=0;
-  renderStoreList();
-  refreshStoreDropdowns();
-  showToast('已删除');
+  if(!confirm('删除店铺会同时删除相关数据？'))return;
+  let data=loadData().filter(d=>d.storeIndex!==i).map(d=>{if(d.storeIndex>i)d.storeIndex--;return d;});
+  saveData(data);stores.splice(i,1);saveStores();
+  if(dashS>=stores.length)dashS=0;if(entryS>=stores.length)entryS=0;if(histS>=stores.length)histS=0;
+  renderStoreList();refreshDD();showToast('已删除');
 }
-function changePassword(){
-  const p=document.getElementById('s_newPwd').value.trim();
-  if(!p){showToast('请输入新密码');return;}
-  localStorage.setItem(SK_PWD,p);
-  document.getElementById('s_newPwd').value='';
-  showToast('密码已修改');
-}
-function exportData(){
-  const data=loadData();
-  const blob=new Blob([JSON.stringify({stores,platforms:PLATFORMS,data},null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='外卖数据_'+today()+'.json';a.click();
-}
-function importData(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=function(ev){
-    try{
-      const imported=JSON.parse(ev.target.result);
-      if(imported.stores){stores=imported.stores;saveStores();}
-      const records=imported.data||imported;
-      if(!Array.isArray(records)){showToast('格式错误');return;}
-      const existing=loadData();
-      saveData([...existing,...records]);
-      showToast('导入成功，共'+records.length+'条');
-      refreshStoreDropdowns();
-      loadDashboard();
-    }catch(err){showToast('文件解析失败');}
-  };
-  reader.readAsText(file);
-}
+function changePassword(){const p=document.getElementById('s_newPwd').value.trim();if(!p){showToast('请输入新密码');return;}localStorage.setItem(SK_PWD,p);document.getElementById('s_newPwd').value='';showToast('密码已修改');}
+function exportData(){const blob=new Blob([JSON.stringify({stores,platforms:PLATFORMS,data:loadData()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='外卖数据_'+today()+'.json';a.click();}
+function importData(e){const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=function(ev){try{const imp=JSON.parse(ev.target.result);if(imp.stores){stores=imp.stores;saveStores();}const recs=imp.data||imp;if(!Array.isArray(recs)){showToast('格式错误');return;}saveData([...loadData(),...recs]);showToast('导入成功');refreshDD();loadDashboard();}catch(err){showToast('解析失败');}};r.readAsText(file);}
 function clearAllData(){localStorage.removeItem(SK_DATA);showToast('已清空');}
-
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
 </script>
 </body>
