@@ -48,9 +48,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .form-input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:15px;outline:none;transition:border .2s;background:#fff}
 .form-input:focus{border-color:var(--primary)}
 
-.store-toggle{display:flex;background:var(--bg);border-radius:8px;padding:3px;margin-bottom:16px}
-.store-toggle .tab{flex:1;text-align:center;padding:8px;border-radius:6px;font-size:14px;cursor:pointer;transition:all .2s}
-.store-toggle .tab.active{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.1);font-weight:600;color:var(--primary)}
+/* Store selector */
+.store-selector{margin-bottom:12px}
+.store-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:15px;cursor:pointer;color:var(--text)}
+.store-btn:active{background:var(--bg)}
+.store-btn .arrow{font-size:12px;color:var(--text-light);transition:transform .2s}
+.store-btn.open .arrow{transform:rotate(180deg)}
+
+.store-dropdown{display:none;margin-top:4px;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.store-dropdown.show{display:block}
+.store-opt{padding:10px 16px;cursor:pointer;font-size:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.store-opt:last-child{border-bottom:none}
+.store-opt:active{background:var(--bg)}
+.store-opt.selected{color:var(--primary);font-weight:600}
+.store-opt .platforms{font-size:11px;color:var(--text-light)}
+.store-opt .check{color:var(--primary);font-size:16px}
+
+/* Platform toggle under store */
+.platform-toggle{display:flex;background:var(--bg);border-radius:8px;padding:3px;margin-bottom:16px}
+.platform-toggle .tab{flex:1;text-align:center;padding:8px;border-radius:6px;font-size:14px;cursor:pointer;transition:all .2s}
+.platform-toggle .tab.active{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.1);font-weight:600;color:var(--primary)}
 
 .btn-submit{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;margin-top:8px}
 .btn-submit:active{background:var(--primary-light)}
@@ -78,6 +95,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 .empty{text-align:center;padding:40px 20px;color:var(--text-light)}
 .empty .icon{font-size:48px;margin-bottom:12px}
+
+.section-label{font-size:12px;color:var(--text-light);margin:12px 0 6px;padding-left:4px}
+
+/* Add store */
+.add-store-row{display:flex;gap:8px;margin-top:8px}
+.add-store-row input{flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;outline:none}
+.add-store-row button{padding:10px 16px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:14px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -94,18 +118,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- App -->
 <div id="mainApp" style="display:none">
+
+  <!-- Dashboard -->
   <div id="pageDash" class="page active">
     <div class="page-header"><h1>数据看板</h1><span class="date" id="dashDate"></span></div>
-    <div class="store-toggle"><div class="tab active" onclick="switchDashStore(0)">店1</div><div class="tab" onclick="switchDashStore(1)">店2</div></div>
+    <div class="store-selector">
+      <button class="store-btn" id="dashStoreBtn" onclick="toggleDashDropdown()">
+        <span id="dashStoreLabel">选择店铺</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="store-dropdown" id="dashStoreDropdown"></div>
+    </div>
+    <div class="platform-toggle" id="dashPlatformToggle">
+      <div class="tab active" onclick="switchDashPlatform(0)">淘宝闪购</div>
+      <div class="tab" onclick="switchDashPlatform(1)">美团外卖</div>
+    </div>
     <div id="dashKpi" class="kpi-grid"></div>
     <div class="card"><div class="card-title">营业额趋势</div><div class="chart-wrap"><canvas id="chartRevenue"></canvas></div></div>
     <div class="card"><div class="card-title">订单量趋势</div><div class="chart-wrap"><canvas id="chartOrders"></canvas></div></div>
-    <div class="card"><div class="card-title">两店对比（近7日）</div><div id="compareSection"></div></div>
+    <div class="card"><div class="card-title">平台对比（近7日）</div><div id="compareSection"></div></div>
   </div>
 
+  <!-- Entry -->
   <div id="pageEntry" class="page">
     <div class="page-header"><h1>数据录入</h1></div>
-    <div class="store-toggle" id="entryStoreToggle"><div class="tab active" onclick="switchEntryStore(0)">店1</div><div class="tab" onclick="switchEntryStore(1)">店2</div></div>
+    <div class="store-selector">
+      <button class="store-btn" id="entryStoreBtn" onclick="toggleEntryDropdown()">
+        <span id="entryStoreLabel">选择店铺</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="store-dropdown" id="entryStoreDropdown"></div>
+    </div>
+    <div class="platform-toggle" id="entryPlatformToggle">
+      <div class="tab active" onclick="switchEntryPlatform(0)">淘宝闪购</div>
+      <div class="tab" onclick="switchEntryPlatform(1)">美团外卖</div>
+    </div>
     <div class="card">
       <div class="form-group"><label class="form-label">日期</label><input type="date" class="form-input" id="entryDate"></div>
       <div class="form-row">
@@ -132,19 +179,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 
+  <!-- History -->
   <div id="pageHistory" class="page">
     <div class="page-header"><h1>历史记录</h1></div>
-    <div class="store-toggle" id="histStoreToggle"><div class="tab active" onclick="switchHistStore(0)">店1</div><div class="tab" onclick="switchHistStore(1)">店2</div></div>
+    <div class="store-selector">
+      <button class="store-btn" id="histStoreBtn" onclick="toggleHistDropdown()">
+        <span id="histStoreLabel">选择店铺</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="store-dropdown" id="histStoreDropdown"></div>
+    </div>
+    <div class="platform-toggle" id="histPlatformToggle">
+      <div class="tab active" onclick="switchHistPlatform(0)">淘宝闪购</div>
+      <div class="tab" onclick="switchHistPlatform(1)">美团外卖</div>
+    </div>
     <div id="histContent"></div>
   </div>
 
+  <!-- Settings -->
   <div id="pageSettings" class="page">
     <div class="page-header"><h1>设置</h1></div>
     <div class="card">
-      <div class="card-title">店铺名称</div>
-      <div class="form-group"><label class="form-label">店1名称</label><input type="text" class="form-input" id="s_store0Name" placeholder="店1"></div>
-      <div class="form-group"><label class="form-label">店2名称</label><input type="text" class="form-input" id="s_store1Name" placeholder="店2"></div>
-      <button class="btn-submit" onclick="saveStoreNames()">保存</button>
+      <div class="card-title">店铺管理</div>
+      <div id="storeList"></div>
+      <div class="add-store-row">
+        <input type="text" id="newStoreName" placeholder="输入店铺名称">
+        <button onclick="addStore()">添加</button>
+      </div>
     </div>
     <div class="card">
       <div class="card-title">修改密码</div>
@@ -153,12 +214,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <div class="card">
       <div class="card-title">数据管理</div>
-      <button class="btn-submit" onclick="exportData()" style="background:var(--primary-light)">导出数据（JSON）</button>
+      <button class="btn-submit" onclick="exportData()" style="background:var(--primary-light)">导出数据</button>
       <div style="height:8px"></div>
-      <label class="btn-submit" style="background:var(--primary-light);display:block;text-align:center;cursor:pointer">
-        导入数据
-        <input type="file" accept=".json" onchange="importData(event)" style="display:none">
-      </label>
+      <label class="btn-submit" style="background:var(--primary-light);display:block;text-align:center;cursor:pointer">导入数据<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label>
       <div style="height:8px"></div>
       <button class="btn-submit" onclick="if(confirm('确定清空所有数据？不可恢复！'))clearAllData()" style="background:var(--danger)">清空数据</button>
     </div>
@@ -175,103 +233,93 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="toast" id="toast"></div>
 
 <script>
-// ============ STORAGE ============
-const SK_PWD = 'wm_pwd', SK_DATA = 'wm_data', SK_NAMES = 'wm_names';
-let storeNames = ['淘宝闪购','美团外卖'];
-let currentDashStore=0, currentEntryStore=0, currentHistStore=0;
+const SK_PWD='wm_pwd',SK_DATA='wm_data',SK_STORES='wm_stores';
+const PLATFORMS=['淘宝闪购','美团外卖'];
+
+let stores=['远大购物中心店']; // default
+let curStore=0, curPlatform=0;
+let dashStore=0, dashPlatform=0;
+let entryStore=0, entryPlatform=0;
+let histStore=0, histPlatform=0;
 let chartRevenue=null, chartOrders=null;
 let editingId=null;
 
-function loadData(){ return JSON.parse(localStorage.getItem(SK_DATA)||'[]'); }
-function saveData(d){ localStorage.setItem(SK_DATA, JSON.stringify(d)); }
-function loadNames(){ const n=JSON.parse(localStorage.getItem(SK_NAMES)||'null'); if(n) storeNames=n; updateStoreLabels(); }
-function saveNames(){ localStorage.setItem(SK_NAMES, JSON.stringify(storeNames)); }
+// ============ STORAGE ============
+function loadData(){return JSON.parse(localStorage.getItem(SK_DATA)||'[]');}
+function saveData(d){localStorage.setItem(SK_DATA,JSON.stringify(d));}
+function loadStores(){const s=JSON.parse(localStorage.getItem(SK_STORES)||'null');if(s&&s.length)stores=s;}
+function saveStores(){localStorage.setItem(SK_STORES,JSON.stringify(stores));}
 
 // ============ LOGIN ============
 function doLogin(){
   const pwd=document.getElementById('pwdInput').value.trim();
   if(!pwd){showToast('请输入密码');return;}
   const saved=localStorage.getItem(SK_PWD);
-  if(!saved){
-    localStorage.setItem(SK_PWD,pwd);
-    enterApp();
-    showToast('密码已设置');
-  } else if(pwd===saved){
-    enterApp();
-  } else {
-    showToast('密码错误');
-  }
+  if(!saved){localStorage.setItem(SK_PWD,pwd);enterApp();showToast('密码已设置');}
+  else if(pwd===saved){enterApp();}
+  else{showToast('密码错误');}
 }
-function enterApp(){
-  document.getElementById('loginPage').style.display='none';
-  document.getElementById('mainApp').style.display='block';
-  initApp();
-}
-function checkAuth(){
-  const saved=localStorage.getItem(SK_PWD);
-  if(sessionStorage.getItem('wm_authed')==='1' || !saved){
-    if(!saved || sessionStorage.getItem('wm_authed')==='1'){
-      if(!saved){/* first time, show login */}
-      else{enterApp();}
-    }
-  }
-}
-document.getElementById('pwdInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-
-// Auto-login if already authed this session
-(function(){
-  if(sessionStorage.getItem('wm_authed')==='1'){
-    document.getElementById('loginPage').style.display='none';
-    document.getElementById('mainApp').style.display='block';
-    loadNames();
-    initApp();
-  }
-})();
-
 function enterApp(){
   sessionStorage.setItem('wm_authed','1');
   document.getElementById('loginPage').style.display='none';
   document.getElementById('mainApp').style.display='block';
-  loadNames();
+  loadStores();
   initApp();
 }
+document.getElementById('pwdInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+(function(){if(sessionStorage.getItem('wm_authed')==='1'){document.getElementById('loginPage').style.display='none';document.getElementById('mainApp').style.display='block';loadStores();initApp();}})();
 
 // ============ APP ============
 function initApp(){
   document.getElementById('entryDate').value=today();
   document.getElementById('dashDate').textContent=today();
+  refreshStoreDropdowns();
   loadDashboard();
 }
-
-function today(){ return new Date().toISOString().split('T')[0]; }
-function fmtDate(d){ if(typeof d==='string') return d; const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; }
+function today(){return new Date().toISOString().split('T')[0];}
 
 // ============ NAV ============
 function switchPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav-item').forEach((n,i)=>n.classList.toggle('active',['pageDash','pageEntry','pageHistory','pageSettings'][i]===id));
-  if(id==='pageDash') loadDashboard();
-  if(id==='pageHistory') loadHistory();
-  if(id==='pageSettings') loadSettingsForm();
+  if(id==='pageDash')loadDashboard();
+  if(id==='pageHistory')loadHistory();
+  if(id==='pageSettings')renderStoreList();
 }
 
-function switchDashStore(i){currentDashStore=i;document.querySelectorAll('#pageDash .store-toggle .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadDashboard();}
-function switchEntryStore(i){currentEntryStore=i;document.querySelectorAll('#entryStoreToggle .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));editingId=null;document.getElementById('btnSubmit').textContent='提交数据';clearForm();}
-function switchHistStore(i){currentHistStore=i;document.querySelectorAll('#histStoreToggle .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadHistory();}
-
-function updateStoreLabels(){
-  document.querySelectorAll('.store-toggle').forEach(t=>{const tabs=t.querySelectorAll('.tab');tabs[0].textContent=storeNames[0];tabs[1].textContent=storeNames[1];});
+// ============ STORE DROPDOWNS ============
+function refreshStoreDropdowns(){
+  ['dash','entry','hist'].forEach(prefix=>{
+    const dd=document.getElementById(prefix+'StoreDropdown');
+    const label=document.getElementById(prefix+'StoreLabel');
+    const storeIdx=prefix==='dash'?dashStore:prefix==='entry'?entryStore:histStore;
+    label.textContent=stores[storeIdx]||stores[0];
+    dd.innerHTML=stores.map((s,i)=>`<div class="store-opt${i===storeIdx?' selected':''}" onclick="select${prefix.charAt(0).toUpperCase()+prefix.slice(1)}Store(${i})">${s}<span class="platforms">${PLATFORMS.join(' / ')}</span>${i===storeIdx?'<span class="check">✓</span>':''}</div>`).join('');
+  });
 }
+
+function toggleDashDropdown(){const dd=document.getElementById('dashStoreDropdown');dd.classList.toggle('show');document.getElementById('dashStoreBtn').classList.toggle('open');}
+function toggleEntryDropdown(){const dd=document.getElementById('entryStoreDropdown');dd.classList.toggle('show');document.getElementById('entryStoreBtn').classList.toggle('open');}
+function toggleHistDropdown(){const dd=document.getElementById('histStoreDropdown');dd.classList.toggle('show');document.getElementById('histStoreBtn').classList.toggle('open');}
+
+function selectDashStore(i){dashStore=i;document.getElementById('dashStoreLabel').textContent=stores[i];toggleDashDropdown();refreshStoreDropdowns();loadDashboard();}
+function selectEntryStore(i){entryStore=i;document.getElementById('entryStoreLabel').textContent=stores[i];toggleEntryDropdown();refreshStoreDropdowns();editingId=null;document.getElementById('btnSubmit').textContent='提交数据';clearForm();}
+function selectHistStore(i){histStore=i;document.getElementById('histStoreLabel').textContent=stores[i];toggleHistDropdown();refreshStoreDropdowns();loadHistory();}
+
+// ============ PLATFORM TOGGLES ============
+function switchDashPlatform(i){dashPlatform=i;document.querySelectorAll('#dashPlatformToggle .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadDashboard();}
+function switchEntryPlatform(i){entryPlatform=i;document.querySelectorAll('#entryPlatformToggle .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));editingId=null;document.getElementById('btnSubmit').textContent='提交数据';clearForm();}
+function switchHistPlatform(i){histPlatform=i;document.querySelectorAll('#histPlatformToggle .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadHistory();}
 
 // ============ DASHBOARD ============
 function loadDashboard(){
-  const all=loadData().filter(d=>d.storeIndex===currentDashStore).sort((a,b)=>a.date.localeCompare(b.date));
+  const all=loadData().filter(d=>d.storeIndex===dashStore&&d.platformIndex===dashPlatform).sort((a,b)=>a.date.localeCompare(b.date));
   const last7=all.slice(-7);
-  const todayData=all.find(d=>d.date===today());
-  renderKpi(todayData);
+  const todayD=all.find(d=>d.date===today());
+  renderKpi(todayD);
   renderCharts(last7);
-  renderComparison(all.slice(-7));
+  renderComparison();
 }
 
 function renderKpi(d){
@@ -293,21 +341,21 @@ function renderCharts(data){
   const labels=data.map(d=>d.date.slice(5));
   const rev=data.map(d=>d.actualIncome||0);
   const ord=data.map(d=>d.orderCount||0);
-  if(chartRevenue) chartRevenue.destroy();
-  if(chartOrders) chartOrders.destroy();
+  if(chartRevenue)chartRevenue.destroy();
+  if(chartOrders)chartOrders.destroy();
   const opts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'#f0f0f0'},ticks:{font:{size:10}},beginAtZero:true}}};
   chartRevenue=new Chart(document.getElementById('chartRevenue'),{type:'line',data:{labels,datasets:[{data:rev,borderColor:'#5B7BA5',backgroundColor:'rgba(91,123,165,0.1)',fill:true,tension:.3,pointRadius:3}]},options:opts});
   chartOrders=new Chart(document.getElementById('chartOrders'),{type:'bar',data:{labels,datasets:[{data:ord,backgroundColor:'rgba(91,123,165,0.6)',borderRadius:4}]},options:opts});
 }
 
-function renderComparison(data){
+function renderComparison(){
   const el=document.getElementById('compareSection');
   const all=loadData();
-  const d0=all.filter(d=>d.storeIndex===0).slice(-7);
-  const d1=all.filter(d=>d.storeIndex===1).slice(-7);
+  const d0=all.filter(d=>d.storeIndex===dashStore&&d.platformIndex===0).slice(-7);
+  const d1=all.filter(d=>d.storeIndex===dashStore&&d.platformIndex===1).slice(-7);
   const sum=(arr,k)=>arr.reduce((s,d)=>s+(d[k]||0),0);
   const metrics=[{label:'营业额',key:'revenue'},{label:'实收',key:'actualIncome'},{label:'订单量',key:'orderCount'},{label:'进店人数',key:'visitors'}];
-  let html=`<div style="display:flex;justify-content:flex-end;gap:20px;margin-bottom:8px;font-size:11px;color:var(--text-light)"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--primary);margin-right:4px"></span>${storeNames[0]}</span><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-right:4px"></span>${storeNames[1]}</span></div>`;
+  let html=`<div style="display:flex;justify-content:flex-end;gap:20px;margin-bottom:8px;font-size:11px;color:var(--text-light)"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--primary);margin-right:4px"></span>${PLATFORMS[0]}</span><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-right:4px"></span>${PLATFORMS[1]}</span></div>`;
   metrics.forEach(m=>{
     const v0=sum(d0,m.key),v1=sum(d1,m.key),max=Math.max(v0,v1,1);
     const isMoney=m.key.includes('Income')||m.key==='revenue';
@@ -321,8 +369,9 @@ function submitEntry(){
   const date=document.getElementById('entryDate').value;
   if(!date){showToast('请选择日期');return;}
   const record={
-    id: editingId || Date.now().toString(),
-    storeIndex:currentEntryStore,
+    id:editingId||Date.now().toString(),
+    storeIndex:entryStore,
+    platformIndex:entryPlatform,
     date,
     impressions:Number(document.getElementById('f_impressions').value)||0,
     visitors:Number(document.getElementById('f_visitors').value)||0,
@@ -338,16 +387,16 @@ function submitEntry(){
   let data=loadData();
   if(editingId){
     const idx=data.findIndex(d=>d.id===editingId);
-    if(idx>=0) data[idx]=record;
+    if(idx>=0)data[idx]=record;
     editingId=null;
     document.getElementById('btnSubmit').textContent='提交数据';
     showToast('更新成功');
-  } else {
-    const exist=data.findIndex(d=>d.storeIndex===currentEntryStore && d.date===date);
+  }else{
+    const exist=data.findIndex(d=>d.storeIndex===entryStore&&d.platformIndex===entryPlatform&&d.date===date);
     if(exist>=0){
       if(confirm('该日期已有数据，是否覆盖？')){data[exist]=record;showToast('覆盖成功');}
       else return;
-    } else {
+    }else{
       data.push(record);
       showToast('录入成功');
     }
@@ -361,7 +410,7 @@ function clearForm(){['f_impressions','f_visitors','f_buyers','f_orderCount','f_
 
 // ============ HISTORY ============
 function loadHistory(){
-  const data=loadData().filter(d=>d.storeIndex===currentHistStore).sort((a,b)=>b.date.localeCompare(a.date));
+  const data=loadData().filter(d=>d.storeIndex===histStore&&d.platformIndex===histPlatform).sort((a,b)=>b.date.localeCompare(a.date));
   const el=document.getElementById('histContent');
   if(!data.length){el.innerHTML='<div class="empty"><div class="icon">📭</div><div>暂无数据</div></div>';return;}
   let html='<table class="history-table"><thead><tr><th>日期</th><th>订单</th><th>实收</th><th>客单价</th><th>操作</th></tr></thead><tbody>';
@@ -377,8 +426,10 @@ function editRecord(id){
   const d=loadData().find(r=>r.id===id);
   if(!d){showToast('数据不存在');return;}
   editingId=id;
-  currentEntryStore=d.storeIndex;
-  switchEntryStore(d.storeIndex);
+  entryStore=d.storeIndex;entryPlatform=d.platformIndex;
+  document.getElementById('entryStoreLabel').textContent=stores[entryStore];
+  document.querySelectorAll('#entryPlatformToggle .tab').forEach((t,i)=>t.classList.toggle('active',i===entryPlatform));
+  refreshStoreDropdowns();
   switchPage('pageEntry');
   document.getElementById('entryDate').value=d.date;
   document.getElementById('f_impressions').value=d.impressions||'';
@@ -396,23 +447,42 @@ function editRecord(id){
 
 function delRecord(id){
   if(!confirm('确定删除？'))return;
-  let data=loadData().filter(d=>d.id!==id);
-  saveData(data);
+  saveData(loadData().filter(d=>d.id!==id));
   showToast('已删除');
   loadHistory();
 }
 
 // ============ SETTINGS ============
-function loadSettingsForm(){
-  document.getElementById('s_store0Name').value=storeNames[0];
-  document.getElementById('s_store1Name').value=storeNames[1];
+function renderStoreList(){
+  const el=document.getElementById('storeList');
+  el.innerHTML=stores.map((s,i)=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><span style="font-size:15px">${s}</span>${stores.length>1?`<button class="btn-sm btn-del" onclick="removeStore(${i})">删除</button>`:''}</div>`).join('');
 }
-function saveStoreNames(){
-  storeNames[0]=document.getElementById('s_store0Name').value.trim()||'淘宝闪购';
-  storeNames[1]=document.getElementById('s_store1Name').value.trim()||'美团外卖';
-  saveNames();
-  updateStoreLabels();
-  showToast('保存成功');
+function addStore(){
+  const name=document.getElementById('newStoreName').value.trim();
+  if(!name){showToast('请输入店铺名称');return;}
+  if(stores.includes(name)){showToast('店铺已存在');return;}
+  stores.push(name);
+  saveStores();
+  document.getElementById('newStoreName').value='';
+  renderStoreList();
+  refreshStoreDropdowns();
+  showToast('添加成功');
+}
+function removeStore(i){
+  if(!confirm('删除店铺会同时删除该店铺所有数据，确定？'))return;
+  // Remove associated data
+  let data=loadData().filter(d=>d.storeIndex!==i);
+  // Re-index storeIndex for stores after removed one
+  data=data.map(d=>{if(d.storeIndex>i)d.storeIndex--;return d;});
+  saveData(data);
+  stores.splice(i,1);
+  saveStores();
+  if(dashStore>=stores.length)dashStore=0;
+  if(entryStore>=stores.length)entryStore=0;
+  if(histStore>=stores.length)histStore=0;
+  renderStoreList();
+  refreshStoreDropdowns();
+  showToast('已删除');
 }
 function changePassword(){
   const p=document.getElementById('s_newPwd').value.trim();
@@ -423,35 +493,29 @@ function changePassword(){
 }
 function exportData(){
   const data=loadData();
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='外卖数据_'+today()+'.json';
-  a.click();
+  const blob=new Blob([JSON.stringify({stores,platforms:PLATFORMS,data},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='外卖数据_'+today()+'.json';a.click();
 }
 function importData(e){
-  const file=e.target.files[0];
-  if(!file)return;
+  const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=function(ev){
     try{
       const imported=JSON.parse(ev.target.result);
-      if(!Array.isArray(imported)){showToast('格式错误');return;}
+      if(imported.stores){stores=imported.stores;saveStores();}
+      const records=imported.data||imported;
+      if(!Array.isArray(records)){showToast('格式错误');return;}
       const existing=loadData();
-      const merged=[...existing,...imported];
-      saveData(merged);
-      showToast('导入成功，共'+imported.length+'条');
+      saveData([...existing,...records]);
+      showToast('导入成功，共'+records.length+'条');
+      refreshStoreDropdowns();
       loadDashboard();
     }catch(err){showToast('文件解析失败');}
   };
   reader.readAsText(file);
 }
-function clearAllData(){
-  localStorage.removeItem(SK_DATA);
-  showToast('已清空');
-}
+function clearAllData(){localStorage.removeItem(SK_DATA);showToast('已清空');}
 
-// ============ UTILS ============
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
 </script>
 </body>
