@@ -110,6 +110,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="page-header"><h1>数据看板</h1><span class="date" id="dashDate"></span></div>
     <div class="store-selector"><button class="store-btn" id="dashStoreBtn" onclick="toggleDrop('dash')"><span id="dashStoreLabel">远大购物中心店</span><span class="arrow">▼</span></button><div class="store-dropdown" id="dashStoreDD"></div></div>
     <div class="platform-toggle" id="dashPT"><div class="tab active" onclick="setDashP(0)">淘宝闪购</div><div class="tab" onclick="setDashP(1)">美团外卖</div></div>
+    <div id="dashDateTabs" class="platform-toggle" style="margin-bottom:12px"></div>
     <div id="dashKpi" class="kpi-grid"></div>
     <div id="dashDataList"></div>
   </div>
@@ -252,13 +253,26 @@ function autoCalc(){
 // Dashboard
 function loadDashboard(){
   const all=loadData().filter(d=>d.storeIndex===dashS&&d.platformIndex===dashP).sort((a,b)=>b.date.localeCompare(a.date));
+  renderDateTabs(all);
   if(selectedDate){
     const picked=all.find(d=>d.date===selectedDate);
-    renderKpi(picked,selectedDate);
+    renderKpi(picked,selectedDate.slice(5));
+    renderDataCards(picked?[picked]:[]);
   }else{
     renderKpiAgg(all);
+    renderDataCards(all);
   }
-  renderDataCards(all);
+}
+
+function renderDateTabs(data){
+  const el=document.getElementById('dashDateTabs');
+  if(!data.length){el.innerHTML='';return;}
+  const dates=[...new Set(data.map(d=>d.date))].sort((a,b)=>b.localeCompare(a));
+  let html=`<div class="tab${selectedDate?'' :' active'}" onclick="pickDate(null)">全部</div>`;
+  dates.forEach(d=>{
+    html+=`<div class="tab${selectedDate===d?' active':''}" onclick="pickDate('${d}')">${d.slice(5)}</div>`;
+  });
+  el.innerHTML=html;
 }
 
 function renderKpi(d,dateLabel){
@@ -305,8 +319,7 @@ function renderKpiAgg(data){
 }
 
 function pickDate(date){
-  if(selectedDate===date){selectedDate=null;}
-  else{selectedDate=date;}
+  selectedDate=date;
   loadDashboard();
 }
 
@@ -318,9 +331,8 @@ function renderDataCards(data){
   const fmt=(v,unit)=>(v===undefined||v===null)?'-':(unit==='¥'?'¥'+v:v+unit);
   const sec=(title,body)=>`<div class="card"><div class="card-title" style="font-size:13px;color:var(--primary)">${title}</div><div style="${grid}">${body}</div></div>`;
   data.forEach(d=>{
-    const sel=d.date===selectedDate?' style="border:2px solid var(--primary)"':'';
-    html+=`<div class="card" style="padding:10px 16px;cursor:pointer${sel?';border:2px solid var(--primary)':''}" onclick="pickDate('${d.date}')"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:15px">${d.date.slice(5)}</b><span style="font-size:12px;color:var(--text-light)">${PLATFORMS[d.platformIndex]}</span></div></div>`;
-    html+=sec('📦 订单',`
+    const dateTag=data.length>1?' '+d.date.slice(5):'';
+    html+=sec('📦'+dateTag+' 订单',`
       <div>有效订单 <b>${d.validOrders!==undefined?d.validOrders:'-'}</b></div>
       <div>营业额 <b>${fmt(d.revenue,'¥')}</b></div>
       <div>收入 <b style="color:var(--success)">${fmt(d.income,'¥')}</b></div>
