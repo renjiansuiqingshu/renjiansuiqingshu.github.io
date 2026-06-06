@@ -183,6 +183,7 @@ const FIELDS=['validOrders','invalidOrders','revenue','income','expense','custom
 let stores=['远大购物中心店'];
 let dashS=0,dashP=0,entryS=0,entryP=0,histS=0,histP=0;
 let editingId=null;
+let selectedDate=null;
 
 function loadData(){return JSON.parse(localStorage.getItem(SK_DATA)||'[]');}
 function saveData(d){localStorage.setItem(SK_DATA,JSON.stringify(d));}
@@ -230,7 +231,7 @@ function toggleDrop(p){const dd=document.getElementById(p+'StoreDD');dd.classLis
 function pickS(p,i){if(p==='dash')dashS=i;else if(p==='entry')entryS=i;else histS=i;toggleDrop(p);refreshDD();if(p==='dash')loadDashboard();if(p==='hist')loadHistory();}
 
 // Platform
-function setDashP(i){dashP=i;document.querySelectorAll('#dashPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadDashboard();}
+function setDashP(i){dashP=i;selectedDate=null;document.querySelectorAll('#dashPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadDashboard();}
 function setEntryP(i){entryP=i;document.querySelectorAll('#entryPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));editingId=null;document.getElementById('btnSubmit').textContent='提交数据';clearForm();}
 function setHistP(i){histP=i;document.querySelectorAll('#histPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadHistory();}
 
@@ -251,16 +252,19 @@ function autoCalc(){
 // Dashboard
 function loadDashboard(){
   const all=loadData().filter(d=>d.storeIndex===dashS&&d.platformIndex===dashP).sort((a,b)=>b.date.localeCompare(a.date));
-  const latest=all.length?all[0]:null;
-  renderKpi(latest);
+  if(selectedDate){
+    const picked=all.find(d=>d.date===selectedDate);
+    renderKpi(picked,selectedDate);
+  }else{
+    renderKpiAgg(all);
+  }
   renderDataCards(all);
 }
 
-function renderKpi(d){
+function renderKpi(d,dateLabel){
   const el=document.getElementById('dashKpi');
-  if(!d){el.innerHTML='<div class="kpi-item" style="grid-column:span 2"><div class="kpi-value" style="font-size:14px;color:var(--text-light)">暂无数据</div><div class="kpi-label">快去录入吧</div></div>';document.getElementById('dashDate').textContent=today();return;}
-  const isToday=d.date===today();
-  document.getElementById('dashDate').textContent=(isToday?'今日':d.date.slice(5))+' 数据';
+  if(!d){el.innerHTML='<div class="kpi-item" style="grid-column:span 2"><div class="kpi-value" style="font-size:14px;color:var(--text-light)">暂无数据</div><div class="kpi-label">快去录入吧</div></div>';document.getElementById('dashDate').textContent='数据总览';return;}
+  document.getElementById('dashDate').textContent=dateLabel+' 数据';
   const avgO=d.validOrders>0?(d.income/d.validOrders).toFixed(1):'0';
   const inR=d.expPeople>0?(d.inPeople/d.expPeople*100).toFixed(1)+'%':'0%';
   const oR=d.inPeople>0?(d.orderPeople/d.inPeople*100).toFixed(1)+'%':'0%';
@@ -274,6 +278,38 @@ function renderKpi(d){
     <div class="kpi-item"><div class="kpi-value">${rep}</div><div class="kpi-label">复购率</div></div>`;
 }
 
+function renderKpiAgg(data){
+  const el=document.getElementById('dashKpi');
+  document.getElementById('dashDate').textContent='数据总览';
+  if(!data.length){el.innerHTML='<div class="kpi-item" style="grid-column:span 2"><div class="kpi-value" style="font-size:14px;color:var(--text-light)">暂无数据</div><div class="kpi-label">快去录入吧</div></div>';return;}
+  let tVO=0,tIncome=0,tExpPeople=0,tInPeople=0,tOrderPeople=0,tRep=0,tRepN=0;
+  data.forEach(d=>{
+    tVO+=d.validOrders||0;
+    tIncome+=d.income||0;
+    tExpPeople+=d.expPeople||0;
+    tInPeople+=d.inPeople||0;
+    tOrderPeople+=d.orderPeople||0;
+    if(d.repurchase!==undefined&&d.repurchase!==null){tRep+=d.repurchase;tRepN++;}
+  });
+  const avgO=tVO>0?(tIncome/tVO).toFixed(1):'0';
+  const inR=tExpPeople>0?(tInPeople/tExpPeople*100).toFixed(1)+'%':'0%';
+  const oR=tInPeople>0?(tOrderPeople/tInPeople*100).toFixed(1)+'%':'0%';
+  const rep=tRepN>0?(tRep/tRepN).toFixed(1)+'%':'-';
+  el.innerHTML=`
+    <div class="kpi-item"><div class="kpi-value">${tVO}</div><div class="kpi-label">有效订单</div></div>
+    <div class="kpi-item"><div class="kpi-value success">¥${tIncome.toFixed(2)}</div><div class="kpi-label">收入</div></div>
+    <div class="kpi-item"><div class="kpi-value">¥${avgO}</div><div class="kpi-label">客单价</div></div>
+    <div class="kpi-item"><div class="kpi-value">${inR}</div><div class="kpi-label">进店转化率</div></div>
+    <div class="kpi-item"><div class="kpi-value">${oR}</div><div class="kpi-label">下单转化率</div></div>
+    <div class="kpi-item"><div class="kpi-value">${rep}</div><div class="kpi-label">复购率</div></div>`;
+}
+
+function pickDate(date){
+  if(selectedDate===date){selectedDate=null;}
+  else{selectedDate=date;}
+  loadDashboard();
+}
+
 function renderDataCards(data){
   const el=document.getElementById('dashDataList');
   if(!data.length){el.innerHTML='<div class="empty"><div class="icon">📭</div><div>暂无数据，去录入页添加</div></div>';return;}
@@ -282,7 +318,8 @@ function renderDataCards(data){
   const fmt=(v,unit)=>(v===undefined||v===null)?'-':(unit==='¥'?'¥'+v:v+unit);
   const sec=(title,body)=>`<div class="card"><div class="card-title" style="font-size:13px;color:var(--primary)">${title}</div><div style="${grid}">${body}</div></div>`;
   data.forEach(d=>{
-    html+=`<div class="card" style="padding:10px 16px"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:15px">${d.date.slice(5)}</b><span style="font-size:12px;color:var(--text-light)">${PLATFORMS[d.platformIndex]}</span></div></div>`;
+    const sel=d.date===selectedDate?' style="border:2px solid var(--primary)"':'';
+    html+=`<div class="card" style="padding:10px 16px;cursor:pointer${sel?';border:2px solid var(--primary)':''}" onclick="pickDate('${d.date}')"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:15px">${d.date.slice(5)}</b><span style="font-size:12px;color:var(--text-light)">${PLATFORMS[d.platformIndex]}</span></div></div>`;
     html+=sec('📦 订单',`
       <div>有效订单 <b>${d.validOrders!==undefined?d.validOrders:'-'}</b></div>
       <div>营业额 <b>${fmt(d.revenue,'¥')}</b></div>
