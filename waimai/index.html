@@ -208,7 +208,27 @@ function enterApp(){
 document.getElementById('pwdInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 (function(){if(sessionStorage.getItem('wm_authed')==='1'){document.getElementById('loginPage').style.display='none';document.getElementById('mainApp').style.display='block';loadStores();initApp();}})();
 
-function initApp(){document.getElementById('entryDate').value=today();document.getElementById('dashDate').textContent=today();refreshDD();loadDashboard();}
+function initApp(){document.getElementById('entryDate').value=today();document.getElementById('dashDate').textContent=today();seedData();refreshDD();loadDashboard();}
+
+function seedData(){
+  var data=JSON.parse(localStorage.getItem(SK_DATA)||'[]');
+  if(data.length>0)return;
+  var seed=[
+    {id:'1717507200000',storeIndex:0,platformIndex:0,date:'2026-06-05',
+     validOrders:5,invalidOrders:0,revenue:136,income:101.14,expense:34.86,customerPay:138.60,avgPay:27.72,avgOrder:20.23,
+     expPeople:0,expTimes:0,inPeople:0,inTimes:0,orderPeople:0,orderTimes:0,inRate:0,orderRate:0,
+     promoOrders:5,promoCost:10,promoPay:138.6,promoAvg:27.72,roi:13.86,promoRate:9.8,
+     newCust:4,oldCust:0,repurchase:25,bizHours:4.0,
+     cancelOrders:0,cancelRate:0,reportRate:80,cookTime:13,overTimeRate:20},
+    {id:'1717593600000',storeIndex:0,platformIndex:0,date:'2026-06-06',
+     validOrders:0,invalidOrders:0,revenue:0,income:0,expense:0,customerPay:0,avgPay:0,avgOrder:0,
+     expPeople:107,expTimes:120,inPeople:15,inTimes:17,orderPeople:1,orderTimes:1,inRate:14.0,orderRate:6.7,
+     promoOrders:0,promoCost:0,promoPay:0,promoAvg:0,roi:0,promoRate:0,
+     newCust:0,oldCust:0,repurchase:0,bizHours:0,
+     cancelOrders:0,cancelRate:0,reportRate:0,cookTime:0,overTimeRate:0}
+  ];
+  localStorage.setItem(SK_DATA,JSON.stringify(seed));
+}
 
 // Nav
 function switchPage(id){
