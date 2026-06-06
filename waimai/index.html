@@ -184,7 +184,7 @@ const FIELDS=['validOrders','invalidOrders','revenue','income','expense','custom
 let stores=['远大购物中心店'];
 let dashS=0,dashP=0,entryS=0,entryP=0,histS=0,histP=0;
 let editingId=null;
-let selectedDate=null;
+let selectedDate;
 
 function loadData(){return JSON.parse(localStorage.getItem(SK_DATA)||'[]');}
 function saveData(d){localStorage.setItem(SK_DATA,JSON.stringify(d));}
@@ -229,10 +229,10 @@ function refreshDD(){
   });
 }
 function toggleDrop(p){const dd=document.getElementById(p+'StoreDD');dd.classList.toggle('show');document.getElementById(p+'StoreBtn').classList.toggle('open');}
-function pickS(p,i){if(p==='dash')dashS=i;else if(p==='entry')entryS=i;else histS=i;toggleDrop(p);refreshDD();if(p==='dash')loadDashboard();if(p==='hist')loadHistory();}
+function pickS(p,i){if(p==='dash'){dashS=i;selectedDate=undefined;}else if(p==='entry')entryS=i;else histS=i;toggleDrop(p);refreshDD();if(p==='dash')loadDashboard();if(p==='hist')loadHistory();}
 
 // Platform
-function setDashP(i){dashP=i;selectedDate=null;document.querySelectorAll('#dashPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadDashboard();}
+function setDashP(i){dashP=i;selectedDate=undefined;document.querySelectorAll('#dashPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadDashboard();}
 function setEntryP(i){entryP=i;document.querySelectorAll('#entryPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));editingId=null;document.getElementById('btnSubmit').textContent='提交数据';clearForm();}
 function setHistP(i){histP=i;document.querySelectorAll('#histPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadHistory();}
 
@@ -253,7 +253,7 @@ function autoCalc(){
 // Dashboard
 function loadDashboard(){
   const all=loadData().filter(d=>d.storeIndex===dashS&&d.platformIndex===dashP).sort((a,b)=>b.date.localeCompare(a.date));
-  if(!selectedDate&&all.length)selectedDate=all[0].date;
+  if(selectedDate===undefined&&all.length)selectedDate=all[0].date;
   renderDateTabs(all);
   if(selectedDate){
     const picked=all.find(d=>d.date===selectedDate);
@@ -273,10 +273,11 @@ function renderDateTabs(data){
   if(!data.length){el.innerHTML='';return;}
   const dates=[...new Set(data.map(d=>d.date))].sort((a,b)=>b.localeCompare(a));
   let html='';
-  dates.forEach(d=>{
+  dates.forEach((d,i)=>{
+    if(i===1)html+=`<div class="tab${selectedDate===null?' active':''}" onclick="pickDate(null)">全部</div>`;
     html+=`<div class="tab${selectedDate===d?' active':''}" onclick="pickDate('${d}')">${d.slice(5)}</div>`;
   });
-  html+=`<div class="tab${!selectedDate?' active':''}" onclick="pickDate(null)">全部</div>`;
+  if(dates.length===1)html+=`<div class="tab${selectedDate===null?' active':''}" onclick="pickDate(null)">全部</div>`;
   el.innerHTML=html;
 }
 
@@ -312,8 +313,10 @@ function renderKpi(d,dateLabel,prev){
 
 function renderKpiAgg(data){
   const el=document.getElementById('dashKpi');
-  document.getElementById('dashDate').textContent='数据总览';
-  if(!data.length){el.innerHTML='<div class="kpi-item" style="grid-column:span 2"><div class="kpi-value" style="font-size:14px;color:var(--text-light)">暂无数据</div><div class="kpi-label">快去录入吧</div></div>';return;}
+  if(!data.length){document.getElementById('dashDate').textContent='数据总览';el.innerHTML='<div class="kpi-item" style="grid-column:span 2"><div class="kpi-value" style="font-size:14px;color:var(--text-light)">暂无数据</div><div class="kpi-label">快去录入吧</div></div>';return;}
+  const dates=data.map(d=>d.date).sort();
+  const dateRange=dates.length>1?dates[0].slice(5)+'~'+dates[dates.length-1].slice(5)+' 汇总':dates[0].slice(5)+' 数据';
+  document.getElementById('dashDate').textContent=dateRange;
   let tVO=0,tIncome=0,tExpPeople=0,tInPeople=0,tOrderPeople=0,tRep=0,tRepN=0;
   data.forEach(d=>{
     tVO+=d.validOrders||0;
