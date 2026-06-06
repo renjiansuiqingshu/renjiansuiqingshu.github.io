@@ -255,14 +255,17 @@ function autoCalc(){
 function loadDashboard(){
   const all=loadData().filter(d=>d.storeIndex===dashS&&d.platformIndex===dashP).sort((a,b)=>a.date.localeCompare(b.date));
   const last7=all.slice(-7);
-  renderKpi(all.find(d=>d.date===today()));
+  const latest=all.length?all[all.length-1]:null;
+  renderKpi(latest);
   renderCharts(last7);
   renderComparison();
 }
 
 function renderKpi(d){
   const el=document.getElementById('dashKpi');
-  if(!d){el.innerHTML='<div class="kpi-item" style="grid-column:span 2"><div class="kpi-value" style="font-size:14px;color:var(--text-light)">今日暂无数据</div><div class="kpi-label">快去录入吧</div></div>';return;}
+  if(!d){el.innerHTML='<div class="kpi-item" style="grid-column:span 2"><div class="kpi-value" style="font-size:14px;color:var(--text-light)">暂无数据</div><div class="kpi-label">快去录入吧</div></div>';document.getElementById('dashDate').textContent=today();return;}
+  const isToday=d.date===today();
+  document.getElementById('dashDate').textContent=(isToday?'今日':d.date.slice(5))+' 数据';
   const avgO=d.validOrders>0?(d.income/d.validOrders).toFixed(1):'-';
   const inR=d.expPeople>0?(d.inPeople/d.expPeople*100).toFixed(1)+'%':'-';
   const oR=d.inPeople>0?(d.orderPeople/d.inPeople*100).toFixed(1)+'%':'-';
@@ -323,7 +326,7 @@ function submitEntry(){
     if(ex>=0){if(confirm('该日期已有数据，是否覆盖？')){data[ex]=r;showToast('覆盖成功');}else return;}
     else{data.push(r);showToast('录入成功');}
   }
-  saveData(data);clearForm();document.getElementById('entryDate').value=today();
+  saveData(data);clearForm();document.getElementById('entryDate').value=today();loadDashboard();
 }
 
 function clearForm(){FIELDS.forEach(f=>{const el=document.getElementById('f_'+f);if(el)el.value='';});}
