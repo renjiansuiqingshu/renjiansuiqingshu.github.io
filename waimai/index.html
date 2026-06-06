@@ -230,6 +230,8 @@ document.getElementById('pwdInput').addEventListener('keydown',e=>{if(e.key==='E
 
 function enterApp(){
   sessionStorage.setItem('wm_authed','1');
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('mainApp').style.display='block';
   loadNames();
   initApp();
 }
