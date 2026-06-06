@@ -323,16 +323,38 @@ function pickDate(date){
   loadDashboard();
 }
 
+function aggData(data){
+  if(data.length===1)return data[0];
+  const s={storeIndex:data[0].storeIndex,platformIndex:data[0].platformIndex};
+  const sumFields=['validOrders','invalidOrders','revenue','income','expense','customerPay','expPeople','expTimes','inPeople','inTimes','orderPeople','orderTimes','promoOrders','promoCost','promoPay','newCust','oldCust','cancelOrders','cookTime'];
+  sumFields.forEach(f=>{s[f]=data.reduce((a,d)=>a+(d[f]||0),0);});
+  if(s.validOrders>0){s.avgPay=s.customerPay/s.validOrders;s.avgOrder=s.income/s.validOrders;s.promoAvg=s.promoPay/s.validOrders;}else{s.avgPay=0;s.avgOrder=0;s.promoAvg=0;}
+  if(s.expPeople>0)s.inRate=s.inPeople/s.expPeople*100;else s.inRate=0;
+  if(s.inPeople>0)s.orderRate=s.orderPeople/s.inPeople*100;else s.orderRate=0;
+  if(s.promoCost>0)s.roi=s.promoPay/s.promoCost;else s.roi=0;
+  if(s.revenue>0)s.promoRate=s.promoCost/s.revenue*100;else s.promoRate=0;
+  const totalCust=s.newCust+s.oldCust;
+  if(totalCust>0)s.repurchase=s.oldCust/totalCust*100;else s.repurchase=0;
+  const bhVals=data.filter(d=>d.bizHours).map(d=>d.bizHours);
+  s.bizHours=bhVals.length?bhVals.reduce((a,b)=>a+b,0)/bhVals.length:0;
+  const crVals=data.filter(d=>d.cancelRate).map(d=>d.cancelRate);
+  s.cancelRate=crVals.length?crVals.reduce((a,b)=>a+b,0)/crVals.length:0;
+  const rrVals=data.filter(d=>d.reportRate).map(d=>d.reportRate);
+  s.reportRate=rrVals.length?rrVals.reduce((a,b)=>a+b,0)/rrVals.length:0;
+  const otVals=data.filter(d=>d.overTimeRate).map(d=>d.overTimeRate);
+  s.overTimeRate=otVals.length?otVals.reduce((a,b)=>a+b,0)/otVals.length:0;
+  return s;
+}
+
 function renderDataCards(data){
   const el=document.getElementById('dashDataList');
   if(!data.length){el.innerHTML='<div class="empty"><div class="icon">📭</div><div>暂无数据，去录入页添加</div></div>';return;}
-  let html='';
+  const d=aggData(data);
   const grid='display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px';
-  const fmt=(v,unit)=>(v===undefined||v===null)?'-':(unit==='¥'?'¥'+v:v+unit);
+  const fmt=(v,unit)=>(v===undefined||v===null)?'-':(unit==='¥'?'¥'+(typeof v==='number'?v.toFixed(2):v):v+unit);
   const sec=(title,body)=>`<div class="card"><div class="card-title" style="font-size:13px;color:var(--primary)">${title}</div><div style="${grid}">${body}</div></div>`;
-  data.forEach(d=>{
-    const dateTag=data.length>1?' '+d.date.slice(5):'';
-    html+=sec('📦'+dateTag+' 订单',`
+  let html='';
+  html+=sec('📦 订单',`
       <div>有效订单 <b>${d.validOrders!==undefined?d.validOrders:'-'}</b></div>
       <div>营业额 <b>${fmt(d.revenue,'¥')}</b></div>
       <div>收入 <b style="color:var(--success)">${fmt(d.income,'¥')}</b></div>
@@ -341,34 +363,33 @@ function renderDataCards(data){
       <div>单均实付 <b>${fmt(d.avgPay,'¥')}</b></div>
       <div>客单价 <b>${fmt(d.avgOrder,'¥')}</b></div>
       <div>无效订单 <b>${d.invalidOrders!==undefined?d.invalidOrders:'-'}</b></div>`);
-    html+=sec('👁 流量',`
+  html+=sec('👁 流量',`
       <div>曝光人数 <b>${d.expPeople!==undefined?d.expPeople:'-'}</b></div>
       <div>曝光次数 <b>${d.expTimes!==undefined?d.expTimes:'-'}</b></div>
       <div>进店人数 <b>${d.inPeople!==undefined?d.inPeople:'-'}</b></div>
       <div>进店次数 <b>${d.inTimes!==undefined?d.inTimes:'-'}</b></div>
       <div>下单人数 <b>${d.orderPeople!==undefined?d.orderPeople:'-'}</b></div>
       <div>下单次数 <b>${d.orderTimes!==undefined?d.orderTimes:'-'}</b></div>
-      <div>进店转化率 <b>${d.inRate!==undefined&&d.inRate!==null?d.inRate+'%':'-'}</b></div>
-      <div>下单转化率 <b>${d.orderRate!==undefined&&d.orderRate!==null?d.orderRate+'%':'-'}</b></div>`);
-    html+=sec('🎯 营销',`
+      <div>进店转化率 <b>${d.inRate?d.inRate.toFixed(1)+'%':'-'}</b></div>
+      <div>下单转化率 <b>${d.orderRate?d.orderRate.toFixed(1)+'%':'-'}</b></div>`);
+  html+=sec('🎯 营销',`
       <div>活动订单 <b>${d.promoOrders!==undefined?d.promoOrders:'-'}</b></div>
       <div>活动成本 <b>${fmt(d.promoCost,'¥')}</b></div>
       <div>活动顾客实付 <b>${fmt(d.promoPay,'¥')}</b></div>
       <div>活动客单价 <b>${fmt(d.promoAvg,'¥')}</b></div>
-      <div>投入产出比 <b>${d.roi!==undefined?d.roi:'-'}</b></div>
-      <div>营销力度 <b>${d.promoRate!==undefined&&d.promoRate!==null?d.promoRate+'%':'-'}</b></div>`);
-    html+=sec('👥 顾客',`
+      <div>投入产出比 <b>${d.roi?d.roi.toFixed(2):'-'}</b></div>
+      <div>营销力度 <b>${d.promoRate?d.promoRate.toFixed(1)+'%':'-'}</b></div>`);
+  html+=sec('👥 顾客',`
       <div>下单新客 <b>${d.newCust!==undefined?d.newCust:'-'}</b></div>
       <div>下单老客 <b>${d.oldCust!==undefined?d.oldCust:'-'}</b></div>
-      <div>复购率 <b>${d.repurchase!==undefined&&d.repurchase!==null?d.repurchase+'%':'-'}</b></div>
-      <div>日均营业时长 <b>${d.bizHours!==undefined&&d.bizHours!==null?d.bizHours+'h':'-'}</b></div>`);
-    html+=sec('🔧 服务',`
+      <div>复购率 <b>${d.repurchase?d.repurchase.toFixed(1)+'%':'-'}</b></div>
+      <div>日均营业时长 <b>${d.bizHours?d.bizHours.toFixed(1)+'h':'-'}</b></div>`);
+  html+=sec('🔧 服务',`
       <div>取消单数 <b>${d.cancelOrders!==undefined?d.cancelOrders:'-'}</b></div>
-      <div>商责取消率 <b>${d.cancelRate!==undefined&&d.cancelRate!==null?d.cancelRate+'%':'-'}</b></div>
-      <div>出餐上报率 <b>${d.reportRate!==undefined&&d.reportRate!==null?d.reportRate+'%':'-'}</b></div>
-      <div>出餐时长 <b>${d.cookTime!==undefined?d.cookTime+'min':'-'}</b></div>
-      <div>出餐超时率 <b>${d.overTimeRate!==undefined&&d.overTimeRate!==null?d.overTimeRate+'%':'-'}</b></div>`);
-  });
+      <div>商责取消率 <b>${d.cancelRate?d.cancelRate.toFixed(1)+'%':'-'}</b></div>
+      <div>出餐上报率 <b>${d.reportRate?d.reportRate.toFixed(1)+'%':'-'}</b></div>
+      <div>出餐时长 <b>${d.cookTime?d.cookTime+'min':'-'}</b></div>
+      <div>出餐超时率 <b>${d.overTimeRate?d.overTimeRate.toFixed(1)+'%':'-'}</b></div>`);
   el.innerHTML=html;
 }
 
