@@ -255,7 +255,8 @@ function loadDashboard(){
   const all=loadData().filter(d=>d.storeIndex===dashS&&d.platformIndex===dashP).sort((a,b)=>b.date.localeCompare(a.date));
   const latest=all.length?all[0].date:null;
   if(selectedDate!==null&&selectedDate!=='all'&&!all.find(d=>d.date===selectedDate))selectedDate=null;
-  renderDateTabs(latest);
+  if(selectedDate===null)selectedDate=latest;
+  renderDateTabs(all);
   if(selectedDate==='all'||selectedDate===null&&all.length>1){
     renderKpiAgg(all);
     renderDataCards(all);
@@ -275,11 +276,16 @@ function loadDashboard(){
   }
 }
 
-function renderDateTabs(latest){
+function renderDateTabs(all){
   const el=document.getElementById('dashDateTabs');
-  if(!latest){el.innerHTML='';return;}
-  const isAll=selectedDate==='all'||selectedDate===null;
-  el.innerHTML=`<div class="tab${!isAll?' active':''}" onclick="pickDate('${latest}')">${latest.slice(5)}</div><div class="tab${isAll?' active':''}" onclick="pickDate('all')">全部</div>`;
+  if(!all.length){el.innerHTML='';return;}
+  const dates=[...new Set(all.map(d=>d.date))].sort((a,b)=>b.localeCompare(a));
+  let html='';
+  dates.forEach(d=>{
+    html+=`<div class="tab${selectedDate===d?' active':''}" onclick="pickDate('${d}')">${d.slice(5)}</div>`;
+  });
+  html+=`<div class="tab${selectedDate==='all'?' active':''}" onclick="pickDate('all')">全部</div>`;
+  el.innerHTML=html;
 }
 
 function pickDate(v){selectedDate=v;loadDashboard();}
