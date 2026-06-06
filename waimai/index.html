@@ -8,7 +8,6 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--primary:#5B7BA5;--primary-light:#8BAAC8;--bg:#F5F7FA;--card:#fff;--text:#2C3E50;--text-light:#8899AA;--border:#E8ECF0;--success:#52C41A;--danger:#FF4D4F;--warn:#FAAD14}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
-
 .login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
 .login-box{background:var(--card);border-radius:16px;padding:32px 24px;width:100%;max-width:320px;box-shadow:0 2px 12px rgba(0,0,0,.08);text-align:center}
 .login-box h2{font-size:20px;margin-bottom:8px;color:var(--primary)}
@@ -16,28 +15,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-box input{width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:8px;font-size:16px;outline:none}
 .login-box input:focus{border-color:var(--primary)}
 .login-box button{width:100%;margin-top:16px;padding:12px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer}
-
 .nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
 .nav-item{flex:1;text-align:center;padding:8px 0 6px;color:var(--text-light);font-size:11px;cursor:pointer}
 .nav-item.active{color:var(--primary)}
 .nav-item .icon{font-size:20px;display:block;margin-bottom:2px}
-
 .page{display:none;padding:16px 16px 80px;max-width:480px;margin:0 auto}
 .page.active{display:block}
-
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .page-header h1{font-size:20px;font-weight:600}
 .page-header .date{font-size:13px;color:var(--text-light)}
-
 .card{background:var(--card);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .card-title{font-size:15px;font-weight:600;margin-bottom:12px}
-
 .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .kpi-item{background:var(--card);border-radius:10px;padding:12px;text-align:center}
 .kpi-value{font-size:20px;font-weight:700;color:var(--primary)}
 .kpi-value.success{color:var(--success)}
 .kpi-label{font-size:11px;color:var(--text-light);margin-top:2px}
-
 .form-group{margin-bottom:12px}
 .form-label{font-size:13px;color:var(--text-light);margin-bottom:4px;display:block}
 .form-row{display:flex;gap:10px}
@@ -46,7 +39,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .form-input:focus{border-color:var(--primary)}
 .form-input[readonly]{background:#f8f9fa;color:var(--text-light)}
 .section-label{font-size:14px;font-weight:600;color:var(--primary);margin:16px 0 8px;padding-left:2px}
-
+.formula-hint{font-size:11px;color:var(--text-light);margin:-4px 0 8px 4px;font-style:italic}
 .store-selector{margin-bottom:12px}
 .store-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:15px;cursor:pointer}
 .store-btn .arrow{font-size:12px;color:var(--text-light);transition:transform .2s}
@@ -58,37 +51,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .store-opt:active{background:var(--bg)}
 .store-opt.selected{color:var(--primary);font-weight:600}
 .store-opt .platforms{font-size:11px;color:var(--text-light)}
-
 .platform-toggle{display:flex;background:var(--bg);border-radius:8px;padding:3px;margin-bottom:16px}
 .platform-toggle .tab{flex:1;text-align:center;padding:8px;border-radius:6px;font-size:14px;cursor:pointer}
 .platform-toggle .tab.active{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.1);font-weight:600;color:var(--primary)}
-
 .btn-submit{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;margin-top:8px}
 .btn-submit:active{background:var(--primary-light)}
-
-.chart-wrap{position:relative;height:200px;margin:8px 0}
-
 .history-table{width:100%;border-collapse:collapse;font-size:12px}
 .history-table th{text-align:left;padding:8px 4px;color:var(--text-light);font-weight:500;border-bottom:1px solid var(--border)}
 .history-table td{padding:8px 4px;border-bottom:1px solid var(--border)}
-
 .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 24px;border-radius:8px;font-size:14px;z-index:999;opacity:0;transition:opacity .3s}
 .toast.show{opacity:1}
-
-.compare-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
-.compare-row:last-child{border:none}
-.compare-bar{display:flex;align-items:center;gap:6px}
-.compare-bar .bar{height:6px;border-radius:3px;min-width:4px}
-.compare-bar .bar.a{background:var(--primary)}
-.compare-bar .bar.b{background:var(--warn)}
-
 .btn-sm{padding:4px 10px;border:none;border-radius:6px;font-size:12px;cursor:pointer}
 .btn-edit{background:#E6F0FA;color:var(--primary)}
 .btn-del{background:#FFF1F0;color:var(--danger)}
-
 .empty{text-align:center;padding:40px 20px;color:var(--text-light)}
 .empty .icon{font-size:48px;margin-bottom:12px}
-
 .add-store-row{display:flex;gap:8px;margin-top:8px}
 .add-store-row input{flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;outline:none}
 .add-store-row button{padding:10px 16px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:14px;white-space:nowrap}
@@ -125,33 +102,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="platform-toggle" id="entryPT"><div class="tab active" onclick="setEntryP(0)">淘宝闪购</div><div class="tab" onclick="setEntryP(1)">美团外卖</div></div>
     <div class="card">
       <div class="form-group"><label class="form-label">📅 日期</label><input type="date" class="form-input" id="entryDate"></div>
-
-      <div class="section-label">📦 订单数据</div>
-      <div class="form-row"><div class="form-group"><label class="form-label">有效订单</label><input type="number" class="form-input" id="f_validOrders" placeholder="0" oninput="autoCalc()"></div><div class="form-group"><label class="form-label">无效订单</label><input type="number" class="form-input" id="f_invalidOrders" placeholder="0"></div></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">营业额（元）</label><input type="number" step="0.01" class="form-input" id="f_revenue" placeholder="0.00"></div><div class="form-group"><label class="form-label">收入（元）</label><input type="number" step="0.01" class="form-input" id="f_income" placeholder="0.00"></div></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">支出（元）</label><input type="number" step="0.01" class="form-input" id="f_expense" placeholder="0.00"></div><div class="form-group"><label class="form-label">顾客实付（元）</label><input type="number" step="0.01" class="form-input" id="f_customerPay" placeholder="0.00"></div></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">单均实付（元）</label><input type="number" step="0.01" class="form-input" id="f_avgPay" placeholder="0.00" readonly></div><div class="form-group"><label class="form-label">客单价（元）</label><input type="number" step="0.01" class="form-input" id="f_avgOrder" placeholder="0.00" readonly></div></div>
-
-      <div class="section-label">👁 流量数据</div>
-      <div class="form-row"><div class="form-group"><label class="form-label">曝光人数</label><input type="number" class="form-input" id="f_expPeople" placeholder="0" oninput="autoCalc()"></div><div class="form-group"><label class="form-label">曝光次数</label><input type="number" class="form-input" id="f_expTimes" placeholder="0"></div></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">进店人数</label><input type="number" class="form-input" id="f_inPeople" placeholder="0" oninput="autoCalc()"></div><div class="form-group"><label class="form-label">进店次数</label><input type="number" class="form-input" id="f_inTimes" placeholder="0"></div></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">下单人数</label><input type="number" class="form-input" id="f_orderPeople" placeholder="0" oninput="autoCalc()"></div><div class="form-group"><label class="form-label">下单次数</label><input type="number" class="form-input" id="f_orderTimes" placeholder="0"></div></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">进店转化率</label><input type="text" class="form-input" id="f_inRate" placeholder="自动计算" readonly></div><div class="form-group"><label class="form-label">下单转化率</label><input type="text" class="form-input" id="f_orderRate" placeholder="自动计算" readonly></div></div>
-
-      <div class="section-label">🎯 营销数据</div>
-      <div class="form-row"><div class="form-group"><label class="form-label">活动订单量</label><input type="number" class="form-input" id="f_promoOrders" placeholder="0"></div><div class="form-group"><label class="form-label">商家活动成本（元）</label><input type="number" step="0.01" class="form-input" id="f_promoCost" placeholder="0.00"></div></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">活动顾客实付（元）</label><input type="number" step="0.01" class="form-input" id="f_promoPay" placeholder="0.00"></div><div class="form-group"><label class="form-label">活动客单价（元）</label><input type="number" step="0.01" class="form-input" id="f_promoAvg" placeholder="0.00"></div></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">投入产出比</label><input type="number" step="0.01" class="form-input" id="f_roi" placeholder="0.00"></div><div class="form-group"><label class="form-label">营销力度（%）</label><input type="number" step="0.1" class="form-input" id="f_promoRate" placeholder="0.0"></div></div>
-
-      <div class="section-label">👥 顾客数据</div>
-      <div class="form-row"><div class="form-group"><label class="form-label">下单新客</label><input type="number" class="form-input" id="f_newCust" placeholder="0"></div><div class="form-group"><label class="form-label">下单老客</label><input type="number" class="form-input" id="f_oldCust" placeholder="0"></div></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">复购率（%）</label><input type="number" step="0.1" class="form-input" id="f_repurchase" placeholder="0.0"></div><div class="form-group"></div></div>
-
-      <div class="section-label">🔧 服务数据</div>
-      <div class="form-row"><div class="form-group"><label class="form-label">日均营业时长（h）</label><input type="number" step="0.1" class="form-input" id="f_bizHours" placeholder="0.0"></div><div class="form-group"><label class="form-label">取消单数</label><input type="number" class="form-input" id="f_cancelOrders" placeholder="0"></div></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">商责取消率（%）</label><input type="number" step="0.1" class="form-input" id="f_cancelRate" placeholder="0.0"></div><div class="form-group"><label class="form-label">出餐上报率（%）</label><input type="number" step="0.1" class="form-input" id="f_reportRate" placeholder="0.0"></div></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">平均出餐时长（min）</label><input type="number" class="form-input" id="f_cookTime" placeholder="0"></div><div class="form-group"><label class="form-label">出餐超时率（%）</label><input type="number" step="0.1" class="form-input" id="f_overTimeRate" placeholder="0.0"></div></div>
-
+      <div id="entryFormFields"></div>
       <button class="btn-submit" id="btnSubmit" onclick="submitEntry()">提交数据</button>
     </div>
   </div>
@@ -183,7 +134,251 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 const SK_PWD='wm_pwd',SK_DATA='wm_data',SK_STORES='wm_stores';
 const PLATFORMS=['淘宝闪购','美团外卖'];
-const FIELDS=['validOrders','invalidOrders','revenue','income','expense','customerPay','avgPay','avgOrder','expPeople','expTimes','inPeople','inTimes','orderPeople','orderTimes','inRate','orderRate','promoOrders','promoCost','promoPay','promoAvg','roi','promoRate','newCust','oldCust','repurchase','bizHours','cancelOrders','cancelRate','reportRate','cookTime','overTimeRate'];
+
+// ========== 平台字段配置 ==========
+const PCFG=[
+  { // 0: 淘宝闪购
+    kpiDefs:[
+      {key:'validOrders',label:'有效订单',fmt:'n'},
+      {key:'income',label:'收入',fmt:'¥',color:'success'},
+      {key:'avgOrder',label:'客单价',fmt:'¥'},
+      {key:'inRate',label:'进店转化率',fmt:'%'},
+      {key:'orderRate',label:'下单转化率',fmt:'%'},
+      {key:'repurchase',label:'复购率',fmt:'%'},
+    ],
+    sumFields:['validOrders','invalidOrders','revenue','income','expense','customerPay','expPeople','expTimes','inPeople','inTimes','orderPeople','orderTimes','promoOrders','promoCost','promoPay','newCust','oldCust','cancelOrders','cookTime'],
+    avgFields:['avgPay','avgOrder','promoAvg','bizHours','cancelRate','reportRate','overTimeRate','roi','promoRate','inRate','orderRate','repurchase'],
+    sections:[
+      {title:'📦 订单数据',fields:[
+        {key:'validOrders',label:'有效订单',t:'n',calc:1},
+        {key:'invalidOrders',label:'无效订单',t:'n'},
+        {key:'revenue',label:'营业额（元）',t:'f'},
+        {key:'income',label:'收入（元）',t:'f',calc:1},
+        {key:'expense',label:'支出（元）',t:'f'},
+        {key:'customerPay',label:'顾客实付（元）',t:'f',calc:1},
+        {key:'avgPay',label:'单均实付（元）',t:'f',ro:1},
+        {key:'avgOrder',label:'客单价（元）',t:'f',ro:1},
+      ]},
+      {title:'👁 流量数据',fields:[
+        {key:'expPeople',label:'曝光人数',t:'n',calc:1},
+        {key:'expTimes',label:'曝光次数',t:'n'},
+        {key:'inPeople',label:'进店人数',t:'n',calc:1},
+        {key:'inTimes',label:'进店次数',t:'n'},
+        {key:'orderPeople',label:'下单人数',t:'n',calc:1},
+        {key:'orderTimes',label:'下单次数',t:'n'},
+        {key:'inRate',label:'进店转化率',t:'t',ro:1},
+        {key:'orderRate',label:'下单转化率',t:'t',ro:1},
+      ]},
+      {title:'🎯 营销数据',fields:[
+        {key:'promoOrders',label:'活动订单量',t:'n'},
+        {key:'promoCost',label:'商家活动成本（元）',t:'f'},
+        {key:'promoPay',label:'活动顾客实付（元）',t:'f'},
+        {key:'promoAvg',label:'活动客单价（元）',t:'f'},
+        {key:'roi',label:'投入产出比',t:'f'},
+        {key:'promoRate',label:'营销力度（%）',t:'p'},
+      ]},
+      {title:'👥 顾客数据',fields:[
+        {key:'newCust',label:'下单新客',t:'n'},
+        {key:'oldCust',label:'下单老客',t:'n'},
+        {key:'repurchase',label:'复购率（%）',t:'p'},
+      ]},
+      {title:'🔧 服务数据',fields:[
+        {key:'bizHours',label:'日均营业时长（h）',t:'f'},
+        {key:'cancelOrders',label:'取消单数',t:'n'},
+        {key:'cancelRate',label:'商责取消率（%）',t:'p'},
+        {key:'reportRate',label:'出餐上报率（%）',t:'p'},
+        {key:'cookTime',label:'平均出餐时长（min）',t:'n'},
+        {key:'overTimeRate',label:'出餐超时率（%）',t:'p'},
+      ]},
+    ],
+    cardDefs:[
+      {title:'📦 订单',items:[
+        {key:'validOrders',label:'有效订单'},
+        {key:'revenue',label:'营业额',fmt:'¥'},
+        {key:'income',label:'收入',fmt:'¥',color:'success'},
+        {key:'expense',label:'支出',fmt:'¥',rev:1},
+        {key:'customerPay',label:'顾客实付',fmt:'¥'},
+        {key:'avgPay',label:'单均实付',fmt:'¥'},
+        {key:'avgOrder',label:'客单价',fmt:'¥'},
+        {key:'invalidOrders',label:'无效订单',rev:1},
+      ]},
+      {title:'👁 流量',items:[
+        {key:'expPeople',label:'曝光人数'},{key:'expTimes',label:'曝光次数'},
+        {key:'inPeople',label:'进店人数'},{key:'inTimes',label:'进店次数'},
+        {key:'orderPeople',label:'下单人数'},{key:'orderTimes',label:'下单次数'},
+        {key:'inRate',label:'进店转化率',fmt:'%'},{key:'orderRate',label:'下单转化率',fmt:'%'},
+      ]},
+      {title:'🎯 营销',items:[
+        {key:'promoOrders',label:'活动订单'},
+        {key:'promoCost',label:'活动成本',fmt:'¥',rev:1},
+        {key:'promoPay',label:'活动顾客实付',fmt:'¥'},
+        {key:'promoAvg',label:'活动客单价',fmt:'¥'},
+        {key:'roi',label:'投入产出比',fmt:'r'},
+        {key:'promoRate',label:'营销力度',fmt:'%',rev:1},
+      ]},
+      {title:'👥 顾客',items:[
+        {key:'newCust',label:'下单新客'},{key:'oldCust',label:'下单老客'},
+        {key:'repurchase',label:'复购率',fmt:'%'},
+        {key:'bizHours',label:'日均营业时长',fmt:'h'},
+      ]},
+      {title:'🔧 服务',items:[
+        {key:'cancelOrders',label:'取消单数',rev:1},
+        {key:'cancelRate',label:'商责取消率',fmt:'%',rev:1},
+        {key:'reportRate',label:'出餐上报率',fmt:'%'},
+        {key:'cookTime',label:'出餐时长',fmt:'m',rev:1},
+        {key:'overTimeRate',label:'出餐超时率',fmt:'%',rev:1},
+      ]},
+    ],
+    autoCalc:function(){
+      var ep=V('f_expPeople'),ip=V('f_inPeople'),op=V('f_orderPeople');
+      var vo=V('f_validOrders'),cp=V('f_customerPay'),ic=V('f_income');
+      S('f_inRate',ep>0?(ip/ep*100).toFixed(1)+'%':'');
+      S('f_orderRate',ip>0?(op/ip*100).toFixed(1)+'%':'');
+      S('f_avgPay',vo>0?(cp/vo).toFixed(2):'');
+      S('f_avgOrder',vo>0?(ic/vo).toFixed(2):'');
+    },
+    getKpiVal:function(d,k){
+      if(k==='avgOrder')return d.validOrders>0?d.income/d.validOrders:0;
+      if(k==='inRate')return d.expPeople>0?d.inPeople/d.expPeople*100:0;
+      if(k==='orderRate')return d.inPeople>0?d.orderPeople/d.inPeople*100:0;
+      if(k==='repurchase')return d.repurchase||0;
+      return d[k]||0;
+    },
+  },
+  { // 1: 美团外卖
+    kpiDefs:[
+      {key:'validOrders',label:'有效订单',fmt:'n'},
+      {key:'revenue',label:'营业收入',fmt:'¥',color:'success'},
+      {key:'avgPayPerOrder',label:'实付单均价',fmt:'¥'},
+      {key:'inRate',label:'入店转化率',fmt:'%'},
+      {key:'orderRate',label:'下单转化率',fmt:'%'},
+      {key:'repurchase',label:'复购率',fmt:'%'},
+    ],
+    sumFields:['validOrders','avgPayPerOrder','orderPayment','grossAmount','activitySubsidy','custDeliveryFee','merchantActivityCost','commission','deliveryServiceFee','otherExpense','charityDonation','subsidyExpense','expPeople','expTimes','inPeople','inTimes','orderPeople','orderTimes','promoOrders','promoCost','promoPay','newCust','oldCust','cancelOrders','cookTime'],
+    avgFields:['bizHours','cancelRate','reportRate','overTimeRate','roi','promoRate','inRate','orderRate','repurchase'],
+    sections:[
+      {title:'📦 营业数据',fields:[
+        {key:'validOrders',label:'有效订单',t:'n',calc:1},
+        {key:'avgPayPerOrder',label:'实付单均价（元）',t:'f',calc:1},
+        {key:'orderPayment',label:'订单实付（元）',t:'f',ro:1},
+        {key:'activitySubsidy',label:'活动补贴（元）',t:'f',calc:1},
+        {key:'custDeliveryFee',label:'顾客配送费美配（元）',t:'f',calc:1},
+        {key:'grossAmount',label:'优惠前总额（元）',t:'f',ro:1},
+        {key:'merchantActivityCost',label:'商家活动成本（元）',t:'f',calc:1},
+        {key:'commission',label:'佣金（元）',t:'f',calc:1},
+        {key:'deliveryServiceFee',label:'配送服务费（元）',t:'f',calc:1},
+        {key:'otherExpense',label:'其他支出（元）',t:'f'},
+        {key:'charityDonation',label:'公益捐款（元）',t:'f'},
+        {key:'subsidyExpense',label:'补贴及支出（元）',t:'f',ro:1},
+        {key:'revenue',label:'营业收入（元）',t:'f',ro:1},
+      ],hints:[
+        '优惠前总额 = 有效订单×实付单均价 + 活动补贴 - 顾客配送费美配',
+        '补贴及支出 = 商家活动成本 + 佣金 + 配送服务费 + 其他支出 + 公益捐款',
+        '营业收入 = 优惠前总额 - 补贴及支出',
+      ]},
+      {title:'👁 流量数据',fields:[
+        {key:'expPeople',label:'曝光人数',t:'n',calc:1},
+        {key:'expTimes',label:'曝光次数',t:'n'},
+        {key:'inPeople',label:'入店人数',t:'n',calc:1},
+        {key:'inTimes',label:'入店次数',t:'n'},
+        {key:'orderPeople',label:'下单人数',t:'n',calc:1},
+        {key:'orderTimes',label:'下单次数',t:'n'},
+        {key:'inRate',label:'入店转化率',t:'t',ro:1},
+        {key:'orderRate',label:'下单转化率',t:'t',ro:1},
+      ]},
+      {title:'🎯 营销数据',fields:[
+        {key:'promoOrders',label:'活动订单量',t:'n'},
+        {key:'promoCost',label:'商家活动成本（元）',t:'f'},
+        {key:'promoPay',label:'活动顾客实付（元）',t:'f'},
+        {key:'promoAvg',label:'活动客单价（元）',t:'f'},
+        {key:'roi',label:'投入产出比',t:'f'},
+        {key:'promoRate',label:'营销力度（%）',t:'p'},
+      ]},
+      {title:'👥 顾客数据',fields:[
+        {key:'newCust',label:'下单新客',t:'n'},
+        {key:'oldCust',label:'下单老客',t:'n'},
+        {key:'repurchase',label:'复购率（%）',t:'p'},
+      ]},
+      {title:'🔧 服务数据',fields:[
+        {key:'bizHours',label:'日均营业时长（h）',t:'f'},
+        {key:'cancelOrders',label:'取消单数',t:'n'},
+        {key:'cancelRate',label:'商责取消率（%）',t:'p'},
+        {key:'reportRate',label:'出餐上报率（%）',t:'p'},
+        {key:'cookTime',label:'平均出餐时长（min）',t:'n'},
+        {key:'overTimeRate',label:'出餐超时率（%）',t:'p'},
+      ]},
+    ],
+    cardDefs:[
+      {title:'📦 营业',items:[
+        {key:'validOrders',label:'有效订单'},
+        {key:'avgPayPerOrder',label:'实付单均价',fmt:'¥'},
+        {key:'orderPayment',label:'订单实付',fmt:'¥'},
+        {key:'grossAmount',label:'优惠前总额',fmt:'¥'},
+        {key:'activitySubsidy',label:'活动补贴',fmt:'¥'},
+        {key:'custDeliveryFee',label:'顾客配送费',fmt:'¥'},
+        {key:'revenue',label:'营业收入',fmt:'¥',color:'success'},
+        {key:'subsidyExpense',label:'补贴及支出',fmt:'¥',rev:1},
+        {key:'merchantActivityCost',label:'商家活动成本',fmt:'¥',rev:1},
+        {key:'commission',label:'佣金',fmt:'¥',rev:1},
+        {key:'deliveryServiceFee',label:'配送服务费',fmt:'¥',rev:1},
+        {key:'otherExpense',label:'其他支出',fmt:'¥',rev:1},
+        {key:'charityDonation',label:'公益捐款',fmt:'¥',rev:1},
+      ]},
+      {title:'👁 流量',items:[
+        {key:'expPeople',label:'曝光人数'},{key:'expTimes',label:'曝光次数'},
+        {key:'inPeople',label:'入店人数'},{key:'inTimes',label:'入店次数'},
+        {key:'orderPeople',label:'下单人数'},{key:'orderTimes',label:'下单次数'},
+        {key:'inRate',label:'入店转化率',fmt:'%'},{key:'orderRate',label:'下单转化率',fmt:'%'},
+      ]},
+      {title:'🎯 营销',items:[
+        {key:'promoOrders',label:'活动订单'},
+        {key:'promoCost',label:'活动成本',fmt:'¥',rev:1},
+        {key:'promoPay',label:'活动顾客实付',fmt:'¥'},
+        {key:'promoAvg',label:'活动客单价',fmt:'¥'},
+        {key:'roi',label:'投入产出比',fmt:'r'},
+        {key:'promoRate',label:'营销力度',fmt:'%',rev:1},
+      ]},
+      {title:'👥 顾客',items:[
+        {key:'newCust',label:'下单新客'},{key:'oldCust',label:'下单老客'},
+        {key:'repurchase',label:'复购率',fmt:'%'},
+        {key:'bizHours',label:'日均营业时长',fmt:'h'},
+      ]},
+      {title:'🔧 服务',items:[
+        {key:'cancelOrders',label:'取消单数',rev:1},
+        {key:'cancelRate',label:'商责取消率',fmt:'%',rev:1},
+        {key:'reportRate',label:'出餐上报率',fmt:'%'},
+        {key:'cookTime',label:'出餐时长',fmt:'m',rev:1},
+        {key:'overTimeRate',label:'出餐超时率',fmt:'%',rev:1},
+      ]},
+    ],
+    autoCalc:function(){
+      var vo=V('f_validOrders'),apo=V('f_avgPayPerOrder');
+      var as_=V('f_activitySubsidy'),cdf=V('f_custDeliveryFee');
+      var mac=V('f_merchantActivityCost'),cm=V('f_commission'),dsf=V('f_deliveryServiceFee');
+      var oe=V('f_otherExpense'),cd=V('f_charityDonation');
+      var ep=V('f_expPeople'),ip=V('f_inPeople'),op=V('f_orderPeople');
+      S('f_orderPayment',(vo*apo).toFixed(2));
+      S('f_grossAmount',(vo*apo+as_-cdf).toFixed(2));
+      S('f_subsidyExpense',(mac+cm+dsf+oe+cd).toFixed(2));
+      S('f_revenue',(vo*apo+as_-cdf-mac-cm-dsf-oe-cd).toFixed(2));
+      S('f_inRate',ep>0?(ip/ep*100).toFixed(1)+'%':'');
+      S('f_orderRate',ip>0?(op/ip*100).toFixed(1)+'%':'');
+    },
+    getKpiVal:function(d,k){
+      if(k==='inRate')return d.expPeople>0?d.inPeople/d.expPeople*100:0;
+      if(k==='orderRate')return d.inPeople>0?d.orderPeople/d.inPeople*100:0;
+      if(k==='repurchase')return d.repurchase||0;
+      return d[k]||0;
+    },
+  }
+];
+
+// Helper
+function V(id){return Number(document.getElementById(id).value)||0;}
+function S(id,v){var e=document.getElementById(id);if(e)e.value=v;}
+
+// Collect all field keys across platforms
+function allKeys(){var s=new Set();PCFG.forEach(function(c){c.sections.forEach(function(sec){sec.fields.forEach(function(f){s.add(f.key);});});});return Array.from(s);}
 
 let stores=['远大购物中心店'];
 let dashS=0,dashP=0,entryS=0,entryP=0,histS=0,histP=0;
@@ -192,15 +387,15 @@ let selectedDate=null;
 
 function loadData(){return JSON.parse(localStorage.getItem(SK_DATA)||'[]');}
 function saveData(d){localStorage.setItem(SK_DATA,JSON.stringify(d));}
-function loadStores(){const s=JSON.parse(localStorage.getItem(SK_STORES)||'null');if(s&&s.length)stores=s;}
+function loadStores(){var s=JSON.parse(localStorage.getItem(SK_STORES)||'null');if(s&&s.length)stores=s;}
 function saveStores(){localStorage.setItem(SK_STORES,JSON.stringify(stores));}
 function today(){return new Date().toISOString().split('T')[0];}
 
 // Login
 function doLogin(){
-  const pwd=document.getElementById('pwdInput').value.trim();
+  var pwd=document.getElementById('pwdInput').value.trim();
   if(!pwd){showToast('请输入密码');return;}
-  const saved=localStorage.getItem(SK_PWD);
+  var saved=localStorage.getItem(SK_PWD);
   if(!saved){localStorage.setItem(SK_PWD,pwd);enterApp();showToast('密码已设置');}
   else if(pwd===saved) enterApp();
   else showToast('密码错误');
@@ -211,65 +406,85 @@ function enterApp(){
   document.getElementById('mainApp').style.display='block';
   loadStores();initApp();
 }
-document.getElementById('pwdInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('pwdInput').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 (function(){if(sessionStorage.getItem('wm_authed')==='1'){document.getElementById('loginPage').style.display='none';document.getElementById('mainApp').style.display='block';loadStores();initApp();}})();
 
-function initApp(){document.getElementById('entryDate').value=today();document.getElementById('dashDate').textContent=today();refreshDD();loadDashboard();}
+function initApp(){document.getElementById('entryDate').value=today();document.getElementById('dashDate').textContent=today();refreshDD();renderEntryForm();loadDashboard();}
 
 // Nav
 function switchPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach((n,i)=>n.classList.toggle('active',['pageDash','pageEntry','pageHistory','pageSettings'][i]===id));
+  document.querySelectorAll('.nav-item').forEach(function(n,i){n.classList.toggle('active',['pageDash','pageEntry','pageHistory','pageSettings'][i]===id);});
   if(id==='pageDash')loadDashboard();if(id==='pageHistory')loadHistory();if(id==='pageSettings')renderStoreList();
 }
 
 // Store dropdowns
 function refreshDD(){
-  ['dash','entry','hist'].forEach(p=>{
-    const s=p==='dash'?dashS:p==='entry'?entryS:histS;
+  ['dash','entry','hist'].forEach(function(p){
+    var s=p==='dash'?dashS:p==='entry'?entryS:histS;
     document.getElementById(p+'StoreLabel').textContent=stores[s]||stores[0];
-    document.getElementById(p+'StoreDD').innerHTML=stores.map((n,i)=>`<div class="store-opt${i===s?' selected':''}" onclick="pickS('${p}',${i})">${n}<span class="platforms">${PLATFORMS.join('/')}</span></div>`).join('');
+    document.getElementById(p+'StoreDD').innerHTML=stores.map(function(n,i){return '<div class="store-opt'+(i===s?' selected':'')+'" onclick="pickS(\''+p+'\','+i+')">'+n+'<span class="platforms">'+PLATFORMS.join('/')+'</span></div>';}).join('');
   });
 }
-function toggleDrop(p){const dd=document.getElementById(p+'StoreDD');dd.classList.toggle('show');document.getElementById(p+'StoreBtn').classList.toggle('open');}
+function toggleDrop(p){var dd=document.getElementById(p+'StoreDD');dd.classList.toggle('show');document.getElementById(p+'StoreBtn').classList.toggle('open');}
 function pickS(p,i){if(p==='dash'){dashS=i;selectedDate=null;}else if(p==='entry')entryS=i;else histS=i;toggleDrop(p);refreshDD();if(p==='dash')loadDashboard();if(p==='hist')loadHistory();}
 
 // Platform
-function setDashP(i){dashP=i;selectedDate=null;document.querySelectorAll('#dashPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadDashboard();}
-function setEntryP(i){entryP=i;document.querySelectorAll('#entryPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));editingId=null;document.getElementById('btnSubmit').textContent='提交数据';clearForm();}
-function setHistP(i){histP=i;document.querySelectorAll('#histPT .tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));loadHistory();}
+function setDashP(i){dashP=i;selectedDate=null;document.querySelectorAll('#dashPT .tab').forEach(function(t,idx){t.classList.toggle('active',idx===i);});loadDashboard();}
+function setEntryP(i){entryP=i;document.querySelectorAll('#entryPT .tab').forEach(function(t,idx){t.classList.toggle('active',idx===i);});editingId=null;document.getElementById('btnSubmit').textContent='提交数据';renderEntryForm();}
+function setHistP(i){histP=i;document.querySelectorAll('#histPT .tab').forEach(function(t,idx){t.classList.toggle('active',idx===i);});loadHistory();}
 
-// Auto calc
-function autoCalc(){
-  const ep=Number(document.getElementById('f_expPeople').value)||0;
-  const ip=Number(document.getElementById('f_inPeople').value)||0;
-  const op=Number(document.getElementById('f_orderPeople').value)||0;
-  const vo=Number(document.getElementById('f_validOrders').value)||0;
-  const cp=Number(document.getElementById('f_customerPay').value)||0;
-  const ic=Number(document.getElementById('f_income').value)||0;
-  document.getElementById('f_inRate').value=ep>0?(ip/ep*100).toFixed(1)+'%':'';
-  document.getElementById('f_orderRate').value=ip>0?(op/ip*100).toFixed(1)+'%':'';
-  document.getElementById('f_avgPay').value=vo>0?(cp/vo).toFixed(2):'';
-  document.getElementById('f_avgOrder').value=vo>0?(ic/vo).toFixed(2):'';
+// ========== 动态录入表单 ==========
+function renderEntryForm(){
+  var cfg=PCFG[entryP];
+  var html='';
+  cfg.sections.forEach(function(sec){
+    html+='<div class="section-label">'+sec.title+'</div>';
+    if(sec.hints){
+      sec.hints.forEach(function(h){
+        html+='<div class="formula-hint">'+h+'</div>';
+      });
+    }
+    // arrange fields in rows of 2
+    var flds=sec.fields;
+    for(var i=0;i<flds.length;i+=2){
+      html+='<div class="form-row">';
+      for(var j=i;j<Math.min(i+2,flds.length);j++){
+        var f=flds[j];
+        var inputType=f.t==='n'?'number':'number';
+        var step=f.t==='f'?' step="0.01"':f.t==='p'?' step="0.1"':'';
+        var roAttr=f.ro?' readonly':'';
+        var ph=f.ro?'自动计算':'0'+(f.t==='f'?'.00':f.t==='p'?'.0':'');
+        var calcAttr=f.calc?' oninput="doAutoCalc()"':'';
+        html+='<div class="form-group"><label class="form-label">'+f.label+'</label><input type="'+inputType+'"'+step+' class="form-input" id="f_'+f.key+'" placeholder="'+ph+'"'+roAttr+calcAttr+'></div>';
+      }
+      if(i+1>=flds.length&&flds.length%2===1) html+='<div class="form-group"></div>';
+      html+='</div>';
+    }
+  });
+  document.getElementById('entryFormFields').innerHTML=html;
 }
 
-// Dashboard
+function doAutoCalc(){PCFG[entryP].autoCalc();}
+
+// ========== Dashboard ==========
 function loadDashboard(){
-  const all=loadData().filter(d=>d.storeIndex===dashS&&d.platformIndex===dashP).sort((a,b)=>b.date.localeCompare(a.date));
-  const latest=all.length?all[0].date:null;
-  if(selectedDate!==null&&selectedDate!=='all'&&!all.find(d=>d.date===selectedDate))selectedDate=null;
+  var all=loadData().filter(function(d){return d.storeIndex===dashS&&d.platformIndex===dashP;}).sort(function(a,b){return b.date.localeCompare(a.date);});
+  var latest=all.length?all[0].date:null;
+  if(selectedDate!==null&&selectedDate!=='all'&&!all.find(function(d){return d.date===selectedDate;}))selectedDate=null;
   if(selectedDate===null)selectedDate=latest;
-  renderDateTabs(all);if(selectedDate==='all'||selectedDate===null&&all.length>1){
+  renderDateTabs(all);
+  if(selectedDate==='all'||selectedDate===null&&all.length>1){
     renderKpiAgg(all);
     renderDataCards(all);
   }else{
-    const date=selectedDate||latest;
-    const picked=all.find(d=>d.date===date);
+    var date=selectedDate||latest;
+    var picked=all.find(function(d){return d.date===date;});
     if(picked){
-      const dates=all.map(d=>d.date).sort((a,b)=>a.localeCompare(b));
-      const idx=dates.indexOf(date);
-      const prev=idx>0?all.find(d=>d.date===dates[idx-1]):null;
+      var dates=all.map(function(d){return d.date;}).sort();
+      var idx=dates.indexOf(date);
+      var prev=idx>0?all.find(function(d){return d.date===dates[idx-1];}):null;
       renderKpiSingle(picked,date.slice(5),prev);
       renderDataCards([picked],prev);
     }else{
@@ -280,10 +495,10 @@ function loadDashboard(){
 }
 
 function renderDateTabs(all){
-  const picker=document.getElementById('dashDatePicker');
+  var picker=document.getElementById('dashDatePicker');
   if(!all.length){if(picker)picker.value='';return;}
   if(picker&&selectedDate&&selectedDate!=='all')picker.value=selectedDate;
-  const allBtn=document.getElementById('dashAllBtn');
+  var allBtn=document.getElementById('dashAllBtn');
   if(allBtn){
     if(selectedDate==='all'){allBtn.style.background='var(--primary)';allBtn.style.color='#fff';allBtn.style.fontWeight='600';}
     else{allBtn.style.background='var(--bg)';allBtn.style.color='';allBtn.style.fontWeight='';}
@@ -292,225 +507,230 @@ function renderDateTabs(all){
 
 function pickDate(v){selectedDate=v;loadDashboard();}
 
+function fmtKpi(v,fmt){
+  if(v===undefined||v===null||isNaN(v))return '-';
+  if(fmt==='n')return Number.isInteger(v)?v:v.toFixed(0);
+  if(fmt==='¥')return '¥'+(typeof v==='number'?v.toFixed(2):v);
+  if(fmt==='%')return v.toFixed(1)+'%';
+  return v;
+}
+
 function renderKpiSingle(d,dateLabel,prev){
-  const el=document.getElementById('dashKpi');
+  var el=document.getElementById('dashKpi');
   if(!d){el.innerHTML='<div class="kpi-item" style="grid-column:span 2"><div class="kpi-value" style="font-size:14px;color:var(--text-light)">暂无数据</div><div class="kpi-label">快去录入吧</div></div>';return;}
   document.getElementById('dashDate').textContent=dateLabel+' 数据';
-  const avgO=d.validOrders>0?(d.income/d.validOrders).toFixed(1):'0';
-  const inR=d.expPeople>0?(d.inPeople/d.expPeople*100).toFixed(1)+'%':'0%';
-  const oR=d.inPeople>0?(d.orderPeople/d.inPeople*100).toFixed(1)+'%':'0%';
-  const rep=d.repurchase!==undefined&&d.repurchase!==null?d.repurchase+'%':'-';
-  const cmp=(cur,old,unit,rev)=>{
-    if(!prev||old===undefined||old===null||old===0)return'';
-    let diff,arrow,color;
-    if(unit==='%'){diff=(cur-old).toFixed(1);}
-    else{diff=(cur-old).toFixed(2);}
+  var cfg=PCFG[dashP];
+  var cmp=function(cur,old,unit,rev){
+    if(!prev||old===undefined||old===null||old===0)return '';
+    var diff=cur-old;
+    if(Math.abs(diff)<0.001)return '';
+    var arrow,color;
     if(rev){arrow=diff<0?'↑':diff>0?'↓':'-';color=diff<0?'var(--success)':diff>0?'var(--danger)':'';}
     else{arrow=diff>0?'↑':diff<0?'↓':'-';color=diff>0?'var(--success)':diff<0?'var(--danger)':'';}
-    if(diff==0)return'';
-    return`<span style="font-size:10px;color:${color||'var(--text-light)'}">${arrow}${unit==='¥'?'¥':''}${Math.abs(diff)}${unit==='%'?'pp':''}</span>`;
+    var abs=Math.abs(diff);
+    var num=unit==='%'?abs.toFixed(1):abs<1?abs.toFixed(2):abs.toFixed(1);
+    return '<span style="font-size:10px;color:'+color+'">'+arrow+num+(unit==='%'?'pp':'')+'</span>';
   };
-  const pAvgO=prev&&prev.validOrders>0?(prev.income/prev.validOrders):0;
-  const pInR=prev&&prev.expPeople>0?(prev.inPeople/prev.expPeople*100):0;
-  const pOR=prev&&prev.inPeople>0?(prev.orderPeople/prev.inPeople*100):0;
-  el.innerHTML=`
-    <div class="kpi-item"><div class="kpi-value">${d.validOrders} ${cmp(d.validOrders,prev?prev.validOrders:null,'')}</div><div class="kpi-label">有效订单</div></div>
-    <div class="kpi-item"><div class="kpi-value success">¥${d.income} ${cmp(d.income,prev?prev.income:null,'¥')}</div><div class="kpi-label">收入</div></div>
-    <div class="kpi-item"><div class="kpi-value">¥${avgO} ${cmp(d.validOrders>0?d.income/d.validOrders:0,pAvgO,'¥')}</div><div class="kpi-label">客单价</div></div>
-    <div class="kpi-item"><div class="kpi-value">${inR} ${cmp(d.expPeople>0?d.inPeople/d.expPeople*100:0,pInR,'%')}</div><div class="kpi-label">进店转化率</div></div>
-    <div class="kpi-item"><div class="kpi-value">${oR} ${cmp(d.inPeople>0?d.orderPeople/d.inPeople*100:0,pOR,'%')}</div><div class="kpi-label">下单转化率</div></div>
-    <div class="kpi-item"><div class="kpi-value">${rep} ${cmp(d.repurchase,prev?prev.repurchase:null,'%')}</div><div class="kpi-label">复购率</div></div>`;
+  var html='';
+  cfg.kpiDefs.forEach(function(kd){
+    var val=cfg.getKpiVal(d,kd.key);
+    var pval=prev?cfg.getKpiVal(prev,kd.key):null;
+    var colorCls=kd.color?' '+kd.color:'';
+    html+='<div class="kpi-item"><div class="kpi-value'+colorCls+'">'+fmtKpi(val,kd.fmt)+' '+cmp(val,pval,kd.fmt==='¥'?'¥':'%',kd.key==='cancelRate'||kd.key==='overTimeRate')+'</div><div class="kpi-label">'+kd.label+'</div></div>';
+  });
+  el.innerHTML=html;
 }
 
 function renderKpiAgg(data){
-  const el=document.getElementById('dashKpi');
+  var el=document.getElementById('dashKpi');
   if(!data.length){document.getElementById('dashDate').textContent='数据总览';el.innerHTML='<div class="kpi-item" style="grid-column:span 2"><div class="kpi-value" style="font-size:14px;color:var(--text-light)">暂无数据</div><div class="kpi-label">快去录入吧</div></div>';return;}
-  const dates=data.map(d=>d.date).sort();
-  const dateRange=dates.length>1?dates[0].slice(5)+'~'+dates[dates.length-1].slice(5)+' 汇总':dates[0].slice(5)+' 数据';
+  var dates=data.map(function(d){return d.date;}).sort();
+  var dateRange=dates.length>1?dates[0].slice(5)+'~'+dates[dates.length-1].slice(5)+' 汇总':dates[0].slice(5)+' 数据';
   document.getElementById('dashDate').textContent=dateRange;
-  let tVO=0,tIncome=0,tExpPeople=0,tInPeople=0,tOrderPeople=0,tRep=0,tRepN=0;
-  data.forEach(d=>{
-    tVO+=d.validOrders||0;
-    tIncome+=d.income||0;
-    tExpPeople+=d.expPeople||0;
-    tInPeople+=d.inPeople||0;
-    tOrderPeople+=d.orderPeople||0;
-    if(d.repurchase!==undefined&&d.repurchase!==null){tRep+=d.repurchase;tRepN++;}
+  var d=aggData(data);
+  var cfg=PCFG[dashP];
+  var html='';
+  cfg.kpiDefs.forEach(function(kd){
+    var val=cfg.getKpiVal(d,kd.key);
+    var colorCls=kd.color?' '+kd.color:'';
+    html+='<div class="kpi-item"><div class="kpi-value'+colorCls+'">'+fmtKpi(val,kd.fmt)+'</div><div class="kpi-label">'+kd.label+'</div></div>';
   });
-  const avgO=tVO>0?(tIncome/tVO).toFixed(1):'0';
-  const inR=tExpPeople>0?(tInPeople/tExpPeople*100).toFixed(1)+'%':'0%';
-  const oR=tInPeople>0?(tOrderPeople/tInPeople*100).toFixed(1)+'%':'0%';
-  const rep=tRepN>0?(tRep/tRepN).toFixed(1)+'%':'-';
-  el.innerHTML=`
-    <div class="kpi-item"><div class="kpi-value">${tVO}</div><div class="kpi-label">有效订单</div></div>
-    <div class="kpi-item"><div class="kpi-value success">¥${tIncome.toFixed(2)}</div><div class="kpi-label">收入</div></div>
-    <div class="kpi-item"><div class="kpi-value">¥${avgO}</div><div class="kpi-label">客单价</div></div>
-    <div class="kpi-item"><div class="kpi-value">${inR}</div><div class="kpi-label">进店转化率</div></div>
-    <div class="kpi-item"><div class="kpi-value">${oR}</div><div class="kpi-label">下单转化率</div></div>
-    <div class="kpi-item"><div class="kpi-value">${rep}</div><div class="kpi-label">复购率</div></div>`;
+  el.innerHTML=html;
 }
-
 
 function aggData(data){
   if(data.length===1)return data[0];
-  const s={storeIndex:data[0].storeIndex,platformIndex:data[0].platformIndex};
-  const sumFields=['validOrders','invalidOrders','revenue','income','expense','customerPay','expPeople','expTimes','inPeople','inTimes','orderPeople','orderTimes','promoOrders','promoCost','promoPay','newCust','oldCust','cancelOrders','cookTime'];
-  sumFields.forEach(f=>{s[f]=data.reduce((a,d)=>a+(d[f]||0),0);});
-  if(s.validOrders>0){s.avgPay=s.customerPay/s.validOrders;s.avgOrder=s.income/s.validOrders;s.promoAvg=s.promoPay/s.validOrders;}else{s.avgPay=0;s.avgOrder=0;s.promoAvg=0;}
-  if(s.expPeople>0)s.inRate=s.inPeople/s.expPeople*100;else s.inRate=0;
-  if(s.inPeople>0)s.orderRate=s.orderPeople/s.inPeople*100;else s.orderRate=0;
-  if(s.promoCost>0)s.roi=s.promoPay/s.promoCost;else s.roi=0;
-  if(s.revenue>0)s.promoRate=s.promoCost/s.revenue*100;else s.promoRate=0;
-  const totalCust=s.newCust+s.oldCust;
+  var cfg=PCFG[data[0].platformIndex];
+  var s={storeIndex:data[0].storeIndex,platformIndex:data[0].platformIndex};
+  cfg.sumFields.forEach(function(f){s[f]=data.reduce(function(a,d){return a+(d[f]||0);},0);});
+  // calc avg/rate fields
+  if(dashP===0){
+    if(s.validOrders>0){s.avgPay=s.customerPay/s.validOrders;s.avgOrder=s.income/s.validOrders;s.promoAvg=s.promoPay/s.validOrders;}else{s.avgPay=0;s.avgOrder=0;s.promoAvg=0;}
+    if(s.expPeople>0)s.inRate=s.inPeople/s.expPeople*100;else s.inRate=0;
+    if(s.inPeople>0)s.orderRate=s.orderPeople/s.inPeople*100;else s.orderRate=0;
+    if(s.promoCost>0)s.roi=s.promoPay/s.promoCost;else s.roi=0;
+    if(s.revenue>0)s.promoRate=s.promoCost/s.revenue*100;else s.promoRate=0;
+  }else{
+    if(s.expPeople>0)s.inRate=s.inPeople/s.expPeople*100;else s.inRate=0;
+    if(s.inPeople>0)s.orderRate=s.orderPeople/s.inPeople*100;else s.orderRate=0;
+    if(s.promoCost>0)s.roi=s.promoPay/s.promoCost;else s.roi=0;
+    if(s.validOrders>0)s.promoAvg=s.promoPay/s.validOrders;else s.promoAvg=0;
+    s.revenue=s.grossAmount-s.subsidyExpense;
+  }
+  var totalCust=s.newCust+s.oldCust;
   if(totalCust>0)s.repurchase=s.oldCust/totalCust*100;else s.repurchase=0;
-  const bhVals=data.filter(d=>d.bizHours).map(d=>d.bizHours);
-  s.bizHours=bhVals.length?bhVals.reduce((a,b)=>a+b,0)/bhVals.length:0;
-  const crVals=data.filter(d=>d.cancelRate).map(d=>d.cancelRate);
-  s.cancelRate=crVals.length?crVals.reduce((a,b)=>a+b,0)/crVals.length:0;
-  const rrVals=data.filter(d=>d.reportRate).map(d=>d.reportRate);
-  s.reportRate=rrVals.length?rrVals.reduce((a,b)=>a+b,0)/rrVals.length:0;
-  const otVals=data.filter(d=>d.overTimeRate).map(d=>d.overTimeRate);
-  s.overTimeRate=otVals.length?otVals.reduce((a,b)=>a+b,0)/otVals.length:0;
+  var bhVals=data.filter(function(d){return d.bizHours;}).map(function(d){return d.bizHours;});
+  s.bizHours=bhVals.length?bhVals.reduce(function(a,b){return a+b;},0)/bhVals.length:0;
+  var crVals=data.filter(function(d){return d.cancelRate;}).map(function(d){return d.cancelRate;});
+  s.cancelRate=crVals.length?crVals.reduce(function(a,b){return a+b;},0)/crVals.length:0;
+  var rrVals=data.filter(function(d){return d.reportRate;}).map(function(d){return d.reportRate;});
+  s.reportRate=rrVals.length?rrVals.reduce(function(a,b){return a+b;},0)/rrVals.length:0;
+  var otVals=data.filter(function(d){return d.overTimeRate;}).map(function(d){return d.overTimeRate;});
+  s.overTimeRate=otVals.length?otVals.reduce(function(a,b){return a+b;},0)/otVals.length:0;
   return s;
 }
 
 function renderDataCards(data,prev){
-  const el=document.getElementById('dashDataList');
+  var el=document.getElementById('dashDataList');
   if(!data.length){el.innerHTML='<div class="empty"><div class="icon">📭</div><div>暂无数据，去录入页添加</div></div>';return;}
-  const d=aggData(data);
-  const p=prev?aggData([prev]):null;
-  const grid='display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px';
-  const fmt=(v,unit)=>(v===undefined||v===null)?'-':(unit==='¥'?'¥'+(typeof v==='number'?v.toFixed(2):v):v+unit);
-  const delta=(cur,old,rev)=>{
-    if(!p||old===undefined||old===null)return'';
-    if(old===0&&cur===0)return'';
-    let diff;
-    if(typeof cur==='number'&&typeof old==='number'){diff=cur-old;}
-    else return'';
-    if(diff===0)return'';
-    const abs=Math.abs(diff);
-    const arrow=diff>0?'↑':'↓';
-    let color;
+  var d=aggData(data);
+  var p=prev?aggData([prev]):null;
+  var cfg=PCFG[dashP];
+  var grid='display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px';
+  var delta=function(cur,old,rev){
+    if(!p||old===undefined||old===null)return '';
+    if(old===0&&cur===0)return '';
+    var diff=cur-old;
+    if(Math.abs(diff)<0.001)return '';
+    var abs=Math.abs(diff);
+    var arrow=diff>0?'↑':'↓';
+    var color;
     if(rev)color=diff<0?'var(--success)':diff>0?'var(--danger)':'';
     else color=diff>0?'var(--success)':diff<0?'var(--danger)':'';
-    const num=Number.isInteger(abs)?abs:abs.toFixed(1);
-    return`<span style="font-size:10px;color:${color}">${arrow}${num}</span>`;
+    var num=abs<1?abs.toFixed(2):abs<10?abs.toFixed(1):abs.toFixed(0);
+    return '<span style="font-size:10px;color:'+color+'">'+arrow+num+'</span>';
   };
-  const sec=(title,body)=>`<div class="card"><div class="card-title" style="font-size:13px;color:var(--primary)">${title}</div><div style="${grid}">${body}</div></div>`;
-  let html='';
-  html+=sec('📦 订单',`
-      <div>有效订单 <b>${d.validOrders!==undefined?d.validOrders:'-'} ${delta(d.validOrders,p?p.validOrders:null)}</b></div>
-      <div>营业额 <b>${fmt(d.revenue,'¥')} ${delta(d.revenue,p?p.revenue:null)}</b></div>
-      <div>收入 <b style="color:var(--success)">${fmt(d.income,'¥')} ${delta(d.income,p?p.income:null)}</b></div>
-      <div>支出 <b style="color:var(--danger)">${fmt(d.expense,'¥')} ${delta(d.expense,p?p.expense:null,true)}</b></div>
-      <div>顾客实付 <b>${fmt(d.customerPay,'¥')} ${delta(d.customerPay,p?p.customerPay:null)}</b></div>
-      <div>单均实付 <b>${fmt(d.avgPay,'¥')} ${delta(d.avgPay,p?p.avgPay:null)}</b></div>
-      <div>客单价 <b>${fmt(d.avgOrder,'¥')} ${delta(d.avgOrder,p?p.avgOrder:null)}</b></div>
-      <div>无效订单 <b>${d.invalidOrders!==undefined?d.invalidOrders:'-'} ${delta(d.invalidOrders,p?p.invalidOrders:null,true)}</b></div>`);
-  html+=sec('👁 流量',`
-      <div>曝光人数 <b>${d.expPeople!==undefined?d.expPeople:'-'} ${delta(d.expPeople,p?p.expPeople:null)}</b></div>
-      <div>曝光次数 <b>${d.expTimes!==undefined?d.expTimes:'-'} ${delta(d.expTimes,p?p.expTimes:null)}</b></div>
-      <div>进店人数 <b>${d.inPeople!==undefined?d.inPeople:'-'} ${delta(d.inPeople,p?p.inPeople:null)}</b></div>
-      <div>进店次数 <b>${d.inTimes!==undefined?d.inTimes:'-'} ${delta(d.inTimes,p?p.inTimes:null)}</b></div>
-      <div>下单人数 <b>${d.orderPeople!==undefined?d.orderPeople:'-'} ${delta(d.orderPeople,p?p.orderPeople:null)}</b></div>
-      <div>下单次数 <b>${d.orderTimes!==undefined?d.orderTimes:'-'} ${delta(d.orderTimes,p?p.orderTimes:null)}</b></div>
-      <div>进店转化率 <b>${d.inRate?d.inRate.toFixed(1)+'%':'-'} ${delta(d.inRate,p?p.inRate:null)}</b></div>
-      <div>下单转化率 <b>${d.orderRate?d.orderRate.toFixed(1)+'%':'-'} ${delta(d.orderRate,p?p.orderRate:null)}</b></div>`);
-  html+=sec('🎯 营销',`
-      <div>活动订单 <b>${d.promoOrders!==undefined?d.promoOrders:'-'} ${delta(d.promoOrders,p?p.promoOrders:null)}</b></div>
-      <div>活动成本 <b>${fmt(d.promoCost,'¥')} ${delta(d.promoCost,p?p.promoCost:null,true)}</b></div>
-      <div>活动顾客实付 <b>${fmt(d.promoPay,'¥')} ${delta(d.promoPay,p?p.promoPay:null)}</b></div>
-      <div>活动客单价 <b>${fmt(d.promoAvg,'¥')} ${delta(d.promoAvg,p?p.promoAvg:null)}</b></div>
-      <div>投入产出比 <b>${d.roi?d.roi.toFixed(2):'-'} ${delta(d.roi,p?p.roi:null)}</b></div>
-      <div>营销力度 <b>${d.promoRate?d.promoRate.toFixed(1)+'%':'-'} ${delta(d.promoRate,p?p.promoRate:null,true)}</b></div>`);
-  html+=sec('👥 顾客',`
-      <div>下单新客 <b>${d.newCust!==undefined?d.newCust:'-'} ${delta(d.newCust,p?p.newCust:null)}</b></div>
-      <div>下单老客 <b>${d.oldCust!==undefined?d.oldCust:'-'} ${delta(d.oldCust,p?p.oldCust:null)}</b></div>
-      <div>复购率 <b>${d.repurchase?d.repurchase.toFixed(1)+'%':'-'} ${delta(d.repurchase,p?p.repurchase:null)}</b></div>
-      <div>日均营业时长 <b>${d.bizHours?d.bizHours.toFixed(1)+'h':'-'} ${delta(d.bizHours,p?p.bizHours:null)}</b></div>`);
-  html+=sec('🔧 服务',`
-      <div>取消单数 <b>${d.cancelOrders!==undefined?d.cancelOrders:'-'} ${delta(d.cancelOrders,p?p.cancelOrders:null,true)}</b></div>
-      <div>商责取消率 <b>${d.cancelRate?d.cancelRate.toFixed(1)+'%':'-'} ${delta(d.cancelRate,p?p.cancelRate:null,true)}</b></div>
-      <div>出餐上报率 <b>${d.reportRate?d.reportRate.toFixed(1)+'%':'-'} ${delta(d.reportRate,p?p.reportRate:null)}</b></div>
-      <div>出餐时长 <b>${d.cookTime?d.cookTime+'min':'-'} ${delta(d.cookTime,p?p.cookTime:null,true)}</b></div>
-      <div>出餐超时率 <b>${d.overTimeRate?d.overTimeRate.toFixed(1)+'%':'-'} ${delta(d.overTimeRate,p?p.overTimeRate:null,true)}</b></div>`);
+  var fmtV=function(v,fmt){
+    if(v===undefined||v===null)return '-';
+    if(fmt==='¥')return '¥'+(typeof v==='number'?v.toFixed(2):v);
+    if(fmt==='%')return v.toFixed(1)+'%';
+    if(fmt==='r')return typeof v==='number'?v.toFixed(2):'-';
+    if(fmt==='h')return v.toFixed(1)+'h';
+    if(fmt==='m')return v+'min';
+    return typeof v==='number'?(Number.isInteger(v)?v:v.toFixed(1)):'-';
+  };
+  var sec=function(title,body){return '<div class="card"><div class="card-title" style="font-size:13px;color:var(--primary)">'+title+'</div><div style="'+grid+'">'+body+'</div></div>';};
+  var html='';
+  cfg.cardDefs.forEach(function(cd){
+    var body='';
+    cd.items.forEach(function(item){
+      var val=d[item.key]!==undefined?d[item.key]:'';
+      var pval=p?p[item.key]:null;
+      var colorStyle=item.color?' style="color:var(--'+item.color+')"':'';
+      var fmt=item.fmt||'';
+      body+='<div>'+item.label+' <b'+colorStyle+'>'+fmtV(val,fmt)+' '+delta(val,pval,item.rev)+'</b></div>';
+    });
+    html+=sec(cd.title,body);
+  });
   el.innerHTML=html;
 }
 
-// Entry
+// ========== Entry ==========
 function submitEntry(){
-  const date=document.getElementById('entryDate').value;
+  var date=document.getElementById('entryDate').value;
   if(!date){showToast('请选择日期');return;}
-  const r={id:editingId||Date.now().toString(),storeIndex:entryS,platformIndex:entryP,date};
-  FIELDS.forEach(f=>{
-    const el=document.getElementById('f_'+f);
-    if(!el)return;
-    let v=el.value;
-    if(f==='inRate'||f==='orderRate')v=parseFloat(v)||0;
-    else v=Number(v)||0;
-    r[f]=v;
+  var cfg=PCFG[entryP];
+  var r={id:editingId||Date.now().toString(),storeIndex:entryS,platformIndex:entryP,date};
+  cfg.sections.forEach(function(sec){
+    sec.fields.forEach(function(f){
+      var el=document.getElementById('f_'+f.key);
+      if(!el)return;
+      var v=el.value;
+      if(f.t==='t'){v=parseFloat(v)||0;}
+      else{v=Number(v)||0;}
+      r[f.key]=v;
+    });
   });
-  let data=loadData();
+  var data=loadData();
   if(editingId){
-    const idx=data.findIndex(d=>d.id===editingId);if(idx>=0)data[idx]=r;editingId=null;document.getElementById('btnSubmit').textContent='提交数据';showToast('更新成功');
+    var idx=data.findIndex(function(d){return d.id===editingId;});if(idx>=0)data[idx]=r;editingId=null;document.getElementById('btnSubmit').textContent='提交数据';showToast('更新成功');
   }else{
-    const ex=data.findIndex(d=>d.storeIndex===entryS&&d.platformIndex===entryP&&d.date===date);
+    var ex=data.findIndex(function(d){return d.storeIndex===entryS&&d.platformIndex===entryP&&d.date===date;});
     if(ex>=0){if(confirm('该日期已有数据，是否覆盖？')){data[ex]=r;showToast('覆盖成功');}else return;}
     else{data.push(r);showToast('录入成功');}
   }
   saveData(data);clearForm();document.getElementById('entryDate').value=today();loadDashboard();
 }
 
-function clearForm(){FIELDS.forEach(f=>{const el=document.getElementById('f_'+f);if(el)el.value='';});}
+function clearForm(){
+  var cfg=PCFG[entryP];
+  cfg.sections.forEach(function(sec){
+    sec.fields.forEach(function(f){
+      var el=document.getElementById('f_'+f.key);
+      if(el)el.value='';
+    });
+  });
+}
 
-// History
+// ========== History ==========
 function loadHistory(){
-  const data=loadData().filter(d=>d.storeIndex===histS&&d.platformIndex===histP).sort((a,b)=>b.date.localeCompare(a.date));
-  const el=document.getElementById('histContent');
+  var data=loadData().filter(function(d){return d.storeIndex===histS&&d.platformIndex===histP;}).sort(function(a,b){return b.date.localeCompare(a.date);});
+  var el=document.getElementById('histContent');
   if(!data.length){el.innerHTML='<div class="empty"><div class="icon">📭</div><div>暂无数据</div></div>';return;}
-  let html='<table class="history-table"><thead><tr><th>日期</th><th>订单</th><th>收入</th><th>客单价</th><th>操作</th></tr></thead><tbody>';
-  data.forEach(d=>{
-    const avg=d.validOrders>0?'¥'+(d.income/d.validOrders).toFixed(1):'-';
-    html+=`<tr><td>${d.date.slice(5)}</td><td>${d.validOrders}</td><td>¥${d.income}</td><td>${avg}</td><td><button class="btn-sm btn-edit" onclick="editR('${d.id}')">编辑</button> <button class="btn-sm btn-del" onclick="delR('${d.id}')">删</button></td></tr>`;
+  var cfg=PCFG[histP];
+  var html='<table class="history-table"><thead><tr><th>日期</th><th>订单</th><th>'+(histP===0?'收入':'营业收入')+'</th><th>'+(histP===0?'客单价':'实付单均价')+'</th><th>操作</th></tr></thead><tbody>';
+  data.forEach(function(d){
+    var avg='-';
+    if(histP===0){avg=d.validOrders>0?'¥'+(d.income/d.validOrders).toFixed(1):'-';}
+    else{avg=d.avgPayPerOrder?'¥'+d.avgPayPerOrder.toFixed(2):'-';}
+    var rev=histP===0?'¥'+d.income:'¥'+(d.revenue||0).toFixed(2);
+    html+='<tr><td>'+d.date.slice(5)+'</td><td>'+d.validOrders+'</td><td>'+rev+'</td><td>'+avg+'</td><td><button class="btn-sm btn-edit" onclick="editR(\''+d.id+'\')">编辑</button> <button class="btn-sm btn-del" onclick="delR(\''+d.id+'\')">删</button></td></tr>';
   });
   html+='</tbody></table>';el.innerHTML=html;
 }
 
 function editR(id){
-  const d=loadData().find(r=>r.id===id);if(!d)return;
+  var d=loadData().find(function(r){return r.id===id;});if(!d)return;
   editingId=id;entryS=d.storeIndex;entryP=d.platformIndex;
   document.getElementById('entryStoreLabel').textContent=stores[entryS];
-  document.querySelectorAll('#entryPT .tab').forEach((t,i)=>t.classList.toggle('active',i===entryP));
+  document.querySelectorAll('#entryPT .tab').forEach(function(t,i){t.classList.toggle('active',i===entryP);});
   refreshDD();switchPage('pageEntry');
+  renderEntryForm();
   document.getElementById('entryDate').value=d.date;
-  FIELDS.forEach(f=>{const el=document.getElementById('f_'+f);if(el)el.value=d[f]!==undefined&&d[f]!==0?d[f]:'';});
-  autoCalc();
+  var cfg=PCFG[entryP];
+  cfg.sections.forEach(function(sec){
+    sec.fields.forEach(function(f){
+      var el=document.getElementById('f_'+f.key);
+      if(el)el.value=d[f.key]!==undefined&&d[f.key]!==0?d[f.key]:'';
+    });
+  });
+  doAutoCalc();
   document.getElementById('btnSubmit').textContent='更新数据';
 }
 
-function delR(id){if(!confirm('确定删除？'))return;saveData(loadData().filter(d=>d.id!==id));showToast('已删除');loadHistory();}
+function delR(id){if(!confirm('确定删除？'))return;saveData(loadData().filter(function(d){return d.id!==id;}));showToast('已删除');loadHistory();}
 
-// Settings
+// ========== Settings ==========
 function renderStoreList(){
-  document.getElementById('storeList').innerHTML=stores.map((s,i)=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><span>${s}</span>${stores.length>1?`<button class="btn-sm btn-del" onclick="removeStore(${i})">删除</button>`:''}</div>`).join('');
+  document.getElementById('storeList').innerHTML=stores.map(function(s,i){return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><span>'+s+'</span>'+(stores.length>1?'<button class="btn-sm btn-del" onclick="removeStore('+i+')">删除</button>':'')+'</div>';}).join('');
 }
 function addStore(){
-  const n=document.getElementById('newStoreName').value.trim();
+  var n=document.getElementById('newStoreName').value.trim();
   if(!n){showToast('请输入名称');return;}if(stores.includes(n)){showToast('已存在');return;}
   stores.push(n);saveStores();document.getElementById('newStoreName').value='';renderStoreList();refreshDD();showToast('添加成功');
 }
 function removeStore(i){
   if(!confirm('删除店铺会同时删除相关数据？'))return;
-  let data=loadData().filter(d=>d.storeIndex!==i).map(d=>{if(d.storeIndex>i)d.storeIndex--;return d;});
+  var data=loadData().filter(function(d){return d.storeIndex!==i;}).map(function(d){if(d.storeIndex>i)d.storeIndex--;return d;});
   saveData(data);stores.splice(i,1);saveStores();
   if(dashS>=stores.length)dashS=0;if(entryS>=stores.length)entryS=0;if(histS>=stores.length)histS=0;
   renderStoreList();refreshDD();showToast('已删除');
 }
-function changePassword(){const p=document.getElementById('s_newPwd').value.trim();if(!p){showToast('请输入新密码');return;}localStorage.setItem(SK_PWD,p);document.getElementById('s_newPwd').value='';showToast('密码已修改');}
-function exportData(){const blob=new Blob([JSON.stringify({stores,platforms:PLATFORMS,data:loadData()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='外卖数据_'+today()+'.json';a.click();}
-function importData(e){const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=function(ev){try{const imp=JSON.parse(ev.target.result);if(imp.stores){stores=imp.stores;saveStores();}const recs=imp.data||imp;if(!Array.isArray(recs)){showToast('格式错误');return;}saveData([...loadData(),...recs]);showToast('导入成功');refreshDD();loadDashboard();}catch(err){showToast('解析失败');}};r.readAsText(file);}
+function changePassword(){var p=document.getElementById('s_newPwd').value.trim();if(!p){showToast('请输入新密码');return;}localStorage.setItem(SK_PWD,p);document.getElementById('s_newPwd').value='';showToast('密码已修改');}
+function exportData(){var blob=new Blob([JSON.stringify({stores:stores,platforms:PLATFORMS,data:loadData()},null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='外卖数据_'+today()+'.json';a.click();}
+function importData(e){var file=e.target.files[0];if(!file)return;var r=new FileReader();r.onload=function(ev){try{var imp=JSON.parse(ev.target.result);if(imp.stores){stores=imp.stores;saveStores();}var recs=imp.data||imp;if(!Array.isArray(recs)){showToast('格式错误');return;}saveData(loadData().concat(recs));showToast('导入成功');refreshDD();loadDashboard();}catch(err){showToast('解析失败');}};r.readAsText(file);}
 function clearAllData(){localStorage.removeItem(SK_DATA);showToast('已清空');}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2000);}
 </script>
 </body>
 </html>
