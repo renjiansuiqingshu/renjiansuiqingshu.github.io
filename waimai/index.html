@@ -278,10 +278,12 @@ function renderDataCards(data){
   const el=document.getElementById('dashDataList');
   if(!data.length){el.innerHTML='<div class="empty"><div class="icon">📭</div><div>暂无数据，去录入页添加</div></div>';return;}
   let html='';
+  const grid='display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px';
+  const fmt=(v,unit)=>(v===undefined||v===0)?'-':(unit==='¥'?'¥'+v:v+unit);
+  const sec=(title,body)=>`<div class="card"><div class="card-title" style="font-size:13px;color:var(--primary)">${title}</div><div style="${grid}">${body}</div></div>`;
   data.forEach(d=>{
-    const fmt=(v,unit)=>(v===undefined||v===0)?'-':(unit==='¥'?'¥'+v:v+unit);
-    html+=`<div class="card"><div class="card-title" style="display:flex;justify-content:space-between;align-items:center"><span>${d.date.slice(5)}</span><span style="font-size:12px;font-weight:400;color:var(--text-light)">${PLATFORMS[d.platformIndex]}</span></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+    html+=`<div class="card" style="padding:10px 16px"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:15px">${d.date.slice(5)}</b><span style="font-size:12px;color:var(--text-light)">${PLATFORMS[d.platformIndex]}</span></div></div>`;
+    html+=sec('📦 订单',`
       <div>有效订单 <b>${d.validOrders||'-'}</b></div>
       <div>营业额 <b>${fmt(d.revenue,'¥')}</b></div>
       <div>收入 <b style="color:var(--success)">${fmt(d.income,'¥')}</b></div>
@@ -289,9 +291,8 @@ function renderDataCards(data){
       <div>顾客实付 <b>${fmt(d.customerPay,'¥')}</b></div>
       <div>单均实付 <b>${fmt(d.avgPay,'¥')}</b></div>
       <div>客单价 <b>${fmt(d.avgOrder,'¥')}</b></div>
-      <div>无效订单 <b>${d.invalidOrders||'-'}</b></div>
-    </div>
-    <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+      <div>无效订单 <b>${d.invalidOrders||'-'}</b></div>`);
+    html+=sec('👁 流量',`
       <div>曝光人数 <b>${d.expPeople||'-'}</b></div>
       <div>曝光次数 <b>${d.expTimes||'-'}</b></div>
       <div>进店人数 <b>${d.inPeople||'-'}</b></div>
@@ -299,30 +300,25 @@ function renderDataCards(data){
       <div>下单人数 <b>${d.orderPeople||'-'}</b></div>
       <div>下单次数 <b>${d.orderTimes||'-'}</b></div>
       <div>进店转化率 <b>${d.inRate?d.inRate+'%':'-'}</b></div>
-      <div>下单转化率 <b>${d.orderRate?d.orderRate+'%':'-'}</b></div>
-    </div>
-    <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+      <div>下单转化率 <b>${d.orderRate?d.orderRate+'%':'-'}</b></div>`);
+    html+=sec('🎯 营销',`
       <div>活动订单 <b>${d.promoOrders||'-'}</b></div>
       <div>活动成本 <b>${fmt(d.promoCost,'¥')}</b></div>
       <div>活动顾客实付 <b>${fmt(d.promoPay,'¥')}</b></div>
       <div>活动客单价 <b>${fmt(d.promoAvg,'¥')}</b></div>
       <div>投入产出比 <b>${d.roi||'-'}</b></div>
-      <div>营销力度 <b>${d.promoRate?d.promoRate+'%':'-'}</b></div>
-    </div>
-    <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+      <div>营销力度 <b>${d.promoRate?d.promoRate+'%':'-'}</b></div>`);
+    html+=sec('👥 顾客',`
       <div>下单新客 <b>${d.newCust||'-'}</b></div>
       <div>下单老客 <b>${d.oldCust||'-'}</b></div>
       <div>复购率 <b>${d.repurchase?d.repurchase+'%':'-'}</b></div>
-      <div>日均营业时长 <b>${d.bizHours?d.bizHours+'h':'-'}</b></div>
-    </div>
-    <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+      <div>日均营业时长 <b>${d.bizHours?d.bizHours+'h':'-'}</b></div>`);
+    html+=sec('🔧 服务',`
       <div>取消单数 <b>${d.cancelOrders||'-'}</b></div>
       <div>商责取消率 <b>${d.cancelRate?d.cancelRate+'%':'-'}</b></div>
       <div>出餐上报率 <b>${d.reportRate?d.reportRate+'%':'-'}</b></div>
       <div>出餐时长 <b>${d.cookTime?d.cookTime+'min':'-'}</b></div>
-      <div>出餐超时率 <b>${d.overTimeRate?d.overTimeRate+'%':'-'}</b></div>
-    </div>
-    </div>`;
+      <div>出餐超时率 <b>${d.overTimeRate?d.overTimeRate+'%':'-'}</b></div>`);
   });
   el.innerHTML=html;
 }
