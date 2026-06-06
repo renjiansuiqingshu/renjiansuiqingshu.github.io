@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>外卖数据监测</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--primary:#5B7BA5;--primary-light:#8BAAC8;--bg:#F5F7FA;--card:#fff;--text:#2C3E50;--text-light:#8899AA;--border:#E8ECF0;--success:#52C41A;--danger:#FF4D4F;--warn:#FAAD14}
@@ -112,10 +111,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="store-selector"><button class="store-btn" id="dashStoreBtn" onclick="toggleDrop('dash')"><span id="dashStoreLabel">远大购物中心店</span><span class="arrow">▼</span></button><div class="store-dropdown" id="dashStoreDD"></div></div>
     <div class="platform-toggle" id="dashPT"><div class="tab active" onclick="setDashP(0)">淘宝闪购</div><div class="tab" onclick="setDashP(1)">美团外卖</div></div>
     <div id="dashKpi" class="kpi-grid"></div>
-    <div class="card"><div class="card-title">收入趋势</div><div class="chart-wrap"><canvas id="chartRevenue"></canvas></div></div>
-    <div class="card"><div class="card-title">订单量趋势</div><div class="chart-wrap"><canvas id="chartOrders"></canvas></div></div>
-    <div class="card"><div class="card-title">平台对比（近7日）</div><div id="compareSection"></div></div>
-    <div class="card"><div class="card-title">全部数据明细</div><div id="allDataTable"></div></div>
+    <div id="dashDataList"></div>
   </div>
 
   <div id="pageEntry" class="page">
@@ -186,7 +182,7 @@ const FIELDS=['validOrders','invalidOrders','revenue','income','expense','custom
 
 let stores=['远大购物中心店'];
 let dashS=0,dashP=0,entryS=0,entryP=0,histS=0,histP=0;
-let chartRevenue=null,chartOrders=null,editingId=null;
+let editingId=null;
 
 function loadData(){return JSON.parse(localStorage.getItem(SK_DATA)||'[]');}
 function saveData(d){localStorage.setItem(SK_DATA,JSON.stringify(d));}
@@ -254,12 +250,10 @@ function autoCalc(){
 
 // Dashboard
 function loadDashboard(){
-  const all=loadData().filter(d=>d.storeIndex===dashS&&d.platformIndex===dashP).sort((a,b)=>a.date.localeCompare(b.date));
-  const latest=all.length?all[all.length-1]:null;
+  const all=loadData().filter(d=>d.storeIndex===dashS&&d.platformIndex===dashP).sort((a,b)=>b.date.localeCompare(a.date));
+  const latest=all.length?all[0]:null;
   renderKpi(latest);
-  renderCharts(all);
-  renderComparison();
-  renderAllData(all);
+  renderDataCards(all);
 }
 
 function renderKpi(d){
@@ -280,61 +274,56 @@ function renderKpi(d){
     <div class="kpi-item"><div class="kpi-value">${rep}</div><div class="kpi-label">复购率</div></div>`;
 }
 
-function renderCharts(data){
-  const labels=data.map(d=>d.date.slice(5));
-  const rev=data.map(d=>d.income||0);
-  const ord=data.map(d=>d.validOrders||0);
-  if(chartRevenue)chartRevenue.destroy();if(chartOrders)chartOrders.destroy();
-  const opts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'#f0f0f0'},ticks:{font:{size:10}},beginAtZero:true}}};
-  chartRevenue=new Chart(document.getElementById('chartRevenue'),{type:'line',data:{labels,datasets:[{data:rev,borderColor:'#5B7BA5',backgroundColor:'rgba(91,123,165,0.1)',fill:true,tension:.3,pointRadius:3}]},options:opts});
-  chartOrders=new Chart(document.getElementById('chartOrders'),{type:'bar',data:{labels,datasets:[{data:ord,backgroundColor:'rgba(91,123,165,0.6)',borderRadius:4}]},options:opts});
-}
-
-function renderComparison(){
-  const el=document.getElementById('compareSection');
-  const all=loadData();
-  const d0=all.filter(d=>d.storeIndex===dashS&&d.platformIndex===0).slice(-7);
-  const d1=all.filter(d=>d.storeIndex===dashS&&d.platformIndex===1).slice(-7);
-  const sum=(arr,k)=>arr.reduce((s,d)=>s+(d[k]||0),0);
-  const metrics=[{label:'收入',key:'income'},{label:'有效订单',key:'validOrders'},{label:'进店人数',key:'inPeople'},{label:'下单人数',key:'orderPeople'}];
-  let html=`<div style="display:flex;justify-content:flex-end;gap:16px;margin-bottom:8px;font-size:11px;color:var(--text-light)"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--primary);margin-right:4px"></span>${PLATFORMS[0]}</span><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-right:4px"></span>${PLATFORMS[1]}</span></div>`;
-  metrics.forEach(m=>{
-    const v0=sum(d0,m.key),v1=sum(d1,m.key),max=Math.max(v0,v1,1);
-    const isM=m.key==='income';
-    html+=`<div class="compare-row"><span style="width:60px;font-size:12px;color:var(--text-light)">${m.label}</span><div class="compare-bar"><div class="bar a" style="width:${v0/max*100}px"></div><span style="font-size:12px;min-width:40px">${isM?'¥'+v0:v0}</span></div><div class="compare-bar"><div class="bar b" style="width:${v1/max*100}px"></div><span style="font-size:12px;min-width:40px">${isM?'¥'+v1:v1}</span></div></div>`;
+function renderDataCards(data){
+  const el=document.getElementById('dashDataList');
+  if(!data.length){el.innerHTML='<div class="empty"><div class="icon">📭</div><div>暂无数据，去录入页添加</div></div>';return;}
+  let html='';
+  data.forEach(d=>{
+    const fmt=(v,unit)=>(v===undefined||v===0)?'-':(unit==='¥'?'¥'+v:v+unit);
+    html+=`<div class="card"><div class="card-title" style="display:flex;justify-content:space-between;align-items:center"><span>${d.date.slice(5)}</span><span style="font-size:12px;font-weight:400;color:var(--text-light)">${PLATFORMS[d.platformIndex]}</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+      <div>有效订单 <b>${d.validOrders||'-'}</b></div>
+      <div>营业额 <b>${fmt(d.revenue,'¥')}</b></div>
+      <div>收入 <b style="color:var(--success)">${fmt(d.income,'¥')}</b></div>
+      <div>支出 <b style="color:var(--danger)">${fmt(d.expense,'¥')}</b></div>
+      <div>顾客实付 <b>${fmt(d.customerPay,'¥')}</b></div>
+      <div>单均实付 <b>${fmt(d.avgPay,'¥')}</b></div>
+      <div>客单价 <b>${fmt(d.avgOrder,'¥')}</b></div>
+      <div>无效订单 <b>${d.invalidOrders||'-'}</b></div>
+    </div>
+    <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+      <div>曝光人数 <b>${d.expPeople||'-'}</b></div>
+      <div>曝光次数 <b>${d.expTimes||'-'}</b></div>
+      <div>进店人数 <b>${d.inPeople||'-'}</b></div>
+      <div>进店次数 <b>${d.inTimes||'-'}</b></div>
+      <div>下单人数 <b>${d.orderPeople||'-'}</b></div>
+      <div>下单次数 <b>${d.orderTimes||'-'}</b></div>
+      <div>进店转化率 <b>${d.inRate?d.inRate+'%':'-'}</b></div>
+      <div>下单转化率 <b>${d.orderRate?d.orderRate+'%':'-'}</b></div>
+    </div>
+    <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+      <div>活动订单 <b>${d.promoOrders||'-'}</b></div>
+      <div>活动成本 <b>${fmt(d.promoCost,'¥')}</b></div>
+      <div>活动顾客实付 <b>${fmt(d.promoPay,'¥')}</b></div>
+      <div>活动客单价 <b>${fmt(d.promoAvg,'¥')}</b></div>
+      <div>投入产出比 <b>${d.roi||'-'}</b></div>
+      <div>营销力度 <b>${d.promoRate?d.promoRate+'%':'-'}</b></div>
+    </div>
+    <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+      <div>下单新客 <b>${d.newCust||'-'}</b></div>
+      <div>下单老客 <b>${d.oldCust||'-'}</b></div>
+      <div>复购率 <b>${d.repurchase?d.repurchase+'%':'-'}</b></div>
+      <div>日均营业时长 <b>${d.bizHours?d.bizHours+'h':'-'}</b></div>
+    </div>
+    <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+      <div>取消单数 <b>${d.cancelOrders||'-'}</b></div>
+      <div>商责取消率 <b>${d.cancelRate?d.cancelRate+'%':'-'}</b></div>
+      <div>出餐上报率 <b>${d.reportRate?d.reportRate+'%':'-'}</b></div>
+      <div>出餐时长 <b>${d.cookTime?d.cookTime+'min':'-'}</b></div>
+      <div>出餐超时率 <b>${d.overTimeRate?d.overTimeRate+'%':'-'}</b></div>
+    </div>
+    </div>`;
   });
-  el.innerHTML=html;
-}
-
-function renderAllData(data){
-  const el=document.getElementById('allDataTable');
-  if(!data.length){el.innerHTML='<div class="empty" style="padding:20px"><div>暂无数据</div></div>';return;}
-  const cols=[
-    {k:'date',l:'日期'},{k:'validOrders',l:'有效订单'},{k:'income',l:'收入'},{k:'expense',l:'支出'},
-    {k:'customerPay',l:'顾客实付'},{k:'avgPay',l:'单均实付'},{k:'avgOrder',l:'客单价'},
-    {k:'expPeople',l:'曝光人数'},{k:'inPeople',l:'进店人数'},{k:'orderPeople',l:'下单人数'},
-    {k:'inRate',l:'进店转化率',p:'%'},{k:'orderRate',l:'下单转化率',p:'%'},
-    {k:'promoOrders',l:'活动订单'},{k:'promoCost',l:'活动成本'},{k:'roi',l:'投入产出比'},{k:'promoRate',l:'营销力度',p:'%'},
-    {k:'newCust',l:'新客'},{k:'oldCust',l:'老客'},{k:'repurchase',l:'复购率',p:'%'},
-    {k:'bizHours',l:'营业时长'},{k:'cancelOrders',l:'取消单'},{k:'cancelRate',l:'取消率',p:'%'},
-    {k:'reportRate',l:'上报率',p:'%'},{k:'cookTime',l:'出餐时长'},{k:'overTimeRate',l:'超时率',p:'%'}
-  ];
-  let html='<div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table class="history-table" style="min-width:900px;font-size:11px;white-space:nowrap"><thead><tr>';
-  cols.forEach(c=>html+=`<th style="padding:6px 4px">${c.l}</th>`);
-  html+='</tr></thead><tbody>';
-  data.slice().reverse().forEach(d=>{
-    html+='<tr>';
-    cols.forEach(c=>{
-      let v=d[c.k];
-      if(v===undefined||v===0||v==='0')v='-';
-      else if(c.k==='date')v=v.slice(5);
-      else if(c.k==='income'||c.k==='expense'||c.k==='customerPay'||c.k==='avgPay'||c.k==='avgOrder'||c.k==='promoCost')v='¥'+v;
-      else if(c.p==='%')v=v+'%';
-      html+=`<td style="padding:6px 4px">${v}</td>`;
-    });
-    html+='</tr>';
-  });
-  html+='</tbody></table></div>';
   el.innerHTML=html;
 }
 
