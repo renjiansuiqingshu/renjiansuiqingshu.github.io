@@ -115,6 +115,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="card"><div class="card-title">收入趋势</div><div class="chart-wrap"><canvas id="chartRevenue"></canvas></div></div>
     <div class="card"><div class="card-title">订单量趋势</div><div class="chart-wrap"><canvas id="chartOrders"></canvas></div></div>
     <div class="card"><div class="card-title">平台对比（近7日）</div><div id="compareSection"></div></div>
+    <div class="card"><div class="card-title">全部数据明细</div><div id="allDataTable"></div></div>
   </div>
 
   <div id="pageEntry" class="page">
@@ -254,11 +255,11 @@ function autoCalc(){
 // Dashboard
 function loadDashboard(){
   const all=loadData().filter(d=>d.storeIndex===dashS&&d.platformIndex===dashP).sort((a,b)=>a.date.localeCompare(b.date));
-  const last7=all.slice(-7);
   const latest=all.length?all[all.length-1]:null;
   renderKpi(latest);
-  renderCharts(last7);
+  renderCharts(all);
   renderComparison();
+  renderAllData(all);
 }
 
 function renderKpi(d){
@@ -302,6 +303,38 @@ function renderComparison(){
     const isM=m.key==='income';
     html+=`<div class="compare-row"><span style="width:60px;font-size:12px;color:var(--text-light)">${m.label}</span><div class="compare-bar"><div class="bar a" style="width:${v0/max*100}px"></div><span style="font-size:12px;min-width:40px">${isM?'¥'+v0:v0}</span></div><div class="compare-bar"><div class="bar b" style="width:${v1/max*100}px"></div><span style="font-size:12px;min-width:40px">${isM?'¥'+v1:v1}</span></div></div>`;
   });
+  el.innerHTML=html;
+}
+
+function renderAllData(data){
+  const el=document.getElementById('allDataTable');
+  if(!data.length){el.innerHTML='<div class="empty" style="padding:20px"><div>暂无数据</div></div>';return;}
+  const cols=[
+    {k:'date',l:'日期'},{k:'validOrders',l:'有效订单'},{k:'income',l:'收入'},{k:'expense',l:'支出'},
+    {k:'customerPay',l:'顾客实付'},{k:'avgPay',l:'单均实付'},{k:'avgOrder',l:'客单价'},
+    {k:'expPeople',l:'曝光人数'},{k:'inPeople',l:'进店人数'},{k:'orderPeople',l:'下单人数'},
+    {k:'inRate',l:'进店转化率',p:'%'},{k:'orderRate',l:'下单转化率',p:'%'},
+    {k:'promoOrders',l:'活动订单'},{k:'promoCost',l:'活动成本'},{k:'roi',l:'投入产出比'},{k:'promoRate',l:'营销力度',p:'%'},
+    {k:'newCust',l:'新客'},{k:'oldCust',l:'老客'},{k:'repurchase',l:'复购率',p:'%'},
+    {k:'bizHours',l:'营业时长'},{k:'cancelOrders',l:'取消单'},{k:'cancelRate',l:'取消率',p:'%'},
+    {k:'reportRate',l:'上报率',p:'%'},{k:'cookTime',l:'出餐时长'},{k:'overTimeRate',l:'超时率',p:'%'}
+  ];
+  let html='<div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table class="history-table" style="min-width:900px;font-size:11px;white-space:nowrap"><thead><tr>';
+  cols.forEach(c=>html+=`<th style="padding:6px 4px">${c.l}</th>`);
+  html+='</tr></thead><tbody>';
+  data.slice().reverse().forEach(d=>{
+    html+='<tr>';
+    cols.forEach(c=>{
+      let v=d[c.k];
+      if(v===undefined||v===0||v==='0')v='-';
+      else if(c.k==='date')v=v.slice(5);
+      else if(c.k==='income'||c.k==='expense'||c.k==='customerPay'||c.k==='avgPay'||c.k==='avgOrder'||c.k==='promoCost')v='¥'+v;
+      else if(c.p==='%')v=v+'%';
+      html+=`<td style="padding:6px 4px">${v}</td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody></table></div>';
   el.innerHTML=html;
 }
 
