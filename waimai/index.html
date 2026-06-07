@@ -565,8 +565,16 @@ function renderKpiAgg(data){
 }
 
 function aggData(data){
-  if(data.length===1)return data[0];
   var cfg=PCFG[data[0].platformIndex];
+  // always recalc rates from raw numbers even for single records
+  if(data.length===1){
+    var d=Object.assign({},data[0]);
+    if(d.expPeople>0)d.inRate=d.inPeople/d.expPeople*100;else d.inRate=0;
+    if(d.inPeople>0)d.orderRate=d.orderPeople/d.inPeople*100;else d.orderRate=0;
+    var tc=d.newCust+d.oldCust;
+    if(tc>0)d.repurchase=d.oldCust/tc*100;else d.repurchase=0;
+    return d;
+  }
   var s={storeIndex:data[0].storeIndex,platformIndex:data[0].platformIndex};
   cfg.sumFields.forEach(function(f){s[f]=data.reduce(function(a,d){return a+(d[f]||0);},0);});
   // calc avg/rate fields
