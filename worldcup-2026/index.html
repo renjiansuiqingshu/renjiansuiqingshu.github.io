@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🏆 2026 世界杯数据中心</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#F2F4F7;--card:#fff;--text1:#1F2937;--text2:#6B7280;--text3:#9CA3AF;
+--primary:#6C8EBF;--primary-bg:rgba(108,142,191,.08);--border:rgba(0,0,0,.05);
+--radius:16px;--radius-sm:10px;--shadow:0 1px 3px rgba(0,0,0,.04);
+--shadow-md:0 4px 6px -1px rgba(0,0,0,.05);--warm:#E8A87C;--success:#81C784;--danger:#E57373}
+[data-theme="dark"]{--bg:#0F1117;--card:#1A1D28;--text1:#E8ECF4;--text2:#8B92A5;--text3:#505668;
+--primary:#7B9FD4;--primary-bg:rgba(123,159,212,.1);--border:rgba(255,255,255,.06);
+--shadow:0 1px 3px rgba(0,0,0,.2);--shadow-md:0 4px 6px rgba(0,0,0,.2)}
+body{font-family:'Inter','Noto Sans SC',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;padding:20px}
+.container{max-width:1200px;margin:0 auto}
+header{text-align:center;padding:40px 20px 30px}
+header h1{font-size:2rem;font-weight:700;margin-bottom:8px}
+header p{color:var(--text2);font-size:.9rem}
+.stats-bar{display:flex;justify-content:center;gap:24px;margin:20px 0;flex-wrap:wrap}
+.stat-item{background:var(--card);border-radius:var(--radius-sm);padding:12px 20px;box-shadow:var(--shadow);text-align:center;min-width:100px}
+.stat-num{font-size:1.5rem;font-weight:700;color:var(--primary)}
+.stat-label{font-size:.75rem;color:var(--text2);margin-top:2px}
+.section{margin:30px 0}
+.section-title{font-size:1.1rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:18px;background:var(--primary);border-radius:2px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.result-item{background:var(--card);border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;font-size:.88rem}
+.result-group{background:var(--primary-bg);color:var(--primary);padding:3px 8px;border-radius:6px;font-size:.75rem;font-weight:600;white-space:nowrap}
+.result-item .score{font-weight:700;color:var(--primary);margin:0 6px;font-size:1rem}
+.result-venue{margin-left:auto;color:var(--text3);font-size:.75rem}
+.today-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
+.today-item{background:var(--card);border-radius:var(--radius-sm);padding:16px 18px;box-shadow:var(--shadow);border-left:3px solid var(--warm)}
+.today-meta{font-size:.75rem;color:var(--text2);margin-bottom:6px}
+.today-match{font-size:.95rem;font-weight:500}
+.pred-box{margin-top:8px;font-size:.8rem;color:var(--warm);font-weight:500}
+.groups-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(560px,1fr));gap:16px}
+@media(max-width:640px){.groups-grid{grid-template-columns:1fr}.stats-bar{gap:10px}.stat-item{min-width:70px;padding:10px 12px}.stat-num{font-size:1.2rem}}
+.group-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .2s}
+.group-card:hover{box-shadow:var(--shadow-md)}
+.group-header{background:linear-gradient(135deg,var(--primary) 0%,rgba(108,142,191,.8) 100%);color:#fff;padding:12px 18px;display:flex;align-items:center;gap:10px}
+.group-letter{font-size:1.6rem;font-weight:700;opacity:.6}
+.group-name{font-size:.95rem;font-weight:600}
+.group-body{padding:0}
+.standings-table{padding:0}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:var(--primary-bg);color:var(--primary);padding:8px 10px;text-align:left;font-weight:600;font-size:.75rem;position:sticky;top:0}
+td{padding:7px 10px;border-bottom:1px solid var(--border)}
+tr.top2 td{font-weight:500}
+tr.top3 td{color:var(--warm)}
+.rank{width:28px;text-align:center;color:var(--text3);font-weight:600}
+.team{font-weight:500;min-width:100px}
+.gd{text-align:center;font-weight:600}
+.gd.positive{color:var(--success)}
+.gd.negative{color:var(--danger)}
+.pts{font-weight:700;color:var(--primary);text-align:center;font-size:.95rem}
+.group-matches{padding:12px 16px;border-top:1px solid var(--border)}
+.group-matches h4{font-size:.8rem;color:var(--text2);margin-bottom:8px;font-weight:500}
+.match-item{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:.82rem;border-bottom:1px solid var(--border-light)}
+.match-item:last-child{border-bottom:none}
+.match-time{color:var(--text3);font-size:.73rem;min-width:70px;white-space:nowrap}
+.match-teams{flex:1}
+.match-item b{color:var(--text3);font-weight:400;margin:0 4px;font-size:.75rem}
+.match-score{color:var(--primary);font-weight:600;white-space:nowrap}
+.match-item.played .match-teams b{color:var(--primary)}
+.match-item.today{background:rgba(232,168,124,.06);border-radius:6px;padding:6px 8px;margin:2px -8px}
+.pred{font-size:.73rem;color:var(--warm);margin-left:6px}
+.theme-toggle{position:fixed;top:16px;right:16px;background:var(--card);border:1px solid var(--border);border-radius:50%;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:var(--shadow);z-index:10}
+footer{text-align:center;padding:30px;color:var(--text3);font-size:.75rem}
+a{color:var(--primary);text-decoration:none}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+<div class="container">
+<header>
+<h1>🏆 2026 世界杯数据中心</h1>
+<p>美加墨 · 48队 · 12组 · 104场 · 2026.6.12 - 7.20</p>
+<div class="stats-bar">
+<div class="stat-item"><div class="stat-num">48</div><div class="stat-label">参赛队伍</div></div>
+<div class="stat-item"><div class="stat-num">72</div><div class="stat-label">小组赛</div></div>
+<div class="stat-item"><div class="stat-num">4</div><div class="stat-label">已完赛</div></div>
+<div class="stat-item"><div class="stat-num">68</div><div class="stat-label">待踢</div></div>
+<div class="stat-item"><div class="stat-num">16</div><div class="stat-label">承办城市</div></div>
+</div>
+</header>
+
+<div class="section">
+<div class="section-title">📋 已完赛结果</div>
+<div class="results-grid"><div class="result-item">
+        <span class="result-group">A组</span>
+        <span>🇲🇽 墨西哥 <b class="score">2-0</b> 🇿🇦 南非</span>
+        <span class="result-venue">墨西哥城</span>
+    </div><div class="result-item">
+        <span class="result-group">A组</span>
+        <span>🇰🇷 韩国 <b class="score">2-1</b> 🇨🇿 捷克</span>
+        <span class="result-venue">瓜达拉哈拉</span>
+    </div><div class="result-item">
+        <span class="result-group">B组</span>
+        <span>🇨🇦 加拿大 <b class="score">1-1</b> 🇧🇦 波黑</span>
+        <span class="result-venue">多伦多</span>
+    </div><div class="result-item">
+        <span class="result-group">D组</span>
+        <span>🇺🇸 美国 <b class="score">4-1</b> 🇵🇾 巴拉圭</span>
+        <span class="result-venue">洛杉矶</span>
+    </div></div>
+</div>
+
+<div class="section">
+<div class="section-title">⏰ 近期赛程</div>
+<div class="today-grid"><div class="today-item">
+            <div class="today-meta">B组 · 06/14 03:00 · 旧金山</div>
+            <div class="today-match">🇶🇦 卡塔尔 vs 🇨🇭 瑞士</div>
+            <div class="pred-box"><span>预测 0:2</span> ⭐⭐⭐⭐</div>
+        </div><div class="today-item">
+            <div class="today-meta">C组 · 06/14 06:00 · 纽约新泽西</div>
+            <div class="today-match">🇧🇷 巴西 vs 🇲🇦 摩洛哥</div>
+            <div class="pred-box"><span>预测 2:1</span> ⭐⭐⭐</div>
+        </div><div class="today-item">
+            <div class="today-meta">C组 · 06/14 09:00 · 波士顿</div>
+            <div class="today-match">🇭🇹 海地 vs 🏴󠁧󠁢󠁳󠁣󠁴󠁿 苏格兰</div>
+            <div class="pred-box"><span>预测 0:2</span> ⭐⭐⭐⭐</div>
+        </div><div class="today-item">
+            <div class="today-meta">D组 · 06/14 12:00 · 温哥华</div>
+            <div class="today-match">🇦🇺 澳大利亚 vs 🇹🇷 土耳其</div>
+            <div class="pred-box"><span>预测 0:1</span> ⭐⭐⭐</div>
+        </div></div>
+</div>
+
+<div class="section">
+<div class="section-title">🌍 12组积分榜 & 赛程</div>
+<div class="groups-grid">
+    <div class="group-card" data-group="A">
+        <div class="group-header">
+            <span class="group-letter">A</span>
+            <span class="group-name">A组</span>
+        </div>
+        <div class="group-body">
+            <div class="standings-table">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>进球</th><th>净胜</th><th>积分</th>
+                    </tr></thead>
+                    <tbody><tr class="top2">
+            <td class="rank">1</td>
+            <td class="team">🇲🇽 墨西哥</td>
+            <td>1</td><td>1</td><td>0</td><td>0</td>
+            <td>2-0</td><td class="gd">+2</td>
+            <td class="pts">3</td></tr><tr class="top2">
+            <td class="rank">2</td>
+            <td class="team">🇰🇷 韩国</td>
+            <td>1</td><td>1</td><td>0</td><td>0</td>
+            <td>2-1</td><td class="gd">+1</td>
+            <td class="pts">3</td></tr><tr class="top3">
+            <td class="rank">3</td>
+            <td class="team">🇨🇿 捷克</td>
+            <td>1</td><td>0</td><td>0</td><td>1</td>
+            <td>1-2</td><td class="gd">-1</td>
+            <td class="pts">0</td></tr><tr class="">
+            <td class="rank">4</td>
+            <td class="team">🇿🇦 南非</td>
+            <td>1</td><td>0</td><td>0</td><td>1</td>
+            <td>0-2</td><td class="gd">-2</td>
+            <td class="pts">0</td></tr></tbody>
+                </table>
+            </div>
+            <div class="group-matches">
+                <h4>赛程</h4>
+                <div class="match-item played">
+            <span class="match-time">已赛</span>
+            <span class="match-teams">🇲🇽 墨西哥 <b>vs</b> 🇿🇦 南非</span>
+            <span class="match-score">⚽ 2-0</span>
+            
+        </div><div class="match-item played">
+            <span class="match-time">已赛</span>
+            <span class="match-teams">🇰🇷 韩国 <b>vs</b> 🇨🇿 捷克</span>
+            <span class="match-score">⚽ 2-1</span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/17 02:00</span>
+            <span class="match-teams">🇲🇽 墨西哥 <b>vs</b> 🇨🇿 捷克</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/17 06:00</span>
+            <span class="match-teams">🇰🇷 韩国 <b>vs</b> 🇿🇦 南非</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/21 04:00</span>
+            <span class="match-teams">🇿🇦 南非 <b>vs</b> 🇨🇿 捷克</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/21 04:00</span>
+            <span class="match-teams">🇲🇽 墨西哥 <b>vs</b> 🇰🇷 韩国</span>
+            <span class="match-score"></span>
+            
+        </div>
+            </div>
+        </div>
+    </div>
+    <div class="group-card" data-group="B">
+        <div class="group-header">
+            <span class="group-letter">B</span>
+            <span class="group-name">B组</span>
+        </div>
+        <div class="group-body">
+            <div class="standings-table">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>进球</th><th>净胜</th><th>积分</th>
+                    </tr></thead>
+                    <tbody><tr class="top2">
+            <td class="rank">1</td>
+            <td class="team">🇨🇦 加拿大</td>
+            <td>1</td><td>0</td><td>1</td><td>0</td>
+            <td>1-1</td><td class="gd">+0</td>
+            <td class="pts">1</td></tr><tr class="top2">
+            <td class="rank">2</td>
+            <td class="team">🇧🇦 波黑</td>
+            <td>1</td><td>0</td><td>1</td><td>0</td>
+            <td>1-1</td><td class="gd">+0</td>
+            <td class="pts">1</td></tr><tr class="top3">
+            <td class="rank">3</td>
+            <td class="team">🇨🇭 瑞士</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="">
+            <td class="rank">4</td>
+            <td class="team">🇶🇦 卡塔尔</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr></tbody>
+                </table>
+            </div>
+            <div class="group-matches">
+                <h4>赛程</h4>
+                <div class="match-item played">
+            <span class="match-time">已赛</span>
+            <span class="match-teams">🇨🇦 加拿大 <b>vs</b> 🇧🇦 波黑</span>
+            <span class="match-score">⚽ 1-1</span>
+            
+        </div><div class="match-item today">
+            <span class="match-time">06/14 03:00</span>
+            <span class="match-teams">🇶🇦 卡塔尔 <b>vs</b> 🇨🇭 瑞士</span>
+            <span class="match-score"></span>
+            <span class="pred">预测 0-2</span>
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/18 20:00</span>
+            <span class="match-teams">🇨🇦 加拿大 <b>vs</b> 🇶🇦 卡塔尔</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/18 23:00</span>
+            <span class="match-teams">🇨🇭 瑞士 <b>vs</b> 🇧🇦 波黑</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/23 04:00</span>
+            <span class="match-teams">🇧🇦 波黑 <b>vs</b> 🇶🇦 卡塔尔</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/23 04:00</span>
+            <span class="match-teams">🇨🇭 瑞士 <b>vs</b> 🇨🇦 加拿大</span>
+            <span class="match-score"></span>
+            
+        </div>
+            </div>
+        </div>
+    </div>
+    <div class="group-card" data-group="C">
+        <div class="group-header">
+            <span class="group-letter">C</span>
+            <span class="group-name">C组</span>
+        </div>
+        <div class="group-body">
+            <div class="standings-table">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>进球</th><th>净胜</th><th>积分</th>
+                    </tr></thead>
+                    <tbody><tr class="top2">
+            <td class="rank">1</td>
+            <td class="team">🇧🇷 巴西</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top2">
+            <td class="rank">2</td>
+            <td class="team">🇲🇦 摩洛哥</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top3">
+            <td class="rank">3</td>
+            <td class="team">🏴󠁧󠁢󠁳󠁣󠁴󠁿 苏格兰</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="">
+            <td class="rank">4</td>
+            <td class="team">🇭🇹 海地</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr></tbody>
+                </table>
+            </div>
+            <div class="group-matches">
+                <h4>赛程</h4>
+                <div class="match-item today">
+            <span class="match-time">06/14 06:00</span>
+            <span class="match-teams">🇧🇷 巴西 <b>vs</b> 🇲🇦 摩洛哥</span>
+            <span class="match-score"></span>
+            <span class="pred">预测 2-1</span>
+        </div><div class="match-item today">
+            <span class="match-time">06/14 09:00</span>
+            <span class="match-teams">🇭🇹 海地 <b>vs</b> 🏴󠁧󠁢󠁳󠁣󠁴󠁿 苏格兰</span>
+            <span class="match-score"></span>
+            <span class="pred">预测 0-2</span>
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/19 01:30</span>
+            <span class="match-teams">🇧🇷 巴西 <b>vs</b> 🇭🇹 海地</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/19 23:00</span>
+            <span class="match-teams">🏴󠁧󠁢󠁳󠁣󠁴󠁿 苏格兰 <b>vs</b> 🇲🇦 摩洛哥</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/23 23:00</span>
+            <span class="match-teams">🇲🇦 摩洛哥 <b>vs</b> 🇭🇹 海地</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/23 23:00</span>
+            <span class="match-teams">🏴󠁧󠁢󠁳󠁣󠁴󠁿 苏格兰 <b>vs</b> 🇧🇷 巴西</span>
+            <span class="match-score"></span>
+            
+        </div>
+            </div>
+        </div>
+    </div>
+    <div class="group-card" data-group="D">
+        <div class="group-header">
+            <span class="group-letter">D</span>
+            <span class="group-name">D组</span>
+        </div>
+        <div class="group-body">
+            <div class="standings-table">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>进球</th><th>净胜</th><th>积分</th>
+                    </tr></thead>
+                    <tbody><tr class="top2">
+            <td class="rank">1</td>
+            <td class="team">🇺🇸 美国</td>
+            <td>1</td><td>1</td><td>0</td><td>0</td>
+            <td>4-1</td><td class="gd">+3</td>
+            <td class="pts">3</td></tr><tr class="top2">
+            <td class="rank">2</td>
+            <td class="team">🇹🇷 土耳其</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top3">
+            <td class="rank">3</td>
+            <td class="team">🇦🇺 澳大利亚</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="">
+            <td class="rank">4</td>
+            <td class="team">🇵🇾 巴拉圭</td>
+            <td>1</td><td>0</td><td>0</td><td>1</td>
+            <td>1-4</td><td class="gd">-3</td>
+            <td class="pts">0</td></tr></tbody>
+                </table>
+            </div>
+            <div class="group-matches">
+                <h4>赛程</h4>
+                <div class="match-item played">
+            <span class="match-time">已赛</span>
+            <span class="match-teams">🇺🇸 美国 <b>vs</b> 🇵🇾 巴拉圭</span>
+            <span class="match-score">⚽ 4-1</span>
+            
+        </div><div class="match-item today">
+            <span class="match-time">06/14 12:00</span>
+            <span class="match-teams">🇦🇺 澳大利亚 <b>vs</b> 🇹🇷 土耳其</span>
+            <span class="match-score"></span>
+            <span class="pred">预测 0-1</span>
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/19 20:00</span>
+            <span class="match-teams">🇺🇸 美国 <b>vs</b> 🇦🇺 澳大利亚</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/19 04:00</span>
+            <span class="match-teams">🇹🇷 土耳其 <b>vs</b> 🇵🇾 巴拉圭</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/25 03:00</span>
+            <span class="match-teams">🇵🇾 巴拉圭 <b>vs</b> 🇦🇺 澳大利亚</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/25 03:00</span>
+            <span class="match-teams">🇹🇷 土耳其 <b>vs</b> 🇺🇸 美国</span>
+            <span class="match-score"></span>
+            
+        </div>
+            </div>
+        </div>
+    </div>
+    <div class="group-card" data-group="E">
+        <div class="group-header">
+            <span class="group-letter">E</span>
+            <span class="group-name">E组</span>
+        </div>
+        <div class="group-body">
+            <div class="standings-table">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>进球</th><th>净胜</th><th>积分</th>
+                    </tr></thead>
+                    <tbody><tr class="top2">
+            <td class="rank">1</td>
+            <td class="team">🇩🇪 德国</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top2">
+            <td class="rank">2</td>
+            <td class="team">🇪🇨 厄瓜多尔</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top3">
+            <td class="rank">3</td>
+            <td class="team">🇨🇮 科特迪瓦</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="">
+            <td class="rank">4</td>
+            <td class="team">🇨🇼 库拉索</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr></tbody>
+                </table>
+            </div>
+            <div class="group-matches">
+                <h4>赛程</h4>
+                <div class="match-item today">
+            <span class="match-time">06/15 18:00</span>
+            <span class="match-teams">🇩🇪 德国 <b>vs</b> 🇨🇼 库拉索</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item today">
+            <span class="match-time">06/15 00:00</span>
+            <span class="match-teams">🇨🇮 科特迪瓦 <b>vs</b> 🇪🇨 厄瓜多尔</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/19 21:00</span>
+            <span class="match-teams">🇩🇪 德国 <b>vs</b> 🇪🇨 厄瓜多尔</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/20 21:00</span>
+            <span class="match-teams">🇨🇼 库拉索 <b>vs</b> 🇨🇮 科特迪瓦</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/24 01:00</span>
+            <span class="match-teams">🇪🇨 厄瓜多尔 <b>vs</b> 🇨🇼 库拉索</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/24 01:00</span>
+            <span class="match-teams">🇩🇪 德国 <b>vs</b> 🇨🇮 科特迪瓦</span>
+            <span class="match-score"></span>
+            
+        </div>
+            </div>
+        </div>
+    </div>
+    <div class="group-card" data-group="F">
+        <div class="group-header">
+            <span class="group-letter">F</span>
+            <span class="group-name">F组</span>
+        </div>
+        <div class="group-body">
+            <div class="standings-table">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>进球</th><th>净胜</th><th>积分</th>
+                    </tr></thead>
+                    <tbody><tr class="top2">
+            <td class="rank">1</td>
+            <td class="team">🇳🇱 荷兰</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top2">
+            <td class="rank">2</td>
+            <td class="team">🇯🇵 日本</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top3">
+            <td class="rank">3</td>
+            <td class="team">🇸🇪 瑞典</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="">
+            <td class="rank">4</td>
+            <td class="team">🇹🇳 突尼斯</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr></tbody>
+                </table>
+            </div>
+            <div class="group-matches">
+                <h4>赛程</h4>
+                <div class="match-item today">
+            <span class="match-time">06/15 21:00</span>
+            <span class="match-teams">🇳🇱 荷兰 <b>vs</b> 🇯🇵 日本</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/16 03:00</span>
+            <span class="match-teams">🇸🇪 瑞典 <b>vs</b> 🇹🇳 突尼斯</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/21 02:00</span>
+            <span class="match-teams">🇳🇱 荷兰 <b>vs</b> 🇹🇳 突尼斯</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/21 05:00</span>
+            <span class="match-teams">🇯🇵 日本 <b>vs</b> 🇸🇪 瑞典</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/25 00:00</span>
+            <span class="match-teams">🇹🇳 突尼斯 <b>vs</b> 🇯🇵 日本</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/25 00:00</span>
+            <span class="match-teams">🇳🇱 荷兰 <b>vs</b> 🇸🇪 瑞典</span>
+            <span class="match-score"></span>
+            
+        </div>
+            </div>
+        </div>
+    </div>
+    <div class="group-card" data-group="G">
+        <div class="group-header">
+            <span class="group-letter">G</span>
+            <span class="group-name">G组</span>
+        </div>
+        <div class="group-body">
+            <div class="standings-table">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>进球</th><th>净胜</th><th>积分</th>
+                    </tr></thead>
+                    <tbody><tr class="top2">
+            <td class="rank">1</td>
+            <td class="team">🇧🇪 比利时</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top2">
+            <td class="rank">2</td>
+            <td class="team">🇮🇷 伊朗</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top3">
+            <td class="rank">3</td>
+            <td class="team">🇪🇬 埃及</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="">
+            <td class="rank">4</td>
+            <td class="team">🇳🇿 新西兰</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr></tbody>
+                </table>
+            </div>
+            <div class="group-matches">
+                <h4>赛程</h4>
+                <div class="match-item upcoming">
+            <span class="match-time">06/16 02:00</span>
+            <span class="match-teams">🇧🇪 比利时 <b>vs</b> 🇪🇬 埃及</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item today">
+            <span class="match-time">06/15 23:00</span>
+            <span class="match-teams">🇮🇷 伊朗 <b>vs</b> 🇳🇿 新西兰</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/20 04:00</span>
+            <span class="match-teams">🇧🇪 比利时 <b>vs</b> 🇳🇿 新西兰</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/20 04:00</span>
+            <span class="match-teams">🇪🇬 埃及 <b>vs</b> 🇮🇷 伊朗</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/25 02:00</span>
+            <span class="match-teams">🇳🇿 新西兰 <b>vs</b> 🇪🇬 埃及</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/25 02:00</span>
+            <span class="match-teams">🇧🇪 比利时 <b>vs</b> 🇮🇷 伊朗</span>
+            <span class="match-score"></span>
+            
+        </div>
+            </div>
+        </div>
+    </div>
+    <div class="group-card" data-group="H">
+        <div class="group-header">
+            <span class="group-letter">H</span>
+            <span class="group-name">H组</span>
+        </div>
+        <div class="group-body">
+            <div class="standings-table">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>进球</th><th>净胜</th><th>积分</th>
+                    </tr></thead>
+                    <tbody><tr class="top2">
+            <td class="rank">1</td>
+            <td class="team">🇪🇸 西班牙</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top2">
+            <td class="rank">2</td>
+            <td class="team">🇺🇾 乌拉圭</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top3">
+            <td class="rank">3</td>
+            <td class="team">🇸🇦 沙特</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="">
+            <td class="rank">4</td>
+            <td class="team">🇨🇻 佛得角</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr></tbody>
+                </table>
+            </div>
+            <div class="group-matches">
+                <h4>赛程</h4>
+                <div class="match-item upcoming">
+            <span class="match-time">06/16 00:00</span>
+            <span class="match-teams">🇪🇸 西班牙 <b>vs</b> 🇨🇻 佛得角</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item today">
+            <span class="match-time">06/15 06:00</span>
+            <span class="match-teams">🇸🇦 沙特 <b>vs</b> 🇺🇾 乌拉圭</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/21 01:00</span>
+            <span class="match-teams">🇪🇸 西班牙 <b>vs</b> 🇺🇾 乌拉圭</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/21 01:00</span>
+            <span class="match-teams">🇨🇻 佛得角 <b>vs</b> 🇸🇦 沙特</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/25 23:00</span>
+            <span class="match-teams">🇺🇾 乌拉圭 <b>vs</b> 🇨🇻 佛得角</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/25 23:00</span>
+            <span class="match-teams">🇪🇸 西班牙 <b>vs</b> 🇸🇦 沙特</span>
+            <span class="match-score"></span>
+            
+        </div>
+            </div>
+        </div>
+    </div>
+    <div class="group-card" data-group="I">
+        <div class="group-header">
+            <span class="group-letter">I</span>
+            <span class="group-name">I组</span>
+        </div>
+        <div class="group-body">
+            <div class="standings-table">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>进球</th><th>净胜</th><th>积分</th>
+                    </tr></thead>
+                    <tbody><tr class="top2">
+            <td class="rank">1</td>
+            <td class="team">🇫🇷 法国</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top2">
+            <td class="rank">2</td>
+            <td class="team">🇸🇳 塞内加尔</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top3">
+            <td class="rank">3</td>
+            <td class="team">🇳🇴 挪威</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="">
+            <td class="rank">4</td>
+            <td class="team">🇮🇶 伊拉克</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr></tbody>
+                </table>
+            </div>
+            <div class="group-matches">
+                <h4>赛程</h4>
+                <div class="match-item upcoming">
+            <span class="match-time">06/17 03:00</span>
+            <span class="match-teams">🇫🇷 法国 <b>vs</b> 🇸🇳 塞内加尔</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/16 06:00</span>
+            <span class="match-teams">🇮🇶 伊拉克 <b>vs</b> 🇳🇴 挪威</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/21 03:00</span>
+            <span class="match-teams">🇫🇷 法国 <b>vs</b> 🇳🇴 挪威</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/21 20:00</span>
+            <span class="match-teams">🇸🇳 塞内加尔 <b>vs</b> 🇮🇶 伊拉克</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/26 03:00</span>
+            <span class="match-teams">🇳🇴 挪威 <b>vs</b> 🇸🇳 塞内加尔</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/26 03:00</span>
+            <span class="match-teams">🇫🇷 法国 <b>vs</b> 🇮🇶 伊拉克</span>
+            <span class="match-score"></span>
+            
+        </div>
+            </div>
+        </div>
+    </div>
+    <div class="group-card" data-group="J">
+        <div class="group-header">
+            <span class="group-letter">J</span>
+            <span class="group-name">J组</span>
+        </div>
+        <div class="group-body">
+            <div class="standings-table">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>进球</th><th>净胜</th><th>积分</th>
+                    </tr></thead>
+                    <tbody><tr class="top2">
+            <td class="rank">1</td>
+            <td class="team">🇦🇷 阿根廷</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top2">
+            <td class="rank">2</td>
+            <td class="team">🇦🇹 奥地利</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top3">
+            <td class="rank">3</td>
+            <td class="team">🇩🇿 阿尔及利亚</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="">
+            <td class="rank">4</td>
+            <td class="team">🇯🇴 约旦</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr></tbody>
+                </table>
+            </div>
+            <div class="group-matches">
+                <h4>赛程</h4>
+                <div class="match-item upcoming">
+            <span class="match-time">06/17 09:00</span>
+            <span class="match-teams">🇦🇷 阿根廷 <b>vs</b> 🇩🇿 阿尔及利亚</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/17 12:00</span>
+            <span class="match-teams">🇦🇹 奥地利 <b>vs</b> 🇯🇴 约旦</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/22 02:00</span>
+            <span class="match-teams">🇦🇷 阿根廷 <b>vs</b> 🇦🇹 奥地利</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/22 04:00</span>
+            <span class="match-teams">🇩🇿 阿尔及利亚 <b>vs</b> 🇯🇴 约旦</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/27 01:00</span>
+            <span class="match-teams">🇯🇴 约旦 <b>vs</b> 🇦🇷 阿根廷</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/27 01:00</span>
+            <span class="match-teams">🇩🇿 阿尔及利亚 <b>vs</b> 🇦🇹 奥地利</span>
+            <span class="match-score"></span>
+            
+        </div>
+            </div>
+        </div>
+    </div>
+    <div class="group-card" data-group="K">
+        <div class="group-header">
+            <span class="group-letter">K</span>
+            <span class="group-name">K组</span>
+        </div>
+        <div class="group-body">
+            <div class="standings-table">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>进球</th><th>净胜</th><th>积分</th>
+                    </tr></thead>
+                    <tbody><tr class="top2">
+            <td class="rank">1</td>
+            <td class="team">🇵🇹 葡萄牙</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top2">
+            <td class="rank">2</td>
+            <td class="team">🇨🇴 哥伦比亚</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top3">
+            <td class="rank">3</td>
+            <td class="team">🇨🇩 刚果(金)</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="">
+            <td class="rank">4</td>
+            <td class="team">🇺🇿 乌兹别克斯坦</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr></tbody>
+                </table>
+            </div>
+            <div class="group-matches">
+                <h4>赛程</h4>
+                <div class="match-item upcoming">
+            <span class="match-time">06/18 01:00</span>
+            <span class="match-teams">🇵🇹 葡萄牙 <b>vs</b> 🇨🇩 刚果(金)</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/18 03:00</span>
+            <span class="match-teams">🇺🇿 乌兹别克斯坦 <b>vs</b> 🇨🇴 哥伦比亚</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/23 02:00</span>
+            <span class="match-teams">🇵🇹 葡萄牙 <b>vs</b> 🇺🇿 乌兹别克斯坦</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/23 03:00</span>
+            <span class="match-teams">🇨🇩 刚果(金) <b>vs</b> 🇨🇴 哥伦比亚</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/28 00:30</span>
+            <span class="match-teams">🇨🇴 哥伦比亚 <b>vs</b> 🇵🇹 葡萄牙</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/28 00:30</span>
+            <span class="match-teams">🇨🇩 刚果(金) <b>vs</b> 🇺🇿 乌兹别克斯坦</span>
+            <span class="match-score"></span>
+            
+        </div>
+            </div>
+        </div>
+    </div>
+    <div class="group-card" data-group="L">
+        <div class="group-header">
+            <span class="group-letter">L</span>
+            <span class="group-name">L组</span>
+        </div>
+        <div class="group-body">
+            <div class="standings-table">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>进球</th><th>净胜</th><th>积分</th>
+                    </tr></thead>
+                    <tbody><tr class="top2">
+            <td class="rank">1</td>
+            <td class="team">🏴󠁧󠁢󠁥󠁮󠁧󠁿 英格兰</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top2">
+            <td class="rank">2</td>
+            <td class="team">🇭🇷 克罗地亚</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="top3">
+            <td class="rank">3</td>
+            <td class="team">🇵🇦 巴拿马</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr><tr class="">
+            <td class="rank">4</td>
+            <td class="team">🇬🇭 加纳</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0-0</td><td class="gd">+0</td>
+            <td class="pts">0</td></tr></tbody>
+                </table>
+            </div>
+            <div class="group-matches">
+                <h4>赛程</h4>
+                <div class="match-item upcoming">
+            <span class="match-time">06/18 02:00</span>
+            <span class="match-teams">🏴󠁧󠁢󠁥󠁮󠁧󠁿 英格兰 <b>vs</b> 🇭🇷 克罗地亚</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/18 00:00</span>
+            <span class="match-teams">🇬🇭 加纳 <b>vs</b> 🇵🇦 巴拿马</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/23 03:00</span>
+            <span class="match-teams">🏴󠁧󠁢󠁥󠁮󠁧󠁿 英格兰 <b>vs</b> 🇬🇭 加纳</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/23 00:00</span>
+            <span class="match-teams">🇭🇷 克罗地亚 <b>vs</b> 🇵🇦 巴拿马</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/28 02:00</span>
+            <span class="match-teams">🇵🇦 巴拿马 <b>vs</b> 🏴󠁧󠁢󠁥󠁮󠁧󠁿 英格兰</span>
+            <span class="match-score"></span>
+            
+        </div><div class="match-item upcoming">
+            <span class="match-time">06/28 02:00</span>
+            <span class="match-teams">🇭🇷 克罗地亚 <b>vs</b> 🇬🇭 加纳</span>
+            <span class="match-score"></span>
+            
+        </div>
+            </div>
+        </div>
+    </div></div>
+</div>
+
+<footer>
+数据更新于 2026-06-13 · 数据来源 FIFA / oddschecker · <a href="worldcup_2026_dump.sql" target="_blank">下载SQL数据</a><br>
+🍪 由饼干制作
+</footer>
+</div>
+
+<script>
+function toggleTheme(){
+  const d=document.documentElement;
+  const isDark=d.getAttribute('data-theme')==='dark';
+  d.setAttribute('data-theme',isDark?'light':'dark');
+  document.querySelector('.theme-toggle').textContent=isDark?'🌙':'☀️';
+  localStorage.setItem('theme',isDark?'light':'dark');
+}
+if(localStorage.getItem('theme')==='dark'){
+  document.documentElement.setAttribute('data-theme','dark');
+  document.querySelector('.theme-toggle').textContent='☀️';
+}
+// 高亮净胜球颜色
+document.querySelectorAll('.gd').forEach(el=>{
+  const v=parseInt(el.textContent);
+  if(v>0)el.classList.add('positive');
+  else if(v<0)el.classList.add('negative');
+});
+</script>
+</body>
+</html>
